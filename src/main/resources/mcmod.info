@@ -1,0 +1,9 @@
+[
+  {
+    "modid": "skyblockclient",
+    "name": "SkyblockClient",
+    "description": "The best skyblock mod.",
+    "version": "${version}",
+    "mcversion": "${mcversion}"
+  }
+]
