@@ -24,11 +24,10 @@ public class GemstoneESP {
     private long lastUpdate = 0;
     private Thread thread;
 
-
     @SubscribeEvent
     public void update(LivingEvent.LivingUpdateEvent event) {
         if (!SkyblockCheck.inSkyblock || !SkyblockClient.config.gemstoneESP) return;
-        if (event.entity == Minecraft.getMinecraft().thePlayer && lastUpdate + 100 < System.currentTimeMillis()) {
+        if (event.entity == Minecraft.getMinecraft().thePlayer && lastUpdate + SkyblockClient.config.gemstoneESPTime < System.currentTimeMillis()) {
             if (thread == null || !thread.isAlive()) {
                 thread = new Thread(() -> {
                     HashMap<BlockPos, Color> blockList = new HashMap<>();

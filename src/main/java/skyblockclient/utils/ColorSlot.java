@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 public class ColorSlot {
 
-    public ColorSlot(Slot slot, int size ,int color) {
+    public ColorSlot(Slot slot, int size, int color) {
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
         int x = (sr.getScaledWidth() - 176) / 2 + slot.xDisplayPosition;
         int y = (sr.getScaledHeight() - 222) / 2 + slot.yDisplayPosition;

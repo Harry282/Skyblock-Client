@@ -25,7 +25,6 @@ public class BoneMacro {
                                 mc.thePlayer.inventory.getCurrentItem());
                         try {
                             Thread.sleep(SkyblockClient.config.boneThrowDelay);
-                            // TODO add randomized delay
                         } catch (InterruptedException ignored) {
                         }
                     }

@@ -3,8 +3,6 @@ package skyblockclient.utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.scoreboard.ScoreObjective;
 
-import java.util.List;
-
 public class SkyblockCheck {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -13,46 +11,36 @@ public class SkyblockCheck {
 
     public static boolean isOnHypixel() {
         try {
-            if (mc != null && mc.theWorld != null && !mc.isSingleplayer()) {
+            if (mc.theWorld != null && !mc.isSingleplayer()) {
                 if (mc.thePlayer != null && mc.thePlayer.getClientBrand() != null) {
-                    if (mc.thePlayer.getClientBrand().toLowerCase().contains("hypixel")) return true;
+                    return mc.thePlayer.getClientBrand().toLowerCase().contains("hypixel");
                 }
-                if (mc.getCurrentServerData() != null)
+                if (mc.getCurrentServerData() != null) {
                     return mc.getCurrentServerData().serverIP.toLowerCase().contains("hypixel");
+                }
             }
-            return false;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
-    public static void checkForSkyblock() {
+    public static boolean isInSkyblock() {
         if (isOnHypixel()) {
             ScoreObjective scoreboardObj = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
             if (scoreboardObj != null) {
-                String scObjName = ScoreboardUtils.cleanSB(scoreboardObj.getDisplayName());
-                if (scObjName.contains("SKYBLOCK")) {
-                    inSkyblock = true;
-                    return;
-                }
+                return ScoreboardUtils.cleanSB(scoreboardObj.getDisplayName()).contains("SKYBLOCK");
             }
         }
-        inSkyblock = false;
+        return false;
     }
 
-    public static void checkForDungeons() {
+    public static boolean isInDungeon() {
         if (inSkyblock) {
-            List<String> scoreboard = ScoreboardUtils.getSidebarLines();
-            for (String s : scoreboard) {
-                String sCleaned = ScoreboardUtils.cleanSB(s);
-                if ((sCleaned.contains("The Catacombs") && !sCleaned.contains("Queue")) || sCleaned.contains("Dungeon Cleared:")) {
-                    inDungeons = true;
-                    return;
-                }
-            }
+            return ScoreboardUtils.getSidebarLines().stream().anyMatch(s -> ScoreboardUtils.cleanSB(s).contains("The Catacombs") &&
+                    !ScoreboardUtils.cleanSB(s).contains("Queue") || ScoreboardUtils.cleanSB(s).contains("Dungeon Cleared:"));
         }
-        inDungeons = false;
+        return false;
     }
 
 }

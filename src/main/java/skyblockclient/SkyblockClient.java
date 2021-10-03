@@ -1,7 +1,7 @@
 package skyblockclient;
 
-import gg.essential.vigilance.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -12,9 +12,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.input.Keyboard;
-import skyblockclient.config.Config;
 import skyblockclient.commands.SkyblockClientCommands;
+import skyblockclient.config.Config;
 import skyblockclient.features.*;
 import skyblockclient.features.dungeons.*;
 import skyblockclient.utils.SkyblockCheck;
@@ -28,8 +29,8 @@ public class SkyblockClient {
     public static final String MOD_NAME = "Scrollable Tooltips";
     public static final String MOD_VERSION = "1.4.0";
 
-//    public static GuiScreen display = null;
-    public static Config config = new Config();
+    public static GuiScreen display = null;
+    public static Config config = Config.INSTANCE;
     public static KeyBinding[] keyBinds = new KeyBinding[3];
     public static int tickCount = 0;
 
@@ -39,8 +40,6 @@ public class SkyblockClient {
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        Vigilance.initialize();
-        config.preload();
     }
 
     @Mod.EventHandler
@@ -77,33 +76,35 @@ public class SkyblockClient {
     @SubscribeEvent
     public void tick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
-//        if (display != null) {
-//            try {
-//                Minecraft.getMinecraft().displayGuiScreen(display);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            display = null;
-//        }
         tickCount++;
+        if (display != null) {
+            try {
+                Minecraft.getMinecraft().displayGuiScreen(display);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            display = null;
+        }
         if (tickCount % 20 == 0) {
-            if (Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null) {
-                if (!config.forceSkyblock) {
-                    SkyblockCheck.checkForSkyblock();
-                    SkyblockCheck.checkForDungeons();
-                } else {
-                    SkyblockCheck.inSkyblock = true;
-                    SkyblockCheck.inDungeons = true;
-                }
+            if (Minecraft.getMinecraft().thePlayer != null) {
+                SkyblockCheck.inSkyblock = SkyblockClient.config.forceSkyblock || SkyblockCheck.isInSkyblock();
+                SkyblockCheck.inDungeons = SkyblockClient.config.forceSkyblock || SkyblockCheck.isInDungeon();
             }
             tickCount = 0;
         }
     }
 
     @SubscribeEvent
+    public void disconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        SkyblockCheck.inSkyblock = false;
+        SkyblockCheck.inDungeons = false;
+    }
+
+    @SubscribeEvent
     public void key(InputEvent.KeyInputEvent event) {
         if (keyBinds[0].isPressed()) {
-            Minecraft.getMinecraft().displayGuiScreen(config.gui());
+            display = config.gui();
         }
     }
+
 }

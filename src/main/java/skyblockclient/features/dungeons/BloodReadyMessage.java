@@ -6,7 +6,6 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import skyblockclient.SkyblockClient;
 import skyblockclient.utils.DrawTitle;
 import skyblockclient.utils.SkyblockCheck;
@@ -16,7 +15,6 @@ public class BloodReadyMessage {
     private static final Minecraft mc = Minecraft.getMinecraft();
     private static boolean bloodReady;
     private static long timer;
-    private static int renderTimer;
 
     @SubscribeEvent
     public void chat(ClientChatReceivedEvent event) {
@@ -40,7 +38,8 @@ public class BloodReadyMessage {
 
     @SubscribeEvent
     public void renderOverlay(RenderGameOverlayEvent.Post event) {
-        if (!SkyblockCheck.inSkyblock || mc.ingameGUI == null || event.type != RenderGameOverlayEvent.ElementType.HOTBAR) return;
+        if (!SkyblockCheck.inSkyblock || mc.ingameGUI == null || event.type != RenderGameOverlayEvent.ElementType.HOTBAR)
+            return;
         if (timer > System.currentTimeMillis()) {
             new DrawTitle("§cBlood Spawned", 4);
         }

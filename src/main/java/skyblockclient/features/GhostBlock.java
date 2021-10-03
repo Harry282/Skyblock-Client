@@ -68,18 +68,20 @@ public class GhostBlock {
             ItemStack item = mc.thePlayer.getHeldItem();
             if (item == null) return;
             if (item.getDisplayName().contains("Stonk")) {
-                toAir(mc.objectMouseOver.getBlockPos());
-                event.setCanceled(true);
+                event.setCanceled(toAir(mc.objectMouseOver.getBlockPos()));
             }
         }
     }
 
-    private void toAir(BlockPos blockPos) {
-        if (blockPos == null) return;
-        Block block = mc.theWorld.getBlockState(mc.objectMouseOver.getBlockPos()).getBlock();
-        if (!interactables.contains(block)) {
-            mc.theWorld.setBlockToAir(mc.objectMouseOver.getBlockPos());
+    private boolean toAir(BlockPos blockPos) {
+        if (blockPos != null) {
+            Block block = mc.theWorld.getBlockState(mc.objectMouseOver.getBlockPos()).getBlock();
+            if (!interactables.contains(block)) {
+                mc.theWorld.setBlockToAir(mc.objectMouseOver.getBlockPos());
+                return true;
+            }
         }
+        return false;
     }
 
 }

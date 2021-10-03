@@ -18,9 +18,9 @@ import java.util.Collection;
 
 public final class ClassTransformer implements IClassTransformer {
 
+    public final boolean outputBytecode = Boolean.parseBoolean(System.getProperty("debugBytecode", "false"));
     private final Logger logger = LogManager.getLogger("Tooltips Transformer");
     private final Multimap<String, TooltipsTransformer> transformerMap = ArrayListMultimap.create();
-    public final boolean outputBytecode = Boolean.parseBoolean(System.getProperty("debugBytecode", "false"));
 
     public ClassTransformer() {
         this.registerTransformer(new GuiUtilsTransformer());

@@ -1,7 +1,6 @@
 package skyblockclient.features.dungeons;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
@@ -12,9 +11,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringUtils;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -22,7 +19,6 @@ import skyblockclient.SkyblockClient;
 import skyblockclient.events.GuiContainerEvent;
 import skyblockclient.utils.ColorSlot;
 import skyblockclient.utils.SkyblockCheck;
-import skyblockclient.utils.TextRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +28,10 @@ public class Terminals {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
     private static final ArrayList<Slot> clickQueue = new ArrayList<>(28);
-    private static final int[] mazeSlotDirection = {-9, -1, 1, 9};
     private static TerminalType currentTerminal = TerminalType.NONE;
-    private static char letterNeeded;
-    private static String colorNeeded;
-    private static int displayTime;
     private static long lastClickTime;
-    private static int ticksSinceTerminal;
     private static int windowId;
     private static int windowClicks;
-    private static int mouseButton;
     private static boolean recalculate = false;
 
     @SubscribeEvent
@@ -157,77 +147,46 @@ public class Terminals {
 
     @SubscribeEvent
     public void slotClick(GuiContainerEvent.SlotClickEvent event) {
-        if (!SkyblockCheck.inDungeons || clickQueue.isEmpty()) return;
-        if (!SkyblockClient.config.terminalPingless && !SkyblockClient.config.terminalBlockClicks &&
-                !SkyblockClient.config.terminalMiddleClick) return;
+        if (!SkyblockCheck.inDungeons || !SkyblockClient.config.terminalCustomClicks ||
+                clickQueue.isEmpty() || !event.slot.getHasStack()) return;
         event.setCanceled(true);
-        if (currentTerminal == TerminalType.MAZE || currentTerminal == TerminalType.NUMBERS) {
-            if (SkyblockClient.config.terminalBlockClicks && clickQueue.get(0).slotNumber != event.slotId) return;
-            clickSlot(event.slot);
-        } else if (currentTerminal == TerminalType.CORRECTALL) {
-            if (event.slot.getHasStack() && event.slot.getStack().getItemDamage() == 5) {
-                if (SkyblockClient.config.terminalBlockClicks) {
-                    return;
-                } else {
-                    clickQueue.add(event.slot);
-                }
+        if (SkyblockClient.config.terminalBlockClicks) {
+            switch (currentTerminal) {
+                case MAZE:
+                case NUMBERS:
+                    if (clickQueue.get(0).slotNumber != event.slotId) return;
+                    break;
+                case CORRECTALL:
+                    if (event.slot.getStack().getItemDamage() == 5) return;
+                    break;
+                case COLOR:
+                case LETTER:
+                    if (clickQueue.stream().noneMatch(slot -> slot.slotNumber == event.slotId)) return;
             }
-            clickSlot(event.slot);
-        } else if (currentTerminal != TerminalType.NONE) {
-            if (SkyblockClient.config.terminalBlockClicks && clickQueue.stream().noneMatch(slot -> slot.slotNumber == event.slotId)) {
-                return;
+        }
+        clickSlot(event.slot);
+        if (currentTerminal == TerminalType.CORRECTALL) {
+            if (event.slot.getStack().getItemDamage() == 5 && SkyblockClient.config.terminalBlockClicks) {
+                recalculate = true;
             }
-            clickSlot(event.slot);
         }
     }
 
     @SubscribeEvent
     public void tick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START || mc.thePlayer == null || mc.theWorld == null) return;
-        if (mc.currentScreen instanceof GuiChest) {
-            if (currentTerminal != TerminalType.NONE) ticksSinceTerminal = 0;
-        } else {
+        if (!SkyblockCheck.inDungeons || event.phase != TickEvent.Phase.START) return;
+        if (!(mc.currentScreen instanceof GuiChest)) {
             currentTerminal = TerminalType.NONE;
-            if (ticksSinceTerminal == 1) {
-                if (!clickQueue.isEmpty() && SkyblockClient.config.terminalKickNotify) displayTime = 40;
-                clickQueue.clear();
-                letterNeeded = 0;
-                colorNeeded = null;
-                windowClicks = 0;
-            }
-            if (ticksSinceTerminal <= 1) ticksSinceTerminal++;
+            clickQueue.clear();
+            windowClicks = 0;
         }
-        if (displayTime > 0) displayTime--;
-    }
-
-    @SubscribeEvent
-    public void render(RenderGameOverlayEvent.Post event) {
-        if (mc.ingameGUI == null || event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE &&
-                event.type != RenderGameOverlayEvent.ElementType.JUMPBAR)
-            return;
-        if (displayTime > 0) {
-            ScaledResolution sr = new ScaledResolution(mc);
-            int width = sr.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth("Terminal Kicked");
-            int height = sr.getScaledHeight() / 2 - 50;
-            new TextRenderer(mc, "§cTerminal Kicked", width, height, 2);
-        }
-    }
-
-    @SubscribeEvent
-    public void guiOpen(GuiOpenEvent event) {
-        if (SkyblockClient.config.terminalMiddleClick) mouseButton = 2;
-        else mouseButton = 0;
     }
 
     @SubscribeEvent
     public void tooltip(ItemTooltipEvent event) {
-        if (!SkyblockCheck.inDungeons || !SkyblockClient.config.terminalHideTooltip || event.toolTip == null)
-            return;
-        if (mc.currentScreen instanceof GuiChest) {
-            if (currentTerminal != TerminalType.NONE) {
-                event.toolTip.clear();
-            }
-        }
+        if (!SkyblockCheck.inDungeons || !SkyblockClient.config.terminalHideTooltip ||
+                event.toolTip == null || currentTerminal == TerminalType.NONE) return;
+        event.toolTip.clear();
     }
 
     private boolean getClicks(ContainerChest container) {
@@ -236,9 +195,10 @@ public class Terminals {
         clickQueue.clear();
         switch (currentTerminal) {
             case MAZE:
+                int[] mazeSlotDirection = {-9, -1, 1, 9};
+                boolean[] isStartSlot = new boolean[54];
                 int endSlot = -1;
                 boolean[] mazeVisited = new boolean[54];
-                boolean[] isStartSlot = new boolean[54];
                 for (Slot slot : invSlots) {
                     if (slot.inventory == mc.thePlayer.inventory) continue;
                     ItemStack itemStack = slot.getStack();
@@ -260,7 +220,7 @@ public class Terminals {
                             for (int i = 0; i < 4; i++) {
                                 int slotNumber = startSlot + mazeSlotDirection[i];
                                 if (slotNumber == endSlot) return false;
-                                if (slotNumber < 0 || slotNumber > 53 || i == 1 && slotNumber % 9 == 8 || i == 2 && slotNumber % 9 == 0)
+                                if (slotNumber < 0 || slotNumber > 53 || i == 1 && slotNumber % 9 == 0 || i == 2 && slotNumber % 9 == 8)
                                     continue;
                                 if (mazeVisited[slotNumber]) continue;
                                 ItemStack itemStack = invSlots.get(slotNumber).getStack();
@@ -274,7 +234,6 @@ public class Terminals {
                                 }
                             }
                             if (!newSlotChosen) {
-                                System.out.println("Maze calculation aborted");
                                 break;
                             }
                         }
@@ -302,7 +261,7 @@ public class Terminals {
                         return true;
                     }
                 }
-
+                clickQueue.removeIf(Objects::isNull);
                 break;
             case CORRECTALL:
                 for (Slot slot : invSlots) {
@@ -317,7 +276,7 @@ public class Terminals {
                 }
                 break;
             case LETTER:
-                letterNeeded = chestName.charAt(chestName.indexOf("'") + 1);
+                char letterNeeded = chestName.charAt(chestName.indexOf("'") + 1);
                 if (letterNeeded != 0) {
                     for (Slot slot : invSlots) {
                         if (slot.inventory == mc.thePlayer.inventory) continue;
@@ -333,6 +292,7 @@ public class Terminals {
                 }
                 break;
             case COLOR:
+                String colorNeeded = null;
                 for (EnumDyeColor color : EnumDyeColor.values()) {
                     String colorName = color.getName().replaceAll("_", " ").toUpperCase();
                     if (chestName.contains(colorName)) {
@@ -360,13 +320,8 @@ public class Terminals {
 
     private void clickSlot(Slot slot) {
         if (windowClicks == 0) windowId = mc.thePlayer.openContainer.windowId;
-        if (SkyblockClient.config.terminalShiftClick) {
-            mc.playerController.windowClick(windowId + windowClicks,
-                    slot.slotNumber, 0, 1, mc.thePlayer);
-        } else {
-            mc.playerController.windowClick(windowId + windowClicks,
-                    slot.slotNumber, mouseButton, 0, mc.thePlayer);
-        }
+        mc.playerController.windowClick(windowId + windowClicks, slot.slotNumber,
+                SkyblockClient.config.terminalMiddleClick ? 2 : SkyblockClient.config.terminalShiftClick ? 1 : 0, 0, mc.thePlayer);
         lastClickTime = System.currentTimeMillis();
         if (SkyblockClient.config.terminalPingless) {
             windowClicks++;
@@ -375,12 +330,10 @@ public class Terminals {
         if (clickQueue.size() == 1 && clickQueue.get(0).slotNumber == slot.slotNumber) {
             clickQueue.clear();
         }
-        System.out.println("Terminal clicked: " + currentTerminal + " Slot clicked: " + slot.slotNumber + " Window ID: " + windowId + "Window Clicks: " + windowClicks);
     }
 
     private enum TerminalType {
         MAZE, NUMBERS, CORRECTALL, LETTER, COLOR, NONE
     }
-
 
 }

@@ -14,10 +14,9 @@ import skyblockclient.events.GuiContainerEvent;
 @Mixin(GuiContainer.class)
 public class MixinGuiContainer {
 
+    private final GuiContainer gui = (GuiContainer) (Object) this;
     @Shadow
     public Container inventorySlots;
-
-    private final GuiContainer gui = (GuiContainer) (Object) this;
 
     @Inject(method = "drawSlot", at = @At("HEAD"), cancellable = true)
     private void onDrawSlot(Slot slot, CallbackInfo ci) {

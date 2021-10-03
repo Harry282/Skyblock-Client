@@ -27,7 +27,8 @@ public class EndstoneProtectorTimer {
 
     @SubscribeEvent
     public void renderOverlay(RenderGameOverlayEvent.Post event) {
-        if (!SkyblockCheck.inSkyblock || mc.ingameGUI == null || event.type != RenderGameOverlayEvent.ElementType.HOTBAR) return;
+        if (!SkyblockCheck.inSkyblock || mc.ingameGUI == null || event.type != RenderGameOverlayEvent.ElementType.HOTBAR)
+            return;
         if (timer - System.currentTimeMillis() > 0) {
             float time = timer - System.currentTimeMillis();
             time /= 1000;

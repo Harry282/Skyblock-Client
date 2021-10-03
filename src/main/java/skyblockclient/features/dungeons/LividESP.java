@@ -50,7 +50,8 @@ public class LividESP {
 
     @SubscribeEvent
     public void tick(TickEvent.ClientTickEvent event) {
-        if (SkyblockCheck.inDungeons || !SkyblockClient.config.lividFinder || event.phase != TickEvent.Phase.START) return;
+        if (SkyblockCheck.inDungeons || !SkyblockClient.config.lividFinder || event.phase != TickEvent.Phase.START)
+            return;
         if (isF5() && !foundLivid) {
             List<Entity> livids = new ArrayList<>();
             for (Entity entity : mc.theWorld.getLoadedEntityList()) {

@@ -2,14 +2,7 @@ package club.sk1er.mods.scrollabletooltips.transform.impl;
 
 import club.sk1er.mods.scrollabletooltips.transform.TooltipsTransformer;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.IntInsnNode;
-import org.objectweb.asm.tree.LocalVariableNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.tree.*;
 
 import java.util.ListIterator;
 
@@ -48,10 +41,10 @@ public final class GuiUtilsTransformer implements TooltipsTransformer {
 
                         if (methodInsnName.equals("enableRescaleNormal") || methodInsnName.equals("func_179091_B")) {
                             method.instructions.insert(next, new MethodInsnNode(Opcodes.INVOKESTATIC,
-                                "net/minecraft/client/renderer/GlStateManager",
-                                "func_179121_F",
-                                "()V",
-                                false));
+                                    "net/minecraft/client/renderer/GlStateManager",
+                                    "func_179121_F",
+                                    "()V",
+                                    false));
                         }
                     }
                 }
