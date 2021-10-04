@@ -47,6 +47,7 @@ public class SkyblockClient {
         ClientCommandHandler.instance.registerCommand(new SkyblockClientCommands());
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new F7P3Ghost());
         MinecraftForge.EVENT_BUS.register(new AntiBlind());
         MinecraftForge.EVENT_BUS.register(new AnvilUses());
         MinecraftForge.EVENT_BUS.register(new BloodReadyMessage());
