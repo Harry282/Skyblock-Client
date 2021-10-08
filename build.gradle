@@ -35,9 +35,7 @@ configurations {
 
 dependencies {
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
-    packageLib("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
-        transitive = false
-    }
+    implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     packageLib("gg.essential:loader-launchwrapper:1.1.1")
     implementation("gg.essential:essential-1.8.9-forge:1486")
 }
