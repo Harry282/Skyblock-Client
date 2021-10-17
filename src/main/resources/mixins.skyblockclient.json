@@ -3,14 +3,12 @@
   "compatibilityLevel": "JAVA_8",
   "package": "skyblockclient.mixins",
   "refmap": "mixins.skyblockclient.refmap.json",
-  "mixins": [
+  "client": [
     "MixinGuiContainer",
     "MixinInventoryEffectRenderer",
-    "MixinNetHandlerPlayClient",
-    "MixinNetworkManager"
-  ],
-  "client": [
     "MixinMinecraft",
+    "MixinNetHandlerPlayClient",
+    "MixinNetworkManager",
     "MixinRendererLivingEntity"
   ]
 }
