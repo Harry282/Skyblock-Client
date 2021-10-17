@@ -24,6 +24,12 @@ import java.util.Map;
 import static java.lang.Math.*;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Modified from LiquidBounce Hacked Client
+ * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
+ *
+ * @link https://github.com/CCBlueX/LiquidBounce/
+ */
 public class RenderUtils {
 
     private static final Map<Integer, Boolean> glCapMap = new HashMap<>();
@@ -678,5 +684,4 @@ public class RenderUtils {
         worldrenderer.pos(x, y, 0.0D).tex(u * f, v * f1).endVertex();
         tessellator.draw();
     }
-
 }

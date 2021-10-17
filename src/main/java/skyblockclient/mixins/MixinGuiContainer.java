@@ -15,6 +15,7 @@ import skyblockclient.events.GuiContainerEvent;
 public class MixinGuiContainer {
 
     private final GuiContainer gui = (GuiContainer) (Object) this;
+
     @Shadow
     public Container inventorySlots;
 

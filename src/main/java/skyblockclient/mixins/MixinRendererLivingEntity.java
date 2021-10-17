@@ -4,8 +4,6 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,8 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import skyblockclient.events.RenderLivingEntityEvent;
 
 @Mixin(RendererLivingEntity.class)
-@SideOnly(Side.CLIENT)
-public abstract class MixinRendererLivingEntity {
+public class MixinRendererLivingEntity {
 
     @Shadow
     protected ModelBase mainModel;
