@@ -36,10 +36,12 @@ class StarMobESP {
                 ) { entity: Entity? -> entity !is EntityArmorStand }
                 if (possibleEntities.isNotEmpty()) {
                     for (e in possibleEntities) {
-                        if (e is EntityOtherPlayerMP) {
-                            if (e.isInvisible() || e.getUniqueID().version() != 2) break
+                        if (e == mc.thePlayer) {
+                            return
+                        } else if (e is EntityOtherPlayerMP) {
+                            if (e.isInvisible() || e.getUniqueID().version() != 2) return
                             if (config.espMiniboss) {
-                                if (event.entity.name.contains("Adventurer") && e.getName() == "Lost Adventurer") {
+                                if (event.entity.name.contains(" Adventurer") && e.getName() == "Lost Adventurer") {
                                     checkedArmorStands.add(event.entity)
                                     return
                                 }
@@ -49,10 +51,9 @@ class StarMobESP {
                                 }
                             }
                         } else if (e is EntityEnderman && config.espFels) {
-                            break
+                            return
                         }
                         if (starMobs.add(e)) checkedArmorStands.add(event.entity)
-                        return
                     }
                 }
             }
