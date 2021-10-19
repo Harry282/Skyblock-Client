@@ -492,7 +492,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.SWITCH,
         name = "Teleport No Rotate",
-        description = "Prevents your view from being changed while holding any Wither Impact sword, AOTE, or AOTV.",
+        description = "Most likely bannable! Prevents your view from being changed while holding any Wither Impact sword, AOTE, or AOTV.",
         category = "Misc",
         subcategory = "No Rotate"
     )
