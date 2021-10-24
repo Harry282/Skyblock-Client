@@ -1,5 +1,6 @@
 package skyblockclient
 
+import gg.essential.api.EssentialAPI
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.settings.KeyBinding
@@ -8,6 +9,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent
@@ -20,6 +22,7 @@ import skyblockclient.config.Config
 import skyblockclient.features.*
 import skyblockclient.features.dungeons.*
 import skyblockclient.utils.ScoreboardUtils
+import skyblockclient.utils.UpdateChecker
 import java.io.File
 
 @Mod(
@@ -72,6 +75,13 @@ class SkyblockClient {
         }
     }
 
+    @Mod.EventHandler
+    fun postInit(event: FMLLoadCompleteEvent) {
+        if (UpdateChecker.hasUpdate() == 1) {
+            EssentialAPI.getNotifications().push("Skyblock Client", "New release available on Github.")
+        }
+    }
+
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START) return
@@ -117,6 +127,7 @@ class SkyblockClient {
         const val MOD_ID = "text_overflow_scroll"
         const val MOD_NAME = "Scrollable Tooltips"
         const val MOD_VERSION = "1.4.0"
+        const val SB_CLIENT_VERSION = "0.1.2-pre3"
         var inDungeons = false
         var inSkyblock = false
         var isOnHypixel = false
