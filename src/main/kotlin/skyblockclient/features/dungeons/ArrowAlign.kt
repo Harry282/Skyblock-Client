@@ -1,13 +1,12 @@
 package skyblockclient.features.dungeons
 
+import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityItemFrame
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.util.BlockPos
-import net.minecraft.util.EnumFacing
 import net.minecraft.util.MovingObjectPosition
-import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
@@ -16,85 +15,16 @@ import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RightClickEvent
 import skyblockclient.utils.ScoreboardUtils
 import java.awt.Point
+import java.lang.reflect.Method
 import java.util.*
-import kotlin.math.floor
 
-/**
- * Modified from SkytilsMod under GNU Affero General Public License v3.0
- *
- * @link https://github.com/Skytils/SkytilsMod
- */
 class ArrowAlign {
-    // the blocks are on the west side, frames block pos is 1 block higher
-    private val topLeft = BlockPos(197, 124, 278).up()
-    private val bottomRight = BlockPos(197, 120, 274).up()
-    private val box = BlockPos.getAllInBox(topLeft, bottomRight).toList().sortedWith { a, b ->
-        if (a.y == b.y) {
-            return@sortedWith b.z - a.z
-        }
-        if (a.y < b.y) return@sortedWith 1
-        if (a.y > b.y) return@sortedWith -1
-        return@sortedWith 0
-    }
-    private val grid = LinkedHashSet<MazeSpace>()
-    private val directionSet = HashMap<Point, Int>()
-    private var ticks = 0
-
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (!config.arrowAlign || !inDungeons || !isF7() || event.phase != TickEvent.Phase.START) return
         if (ticks % 20 == 0) {
-            if (mc.thePlayer.getDistanceSqToCenter(topLeft) <= 25 * 25) {
-                if (grid.size < 25) {
-                    val frames = mc.theWorld.getEntities(EntityItemFrame::class.java) {
-                        it != null && box.contains(it.position) && it.displayedItem != null &&
-                                (it.displayedItem.item.equals(Items.arrow) || it.displayedItem.item.equals(
-                                    Item.getItemFromBlock(
-                                        Blocks.wool
-                                    )
-                                ))
-                    }
-                    if (frames.isNotEmpty()) {
-                        for ((i, pos) in box.withIndex()) {
-                            val row = i % 5
-                            val column = floor((i / 5f).toDouble()).toInt()
-                            val coords = Point(row, column)
-                            val frame = frames.find { it.position == pos }
-                            if (frame != null) {
-                                val type = with(frame.displayedItem) {
-                                    when (item) {
-                                        Items.arrow -> SpaceType.PATH
-                                        Item.getItemFromBlock(Blocks.wool) -> {
-                                            when (itemDamage) {
-                                                5 -> SpaceType.STARTER
-                                                14 -> SpaceType.END
-                                                else -> SpaceType.PATH
-                                            }
-                                        }
-                                        else -> SpaceType.EMPTY
-                                    }
-                                }
-                                grid.add(MazeSpace(frame.hangingPosition, type, coords))
-                            } else {
-                                grid.add(MazeSpace(type = SpaceType.EMPTY, coords = coords))
-                            }
-                        }
-                    }
-                } else if (directionSet.isEmpty()) {
-                    val startPositions = grid.filter { it.type == SpaceType.STARTER }
-                    val endPositions = grid.filter { it.type == SpaceType.END }
-                    val layout = layout
-                    for (start in startPositions) {
-                        for (endPosition in endPositions) {
-                            val pointMap = solve(layout, start.coords, endPosition.coords)
-                            if (pointMap.size == 0) continue
-                            val moveSet = convertPointMapToMoves(pointMap)
-                            for (move in moveSet) {
-                                directionSet[move.point] = move.directionNum
-                            }
-                        }
-                    }
-                }
+            if (mc.thePlayer.getDistanceSq(BlockPos(197, 122, 276)) <= 20 * 20) {
+                calculate()
             }
             ticks = 0
         }
@@ -103,152 +33,30 @@ class ArrowAlign {
 
     @SubscribeEvent
     fun onRightClick(event: RightClickEvent) {
-        if (!inDungeons || !config.arrowAlign || mc.objectMouseOver == null) return
+        if (!config.arrowAlign || !isF7() || mc.objectMouseOver == null) return
         if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
             if (mc.objectMouseOver.entityHit is EntityItemFrame) {
-                val frame = mc.objectMouseOver.entityHit as EntityItemFrame
-                for (space in grid) {
-                    if (frame.hangingPosition != space.framePos) continue
-                    if (space.type != SpaceType.PATH || space.framePos == null) continue
-                    val neededClicks = directionSet.getOrElse(space.coords) { 0 } - frame.rotation
-                    println("Item frame rotation $neededClicks")
-                    if (neededClicks == 0) event.isCanceled = true
-                    return
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    fun onWorldLoad(event: WorldEvent.Load) {
-        grid.clear()
-        directionSet.clear()
-    }
-
-    class MazeSpace(val framePos: BlockPos? = null, val type: SpaceType, val coords: Point)
-
-    enum class SpaceType {
-        EMPTY,
-        PATH,
-        STARTER,
-        END,
-    }
-
-    class GridMove(val point: Point, val directionNum: Int)
-
-    private fun convertPointMapToMoves(solution: ArrayList<Point>): ArrayList<GridMove> {
-        solution.reverse()
-        val moves = arrayListOf<GridMove>()
-        for (i in 0 until solution.size - 1) {
-            val current = solution[i]
-            val next = solution[i + 1]
-            val diffX = current.x - next.x
-            val diffY = current.y - next.y
-            directionCheck@ for (dir in EnumFacing.HORIZONTALS) {
-                val dirX = dir.directionVec.x
-                val dirY = dir.directionVec.z
-                if (dirX == diffX && dirY == diffY) {
-                    val rotation = when (dir.opposite) {
-                        EnumFacing.EAST -> 1
-                        EnumFacing.WEST -> 5
-                        EnumFacing.SOUTH -> 3
-                        EnumFacing.NORTH -> 7
-                        else -> 0
-                    }
-                    moves.add(GridMove(current, rotation))
-                    break@directionCheck
-                }
-            }
-        }
-        solution.reverse()
-        return moves
-    }
-
-    private val layout: Array<IntArray>
-        get() {
-            val grid = Array(5) { IntArray(5) }
-            for (row in 0..4) {
-                for (column in 0..4) {
-                    val space = this.grid.find { it.coords == Point(row, column) }
-                    grid[column][row] = if (space?.framePos != null) 0 else 1
-                }
-            }
-            return grid
-        }
-
-    private val directions = EnumFacing.HORIZONTALS.reversed()
-
-    /**
-     * This code was modified into returning an ArrayList and was taken under CC BY-SA 4.0
-     *
-     * @link https://stackoverflow.com/a/55271133
-     * @author ofekp
-     */
-    private fun solve(
-        grid: Array<IntArray>,
-        start: Point,
-        end: Point
-    ): ArrayList<Point> {
-        val queue = LinkedList<Point>()
-        val gridCopy = Array(
-            grid.size
-        ) { arrayOfNulls<Point>(grid[0].size) }
-        queue.addLast(start)
-        gridCopy[start.y][start.x] = start
-        while (queue.size != 0) {
-            val currPos = queue.pollFirst()!!
-            // traverse adjacent nodes while sliding on the ice
-            for (dir in directions) {
-                val nextPos = move(grid, gridCopy, currPos, dir)
-                if (nextPos != null) {
-                    queue.addLast(nextPos)
-                    gridCopy[nextPos.y][nextPos.x] = Point(
-                        currPos.x, currPos.y
-                    )
-                    if (end == Point(nextPos.x, nextPos.y)) {
-                        val steps = ArrayList<Point>()
-                        // we found the end point
-                        var tmp = currPos // if we start from nextPos we will count one too many edges
-                        var count = 0
-                        steps.add(nextPos)
-                        steps.add(currPos)
-                        while (tmp !== start) {
-                            count++
-                            tmp = gridCopy[tmp.y][tmp.x]!!
-                            steps.add(tmp)
+                if (!mc.thePlayer.isSneaking) {
+                    val frame = mc.objectMouseOver.entityHit as EntityItemFrame
+                    val x = 278 - frame.hangingPosition.z
+                    val y = 124 - frame.hangingPosition.y
+                    if (x in 0..4 && y in 0..4) {
+                        val clicks = neededRotations[Point(x, y)] ?: return
+                        if (clicks == 0) {
+                            event.isCanceled = true
+                            return
                         }
-                        return steps
+                        neededRotations[Point(x, y)] = clicks - 1
+                        if (config.autoCompleteArrowAlign) {
+                            if (clicks > 1) {
+                                rightClickMouse.isAccessible = true
+                                rightClickMouse.invoke(mc)
+                            }
+                        }
                     }
                 }
             }
         }
-        return arrayListOf()
-    }
-
-    /**
-     * This code was modified to fit Minecraft and was taken under CC BY-SA 4.0
-     *
-     * @link https://stackoverflow.com/a/55271133
-     * @author ofekp
-     */
-    private fun move(
-        grid: Array<IntArray>,
-        gridCopy: Array<Array<Point?>>,
-        currPos: Point,
-        dir: EnumFacing
-    ): Point? {
-        val x = currPos.x
-        val y = currPos.y
-        val diffX = dir.directionVec.x
-        val diffY = dir.directionVec.z
-        val i =
-            if (x + diffX >= 0 && x + diffX < grid[0].size && y + diffY >= 0 && y + diffY < grid.size && grid[y + diffY][x + diffX] != 1) {
-                1
-            } else 0
-        return if (gridCopy[y + i * diffY][x + i * diffX] != null) {
-            // we've already seen this point
-            null
-        } else Point(x + i * diffX, y + i * diffY)
     }
 
     private fun isF7(): Boolean {
@@ -259,6 +67,82 @@ class ArrowAlign {
                 return dungeonFloor == "F7"
             }
         }
-        return false
+        return config.forceSkyblock
+    }
+
+    private fun calculate() {
+        val frames = mc.theWorld.getEntities(EntityItemFrame::class.java) {
+            it != null && area.contains(it.position) && it.displayedItem != null
+        }
+        if (frames.isNotEmpty()) {
+            val solutions = HashMap<Point, Int>()
+            val maze = Array(5) { IntArray(5) }
+            val queue = LinkedList<Point>()
+            val visited = Array(5) { BooleanArray(5) }
+            neededRotations.clear()
+            for ((i, pos) in area.withIndex()) {
+                val x = i % 5
+                val y = i / 5
+                val frame = frames.find { it.position == pos }
+                if (frame != null) {
+                    // 0 = null, 1 = arrow, 2 = end, 3 = start
+                    maze[x][y] = with(frame.displayedItem) {
+                        when (item) {
+                            Items.arrow -> 1
+                            Item.getItemFromBlock(Blocks.wool) -> {
+                                when (itemDamage) {
+                                    5 -> 3
+                                    14 -> 2
+                                    else -> 0
+                                }
+                            }
+                            else -> 0
+                        }
+                    }
+                    if (maze[x][y] == 1) {
+                        neededRotations[Point(x, y)] = frame.rotation
+                    } else if (maze[x][y] == 3) {
+                        queue.add(Point(x, y))
+                    }
+                }
+            }
+            while (queue.size != 0) {
+                val s = queue.poll()
+                val directions = arrayOf(intArrayOf(1, 0), intArrayOf(0, 1), intArrayOf(-1, 0), intArrayOf(0, -1))
+                for (i in 3 downTo 0) {
+                    val x = (s.x + directions[i][0])
+                    val y = (s.y + directions[i][1])
+                    if (x in 0..4 && y in 0..4) {
+                        val rotations = i * 2 + 1
+                        if (solutions[Point(x, y)] == null && maze[x][y] in 1..2) {
+                            queue.add(Point(x, y))
+                            solutions[s] = rotations
+                            if (!visited[s.x][s.y]) {
+                                var neededRotation = neededRotations[s] ?: continue
+                                neededRotation = rotations - neededRotation
+                                if (neededRotation < 0) neededRotation += 8
+                                neededRotations[s] = neededRotation
+                                visited[s.x][s.y] = true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+        private val area =
+            BlockPos.getAllInBox(BlockPos(197, 125, 278), BlockPos(197, 121, 274)).toList().sortedWith { a, b ->
+                if (a.y == b.y) {
+                    return@sortedWith b.z - a.z
+                }
+                if (a.y < b.y) return@sortedWith 1
+                if (a.y > b.y) return@sortedWith -1
+                return@sortedWith 0
+            }
+        private var ticks = 0
+        private val neededRotations = HashMap<Point, Int>()
+        private val rightClickMouse: Method = Minecraft::class.java.getDeclaredMethod("func_147121_ag")
     }
 }

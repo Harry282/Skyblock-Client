@@ -1,11 +1,8 @@
 package skyblockclient.utils
 
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.inventory.Slot
-import org.lwjgl.opengl.GL11
 import skyblockclient.SkyblockClient.Companion.mc
 import kotlin.math.round
 

@@ -41,11 +41,20 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.SWITCH,
         name = "Block Arrow Align Clicks",
-        description = "Experimental!",
+        description = "Shift to override.",
         category = "Dungeons",
         subcategory = "General"
     )
     var arrowAlign = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "One Click Arrow Align",
+        description = "Complete each item frame in one click. Shift to override.",
+        category = "Dungeons",
+        subcategory = "General"
+    )
+    var autoCompleteArrowAlign = false
 
     @Property(
         type = PropertyType.SWITCH,
@@ -156,15 +165,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         subcategory = "Auto"
     )
     var terminalColor = true
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Custom Clicks",
-        description = "Use Skyblock Client's click handling.",
-        category = "Terminals",
-        subcategory = "Clicks"
-    )
-    var terminalCustomClicks = true
 
     @Property(
         type = PropertyType.SWITCH,
@@ -316,6 +316,15 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         subcategory = "Dungeon ESP"
     )
     var espStarMobs = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Remove Starred Nametags",
+        description = "Will likely improve performance",
+        category = "ESP",
+        subcategory = "Dungeon ESP"
+    )
+    var removeStarMobsNametag = false
 
     @Property(
         type = PropertyType.COLOR,
@@ -591,6 +600,16 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
             "Disable Optifine fast render and Patcher entity culling."
         )
 
+        addDependency("autoCompleteArrowAlign", "arrowAlign")
+        listOf(
+            "terminalMaze",
+            "terminalNumbers",
+            "terminalCorrectAll",
+            "terminalLetter",
+            "terminalColor"
+        ).forEach(Consumer { s: String ->
+            addDependency(s, "terminalAutoSeparate")
+        })
         listOf(
             "espColorUnstable",
             "espColorYoung",
@@ -601,28 +620,9 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         ).forEach(Consumer { s: String ->
             addDependency(s, "espMiniboss")
         })
-
+        addDependency("removeStarMobsNametag", "espStarMobs")
         addDependency("overlayColorSalvageable", "overlaySalvageable")
-
         addDependency("overlayColorTopSalvageable", "overlaySalvageable")
-
-        listOf(
-            "terminalMaze",
-            "terminalNumbers",
-            "terminalCorrectAll",
-            "terminalLetter",
-            "terminalColor"
-        ).forEach(Consumer { s: String ->
-            addDependency(s, "terminalAutoSeparate")
-        })
-
-        listOf(
-            "terminalPingless",
-            "terminalBlockClicks",
-            "terminalMiddleClick"
-        ).forEach(Consumer { s: String ->
-            addDependency(s, "terminalCustomClicks")
-        })
     }
 
     fun init() {

@@ -138,7 +138,8 @@ class Terminals {
 
     @SubscribeEvent
     fun onSlotClick(event: SlotClickEvent) {
-        if (!inDungeons || !config.terminalCustomClicks || clickQueue.isEmpty() || event.slot == null || !event.slot!!.hasStack) return
+        if (!inDungeons || clickQueue.isEmpty() || event.slot == null || !event.slot!!.hasStack) return
+        if (!config.terminalPingless && !config.terminalBlockClicks && !config.terminalMiddleClick) return
         event.isCanceled = true
         if (config.terminalBlockClicks) {
             when (currentTerminal) {

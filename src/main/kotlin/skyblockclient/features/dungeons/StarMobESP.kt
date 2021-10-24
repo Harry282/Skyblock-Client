@@ -53,7 +53,13 @@ class StarMobESP {
                         } else if (e is EntityEnderman && config.espFels) {
                             return
                         }
-                        if (starMobs.add(e)) checkedArmorStands.add(event.entity)
+                        if (starMobs.add(e)) {
+                            if (config.removeStarMobsNametag) {
+                                mc.theWorld.removeEntity(event.entity)
+                            } else {
+                                checkedArmorStands.add(event.entity)
+                            }
+                        }
                     }
                 }
             }
