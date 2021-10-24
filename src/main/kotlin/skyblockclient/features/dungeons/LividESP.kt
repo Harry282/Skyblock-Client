@@ -24,6 +24,7 @@ class LividESP {
         }
     }
 
+    @SubscribeEvent
     fun onRender(event: RenderWorldLastEvent) {
         if (!inDungeons || !config.lividFinder || !foundLivid || config.espType == 0) return
         RenderUtils.drawEntityBox(livid, config.espColorStarMobs, config.espType == 2, event.partialTicks)
