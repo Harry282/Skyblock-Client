@@ -11,7 +11,7 @@ import skyblockclient.events.RightClickEvent;
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
     @Inject(method = "rightClickMouse", at = @At("HEAD"), cancellable = true)
-    private void onReceivePacket(CallbackInfo ci) {
+    private void onRightClick(CallbackInfo ci) {
         if (MinecraftForge.EVENT_BUS.post(new RightClickEvent())) ci.cancel();
     }
 }
