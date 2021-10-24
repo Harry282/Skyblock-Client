@@ -16,14 +16,14 @@ class HiddenMobs {
     @SubscribeEvent
     fun onRenderEntity(event: RenderLivingEntityEvent) {
         if (!inDungeons) return
-        if (config.showFels && event.entity is EntityEnderman && event.entity.name == "Dinnerbone") {
-            event.entity.isInvisible = false
+        if (event.entity is EntityEnderman && event.entity.name == "Dinnerbone") {
+            if (config.showFels) event.entity.isInvisible = false
             if (config.espFels && config.espType == 0) {
                 OutlineUtils.outlineESP(event, config.espColorFels)
             }
         } else if (event.entity is EntityPlayer) {
-            if (config.showShadowAssassin && event.entity.name.contains("Shadow Assassin")) {
-                event.entity.isInvisible = false
+            if (event.entity.name.contains("Shadow Assassin")) {
+                if (config.showShadowAssassin) event.entity.isInvisible = false
                 if (config.espShadowAssassin && config.espType == 0) {
                     OutlineUtils.outlineESP(event, config.espColorShadowAssassin)
                 }
@@ -45,9 +45,7 @@ class HiddenMobs {
     fun onRenderWorld(event: RenderWorldLastEvent) {
         if (config.espType == 0) return
         for (entity in mc.theWorld.loadedEntityList) {
-            if (entity is EntityEnderman && entity.getName() == "Dinnerbone" &&
-                config.espFels
-            ) {
+            if (entity is EntityEnderman && entity.getName() == "Dinnerbone" && config.espFels) {
                 RenderUtils.drawEntityBox(
                     entity,
                     config.espColorFels,
