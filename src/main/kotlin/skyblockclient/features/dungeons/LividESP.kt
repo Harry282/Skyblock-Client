@@ -59,7 +59,7 @@ class LividESP {
                     return dungeonFloor == "M5" || dungeonFloor == "F5"
                 }
             }
-            return false
+            return config.forceSkyblock
         }
 
     private val closestLivid: Entity?

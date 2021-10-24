@@ -28,7 +28,7 @@ class F7P3Ghost {
                     return dungeonFloor == "F7"
                 }
             }
-            return false
+            return config.forceSkyblock
         }
 
     companion object {
