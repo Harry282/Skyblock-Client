@@ -52,9 +52,7 @@ class HiddenMobs {
                     config.espType == 2,
                     event.partialTicks
                 )
-            } else if (entity is EntityPlayer && config.showShadowAssassin &&
-                entity.getName().contains("Shadow Assassin") && config.espShadowAssassin
-            ) {
+            } else if (entity is EntityPlayer && entity.getName().contains("Shadow Assassin") && config.espShadowAssassin) {
                 RenderUtils.drawEntityBox(
                     entity,
                     config.espColorShadowAssassin,
