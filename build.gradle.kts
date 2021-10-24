@@ -20,6 +20,9 @@ minecraft {
     runDir = "run"
     mappings = "stable_22"
     makeObfSourceJar = false
+    clientJvmArgs + arrayOf(
+        "-Dfml.coreMods.load=skyblockclient.forge.FMLLoadingPlugin"
+    )
     clientRunArgs + arrayOf(
         "--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker",
         "--mixin mixins.skyblockclient.json"
@@ -42,8 +45,8 @@ val packageLib: Configuration by configurations.creating {
 dependencies {
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
-    packageLib("gg.essential:loader-launchwrapper:1.1.1")
-    implementation("gg.essential:essential-1.8.9-forge:1486")
+    packageLib("gg.essential:loader-launchwrapper:1.1.2")
+    implementation("gg.essential:essential-1.8.9-forge:1541")
 }
 
 mixin {
