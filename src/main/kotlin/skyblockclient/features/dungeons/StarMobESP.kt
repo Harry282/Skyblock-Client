@@ -3,6 +3,7 @@ package skyblockclient.features.dungeons
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.boss.EntityWither
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.monster.EntityEnderman
 import net.minecraftforge.client.event.RenderLivingEvent
@@ -36,10 +37,10 @@ class StarMobESP {
                 ) { entity: Entity? -> entity !is EntityArmorStand }
                 if (possibleEntities.isNotEmpty()) {
                     for (e in possibleEntities) {
-                        if (e == mc.thePlayer) {
-                            return
-                        } else if (e is EntityOtherPlayerMP) {
-                            if (e.isInvisible() || e.getUniqueID().version() != 2) return
+                        if (e is EntityWither) continue
+                        if (e == mc.thePlayer) continue
+                        if (e is EntityOtherPlayerMP) {
+                            if (e.isInvisible() || e.getUniqueID().version() != 2) continue
                             if (config.espMiniboss) {
                                 if (event.entity.name.contains(" Adventurer") && e.getName() == "Lost Adventurer") {
                                     checkedArmorStands.add(event.entity)
