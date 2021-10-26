@@ -77,7 +77,8 @@ class SkyblockClient {
 
     @Mod.EventHandler
     fun postInit(event: FMLLoadCompleteEvent) {
-        if (UpdateChecker.hasUpdate() == 1) {
+        val response = UpdateChecker.hasUpdate()
+        if (response == 1 || response == -2) {
             EssentialAPI.getNotifications().push("Skyblock Client", "New release available on Github.")
         }
     }

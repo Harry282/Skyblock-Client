@@ -12,24 +12,23 @@ import skyblockclient.utils.ScoreboardUtils
 class F7P3Ghost {
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
-        if (!config.f7p3Ghost || !inDungeons || !isF7) return
+        if (!config.f7p3Ghost || !inDungeons || !isF7()) return
         val message = StringUtils.stripControlCodes(event.message.unformattedText)
         if (message == "[BOSS] Necron: You caused me many troubles, your journey ends here adventurers!") {
             BLOCK_POS_LIST.forEach { mc.theWorld.setBlockToAir(it) }
         }
     }
 
-    private val isF7: Boolean
-        get() {
-            for (s in ScoreboardUtils.sidebarLines) {
-                val line = ScoreboardUtils.cleanSB(s)
-                if (line.contains("The Catacombs (")) {
-                    val dungeonFloor = line.substringAfter("(").substringBefore(")")
-                    return dungeonFloor == "F7"
-                }
+    private fun isF7(): Boolean {
+        for (s in ScoreboardUtils.sidebarLines) {
+            val line = ScoreboardUtils.cleanSB(s)
+            if (line.contains("The Catacombs (")) {
+                val dungeonFloor = line.substringAfter("(").substringBefore(")")
+                return dungeonFloor == "F7"
             }
-            return config.forceSkyblock
         }
+        return config.forceSkyblock
+    }
 
     companion object {
         private val BLOCK_POS_LIST = listOf(
