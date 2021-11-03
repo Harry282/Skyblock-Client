@@ -23,9 +23,7 @@ class ArrowAlign {
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (!config.arrowAlign || !inDungeons || !isF7() || event.phase != TickEvent.Phase.START) return
         if (ticks % 20 == 0) {
-            if (mc.thePlayer.getDistanceSq(BlockPos(197, 122, 276)) <= 20 * 20) {
-                calculate()
-            }
+            if (mc.thePlayer.getDistanceSq(BlockPos(197, 122, 276)) <= 20 * 20) calculate()
             ticks = 0
         }
         ticks++
@@ -36,23 +34,20 @@ class ArrowAlign {
         if (!config.arrowAlign || !isF7() || mc.objectMouseOver == null) return
         if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
             if (mc.objectMouseOver.entityHit is EntityItemFrame) {
-                if (!mc.thePlayer.isSneaking) {
-                    val frame = mc.objectMouseOver.entityHit as EntityItemFrame
-                    val x = 278 - frame.hangingPosition.z
-                    val y = 124 - frame.hangingPosition.y
-                    if (x in 0..4 && y in 0..4) {
-                        val clicks = neededRotations[Point(x, y)] ?: return
-                        if (clicks == 0) {
-                            event.isCanceled = true
-                            return
-                        }
-                        neededRotations[Point(x, y)] = clicks - 1
-                        if (config.autoCompleteArrowAlign) {
-                            if (clicks > 1) {
-                                rightClickMouse.isAccessible = true
-                                rightClickMouse.invoke(mc)
-                            }
-                        }
+                if (mc.thePlayer.isSneaking && config.arrowAlignSneakOverride) return
+                val frame = mc.objectMouseOver.entityHit as EntityItemFrame
+                val x = 278 - frame.hangingPosition.z
+                val y = 124 - frame.hangingPosition.y
+                if (x in 0..4 && y in 0..4) {
+                    val clicks = neededRotations[Point(x, y)] ?: return
+                    if (clicks == 0) {
+                        event.isCanceled = true
+                        return
+                    }
+                    neededRotations[Point(x, y)] = clicks - 1
+                    if (config.autoCompleteArrowAlign && clicks > 1) {
+                        rightClickMouse.isAccessible = true
+                        rightClickMouse.invoke(mc)
                     }
                 }
             }
@@ -83,27 +78,22 @@ class ArrowAlign {
             for ((i, pos) in area.withIndex()) {
                 val x = i % 5
                 val y = i / 5
-                val frame = frames.find { it.position == pos }
-                if (frame != null) {
-                    // 0 = null, 1 = arrow, 2 = end, 3 = start
-                    maze[x][y] = with(frame.displayedItem) {
-                        when (item) {
-                            Items.arrow -> 1
-                            Item.getItemFromBlock(Blocks.wool) -> {
-                                when (itemDamage) {
-                                    5 -> 3
-                                    14 -> 2
-                                    else -> 0
-                                }
-                            }
+                val frame = frames.find { it.position == pos } ?: continue
+                // 0 = null, 1 = arrow, 2 = end, 3 = start
+                maze[x][y] = when (frame.displayedItem.item) {
+                    Items.arrow -> 1
+                    Item.getItemFromBlock(Blocks.wool) -> {
+                        when (frame.displayedItem.itemDamage) {
+                            5 -> 3
+                            14 -> 2
                             else -> 0
                         }
                     }
-                    if (maze[x][y] == 1) {
-                        neededRotations[Point(x, y)] = frame.rotation
-                    } else if (maze[x][y] == 3) {
-                        queue.add(Point(x, y))
-                    }
+                    else -> 0
+                }
+                when (maze[x][y]) {
+                    1 -> neededRotations[Point(x, y)] = frame.rotation
+                    3 -> queue.add(Point(x, y))
                 }
             }
             while (queue.size != 0) {
@@ -134,9 +124,7 @@ class ArrowAlign {
     companion object {
         private val area =
             BlockPos.getAllInBox(BlockPos(197, 125, 278), BlockPos(197, 121, 274)).toList().sortedWith { a, b ->
-                if (a.y == b.y) {
-                    return@sortedWith b.z - a.z
-                }
+                if (a.y == b.y) return@sortedWith b.z - a.z
                 if (a.y < b.y) return@sortedWith 1
                 if (a.y > b.y) return@sortedWith -1
                 return@sortedWith 0
