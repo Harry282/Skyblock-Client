@@ -21,7 +21,7 @@ import java.util.*
 class ArrowAlign {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (!config.arrowAlign || !inDungeons || !isF7() || event.phase != TickEvent.Phase.START) return
+        if (!config.arrowAlign && !config.autoCompleteArrowAlign || !inDungeons || !isF7() || event.phase != TickEvent.Phase.START) return
         if (ticks % 20 == 0) {
             if (mc.thePlayer.getDistanceSq(BlockPos(197, 122, 276)) <= 20 * 20) calculate()
             ticks = 0
@@ -31,7 +31,7 @@ class ArrowAlign {
 
     @SubscribeEvent
     fun onRightClick(event: RightClickEvent) {
-        if (!config.arrowAlign || !isF7() || mc.objectMouseOver == null) return
+        if (!config.arrowAlign && !config.autoCompleteArrowAlign || !isF7() || mc.objectMouseOver == null) return
         if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
             if (mc.objectMouseOver.entityHit is EntityItemFrame) {
                 if (mc.thePlayer.isSneaking && config.arrowAlignSneakOverride) return
