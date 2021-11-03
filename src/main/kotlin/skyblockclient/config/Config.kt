@@ -40,28 +40,36 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
-        name = "Block Arrow Align Clicks",
-        description = "Shift to override.",
+        name = "Block Incorrect Arrow Align Clicks",
         category = "Dungeons",
-        subcategory = "General"
+        subcategory = "F7"
     )
     var arrowAlign = false
 
     @Property(
         type = PropertyType.SWITCH,
         name = "One Click Arrow Align",
-        description = "Complete each item frame in one click. Shift to override.",
+        description = "Complete each item frame in one click.",
         category = "Dungeons",
-        subcategory = "General"
+        subcategory = "F7"
     )
     var autoCompleteArrowAlign = false
 
     @Property(
         type = PropertyType.SWITCH,
-        name = "F7 Ghost Block",
-        description = "Automatically creates ghost blocks to go to P3 from P2 on F7.",
+        name = "Arrow Align Sneak Override",
+        description = "Hold crouch to override arrow align solver.",
         category = "Dungeons",
-        subcategory = "General"
+        subcategory = "F7"
+    )
+    var arrowAlignSneakOverride = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "F7 Ghost Block",
+        description = "Automatically creates ghost blocks to go to P3 from P2 on F7. Might not work with boss messages hidden.",
+        category = "Dungeons",
+        subcategory = "F7"
     )
     var f7p3Ghost = false
 
@@ -264,7 +272,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         name = "ESP Type",
         category = "ESP",
         subcategory = "Dungeon ESP",
-        options = ["Outline", "Box", "Outlined Box"]
+        options = ["Outline", "Box"]
     )
     var espType = 0
 
@@ -275,7 +283,25 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         subcategory = "Dungeon ESP",
         maxF = 10f
     )
-    var espOutlineWidth = 3f
+    var espOutlineWidth = 1f
+
+    @Property(
+        type = PropertyType.PERCENT_SLIDER,
+        name = "Box Outline Opacity",
+        category = "ESP",
+        subcategory = "Dungeon ESP",
+        maxF = 10f
+    )
+    var espBoxOutlineOpacity = 0.95f
+
+    @Property(
+        type = PropertyType.PERCENT_SLIDER,
+        name = "Box Opacity",
+        category = "ESP",
+        subcategory = "Dungeon ESP",
+        maxF = 10f
+    )
+    var espBoxOpacity = 0.3f
 
     @Property(
         type = PropertyType.SWITCH,
@@ -554,6 +580,62 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var gemstoneESPTime = 250
 
     @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Amber",
+        category = "Misc",
+        subcategory = "Mining",
+    )
+    var gemstoneAmber = true
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Amethyst",
+        category = "Misc",
+        subcategory = "Mining",
+    )
+    var gemstoneAmethyst = true
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Jade",
+        category = "Misc",
+        subcategory = "Mining",
+    )
+    var gemstoneJade = true
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Jasper",
+        category = "Misc",
+        subcategory = "Mining",
+    )
+    var gemstoneJasper = true
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Ruby",
+        category = "Misc",
+        subcategory = "Mining",
+    )
+    var gemstoneRuby = true
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Sapphire",
+        category = "Misc",
+        subcategory = "Mining",
+    )
+    var gemstoneSapphire = true
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Topaz",
+        category = "Misc",
+        subcategory = "Mining",
+    )
+    var gemstoneTopaz = true
+
+    @Property(
         type = PropertyType.SWITCH,
         name = "Right Click Ghost Block",
         description = "Right click with a Stonk to create ghost block.",
@@ -623,6 +705,19 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         addDependency("removeStarMobsNametag", "espStarMobs")
         addDependency("overlayColorSalvageable", "overlaySalvageable")
         addDependency("overlayColorTopSalvageable", "overlaySalvageable")
+        listOf(
+            "gemstoneESPRadius",
+            "gemstoneESPTime",
+            "gemstoneAmber",
+            "gemstoneAmethyst",
+            "gemstoneJade",
+            "gemstoneJasper",
+            "gemstoneRuby",
+            "gemstoneSapphire",
+            "gemstoneTopaz"
+        ).forEach(Consumer { s: String ->
+            addDependency(s, "gemstoneESP")
+        })
     }
 
     fun init() {

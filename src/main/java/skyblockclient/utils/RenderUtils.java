@@ -16,6 +16,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
+import skyblockclient.SkyblockClient;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -184,11 +185,11 @@ public class RenderUtils {
         if (outline) {
             glLineWidth(1F);
             enableGlCap(GL_LINE_SMOOTH);
-            glColor(color.getRed(), color.getGreen(), color.getBlue(), 95);
+            glColor(color.getRed(), color.getGreen(), color.getBlue(), (int) (SkyblockClient.Companion.getConfig().getEspBoxOutlineOpacity() * 100));
             drawSelectionBoundingBox(axisAlignedBB);
         }
 
-        glColor(color.getRed(), color.getGreen(), color.getBlue(), outline ? 26 : 35);
+        glColor(color.getRed(), color.getGreen(), color.getBlue(), (int) (SkyblockClient.Companion.getConfig().getEspBoxOpacity() * 100));
         drawFilledBox(axisAlignedBB);
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glDepthMask(true);
