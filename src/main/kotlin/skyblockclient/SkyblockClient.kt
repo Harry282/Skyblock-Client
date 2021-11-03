@@ -23,7 +23,9 @@ import skyblockclient.features.*
 import skyblockclient.features.dungeons.*
 import skyblockclient.utils.ScoreboardUtils
 import skyblockclient.utils.UpdateChecker
+import java.awt.Desktop
 import java.io.File
+import java.net.URI
 
 @Mod(
     modid = SkyblockClient.MOD_ID,
@@ -66,10 +68,6 @@ class SkyblockClient {
         MinecraftForge.EVENT_BUS.register(StarMobESP())
         MinecraftForge.EVENT_BUS.register(Terminals())
 
-        keyBinds[0] = KeyBinding("Open Settings", Keyboard.KEY_RSHIFT, "Skyblock Client")
-        keyBinds[1] = KeyBinding("Bone Macro", Keyboard.KEY_B, "Skyblock Client")
-        keyBinds[2] = KeyBinding("Ghost Block", Keyboard.KEY_G, "Skyblock Client")
-
         for (keyBind in keyBinds) {
             ClientRegistry.registerKeyBinding(keyBind)
         }
@@ -79,7 +77,14 @@ class SkyblockClient {
     fun postInit(event: FMLLoadCompleteEvent) {
         val response = UpdateChecker.hasUpdate()
         if (response == 1 || response == -2) {
-            EssentialAPI.getNotifications().push("Skyblock Client", "New release available on Github.")
+            EssentialAPI.getNotifications()
+                .push("Skyblock Client", "New release available on Github. Click to open download link.", 10f) {
+                    try {
+                        Desktop.getDesktop().browse(URI("https://github.com/Harry282/Skyblock-Client/releases"))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
         }
     }
 
@@ -93,12 +98,8 @@ class SkyblockClient {
         }
         if (tickCount % 20 == 0) {
             if (mc.thePlayer != null) {
-                isOnHypixel = mc.runCatching {
-                    theWorld != null && !isSingleplayer && (thePlayer?.clientBrand?.lowercase()?.contains("hypixel")
-                        ?: currentServerData?.serverIP?.lowercase()?.contains("hypixel") ?: false)
-                }.onFailure { it.printStackTrace() }.getOrDefault(false)
-
-                inSkyblock = config.forceSkyblock || isOnHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
+                inSkyblock = config.forceSkyblock || EssentialAPI.getMinecraftUtil()
+                    .isHypixel() && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
                     ?.let { ScoreboardUtils.cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
 
                 inDungeons = config.forceSkyblock || inSkyblock && ScoreboardUtils.sidebarLines.any {
@@ -119,9 +120,7 @@ class SkyblockClient {
 
     @SubscribeEvent
     fun onKey(event: KeyInputEvent?) {
-        if (keyBinds[0]!!.isPressed) {
-            display = config.gui()
-        }
+        if (keyBinds[0].isPressed) display = config.gui()
     }
 
     companion object {
@@ -129,13 +128,16 @@ class SkyblockClient {
         const val MOD_NAME = "Scrollable Tooltips"
         const val MOD_VERSION = "1.4.0"
         const val SB_CLIENT_VERSION = "0.1.2-pre4"
-        var inDungeons = false
         var inSkyblock = false
-        var isOnHypixel = false
-        var mc = Minecraft.getMinecraft()!!
+        var inDungeons = false
+        var mc: Minecraft = Minecraft.getMinecraft()
         var config = Config
         var display: GuiScreen? = null
-        var keyBinds = arrayOfNulls<KeyBinding>(3)
+        var keyBinds = arrayOf(
+            KeyBinding("Open Settings", Keyboard.KEY_RSHIFT, "Skyblock Client"),
+            KeyBinding("Bone Macro", Keyboard.KEY_B, "Skyblock Client"),
+            KeyBinding("Ghost Block", Keyboard.KEY_G, "Skyblock Client")
+        )
         var tickCount = 0
     }
 }
