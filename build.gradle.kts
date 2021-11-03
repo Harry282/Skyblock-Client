@@ -12,7 +12,7 @@ plugins {
     java
 }
 
-version = "0.1.2-pre4"
+version = "0.1.2-pre5"
 group = "skyblockclient"
 
 minecraft {

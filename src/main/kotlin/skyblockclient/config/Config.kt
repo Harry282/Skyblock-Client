@@ -682,7 +682,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
             "Disable Optifine fast render and Patcher entity culling."
         )
 
-        addDependency("autoCompleteArrowAlign", "arrowAlign")
         listOf(
             "terminalMaze",
             "terminalNumbers",
