@@ -10,11 +10,9 @@ import net.minecraft.item.EnumDyeColor
 import net.minecraft.item.Item
 import net.minecraft.util.StringUtils
 import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent
-import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.event.entity.player.ItemTooltipEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.mc
@@ -25,72 +23,66 @@ import skyblockclient.utils.RenderUtilsKT.renderText
 class Terminals {
     @SubscribeEvent
     fun onGuiDraw(event: BackgroundDrawnEvent) {
-        if (!inDungeons) return
-        if (event.gui is GuiChest) {
-            val container = (event.gui as GuiChest).inventorySlots
-            if (container is ContainerChest) {
-                val invSlots = container.inventorySlots
-                if (currentTerminal == TerminalType.NONE) {
-                    val chestName = container.lowerChestInventory.displayName.unformattedText
-                    if (chestName == "Navigate the maze!") {
-                        currentTerminal = TerminalType.MAZE
-                    } else if (chestName == "Click in order!") {
-                        currentTerminal = TerminalType.NUMBERS
-                    } else if (chestName == "Correct all the panes!") {
-                        currentTerminal = TerminalType.CORRECTALL
-                    } else if (chestName.startsWith("What starts with: '")) {
-                        currentTerminal = TerminalType.LETTER
-                    } else if (chestName.startsWith("Select all the")) {
-                        currentTerminal = TerminalType.COLOR
+        if (!inDungeons || event.gui !is GuiChest) return
+        val container = (event.gui as GuiChest).inventorySlots
+        if (container is ContainerChest) {
+            if (currentTerminal == TerminalType.NONE) {
+                val chestName = container.lowerChestInventory.displayName.unformattedText
+                if (chestName == "Navigate the maze!") {
+                    currentTerminal = TerminalType.MAZE
+                } else if (chestName == "Click in order!") {
+                    currentTerminal = TerminalType.NUMBERS
+                } else if (chestName == "Correct all the panes!") {
+                    currentTerminal = TerminalType.CORRECTALL
+                } else if (chestName.startsWith("What starts with: '")) {
+                    currentTerminal = TerminalType.LETTER
+                } else if (chestName.startsWith("Select all the")) {
+                    currentTerminal = TerminalType.COLOR
+                }
+                shouldClick = true
+            }
+            if (currentTerminal != TerminalType.NONE) {
+                if (clickQueue.isEmpty() || recalculate) {
+                    recalculate = getClicks(container)
+                } else {
+                    val invSlots = container.inventorySlots
+                    shouldClick = when (currentTerminal) {
+                        TerminalType.MAZE, TerminalType.NUMBERS, TerminalType.CORRECTALL -> clickQueue.removeIf {
+                            invSlots[it.slotNumber].hasStack && invSlots[it.slotNumber].stack.itemDamage == 5
+                        }
+                        TerminalType.LETTER, TerminalType.COLOR -> clickQueue.removeIf {
+                            invSlots[it.slotNumber].hasStack && invSlots[it.slotNumber].stack.isItemEnchanted
+                        }
+                        TerminalType.NONE -> false
+                    } || shouldClick
+                    if (clickQueue.isNotEmpty() && config.terminalAuto && (shouldClick || config.terminalPingless) &&
+                        System.currentTimeMillis() - lastClickTime > config.terminalClickDelay
+                    ) {
+                        if (!config.terminalAutoSeparate) {
+                            clickSlot(clickQueue[0])
+                        } else when (currentTerminal) {
+                            TerminalType.MAZE -> if (config.terminalMaze) clickSlot(clickQueue[0])
+                            TerminalType.NUMBERS -> if (config.terminalNumbers) clickSlot(clickQueue[0])
+                            TerminalType.CORRECTALL -> if (config.terminalCorrectAll) clickSlot(clickQueue[0])
+                            TerminalType.LETTER -> if (config.terminalLetter) clickSlot(clickQueue[0])
+                            TerminalType.COLOR -> if (config.terminalColor) clickSlot(clickQueue[0])
+                            TerminalType.NONE -> return
+                        }
+                        shouldClick = false
                     }
                 }
-                if (currentTerminal != TerminalType.NONE) {
-                    if (clickQueue.isEmpty() || recalculate) {
-                        recalculate = getClicks(container)
-                    } else {
-                        when (currentTerminal) {
-                            TerminalType.MAZE, TerminalType.NUMBERS, TerminalType.CORRECTALL -> clickQueue.removeIf { slot: Slot? ->
-                                invSlots[slot!!.slotNumber].hasStack &&
-                                        invSlots[slot.slotNumber].stack.itemDamage == 5
-                            }
-                            TerminalType.LETTER, TerminalType.COLOR -> clickQueue.removeIf { slot: Slot? ->
-                                invSlots[slot!!.slotNumber].hasStack &&
-                                        invSlots[slot.slotNumber].stack.isItemEnchanted
-                            }
-                            TerminalType.NONE ->
-                                return
-                        }
-                    }
-                    if (clickQueue.isNotEmpty()) {
-                        if (config.terminalAuto && System.currentTimeMillis() - lastClickTime > config.terminalClickDelay) {
-                            when (currentTerminal) {
-                                TerminalType.MAZE -> if (config.terminalMaze) clickSlot(
-                                    clickQueue[0]
-                                )
-                                TerminalType.NUMBERS -> if (config.terminalNumbers) clickSlot(
-                                    clickQueue[0]
-                                )
-                                TerminalType.CORRECTALL -> if (config.terminalCorrectAll) clickSlot(
-                                    clickQueue[0]
-                                )
-                                TerminalType.LETTER -> if (config.terminalLetter) clickSlot(
-                                    clickQueue[0]
-                                )
-                                TerminalType.COLOR -> if (config.terminalColor) clickSlot(
-                                    clickQueue[0]
-                                )
-                                else -> return
-                            }
-                        }
-                    }
-                }
+            }
+            if (config.showTerminalInfo) {
+                renderText(mc, "Terminal: " + currentTerminal.name, 20, 20, 1.0)
+                renderText(mc, "Clicks left: " + clickQueue.size, 20, 40, 1.0)
+                renderText(mc, "Window ID: $windowId, Pingless Clicks: $windowClicks", 20, 60, 1.0)
             }
         }
     }
 
     @SubscribeEvent
     fun onDrawSlot(event: DrawSlotEvent.Pre) {
-        if (!inDungeons || event.gui !is GuiChest) return
+        if (!inDungeons || event.gui !is GuiChest || event.slot.stack == null) return
         val x = event.slot.xDisplayPosition
         val y = event.slot.yDisplayPosition
         when (currentTerminal) {
@@ -105,7 +97,7 @@ class Terminals {
                     Gui.drawRect(x, y, x + 16, y + 16, config.terminalColorNumberThird.rgb)
                 }
                 if (event.slot.inventory != mc.thePlayer.inventory) {
-                    val item = event.slot.stack ?: return
+                    val item = event.slot.stack
                     if (item.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && item.itemDamage == 14) {
                         GlStateManager.pushMatrix()
                         GlStateManager.disableLighting()
@@ -138,31 +130,28 @@ class Terminals {
 
     @SubscribeEvent
     fun onSlotClick(event: SlotClickEvent) {
-        if (!inDungeons || clickQueue.isEmpty() || event.slot == null || !event.slot!!.hasStack) return
-        if (!config.terminalPingless && !config.terminalBlockClicks && !config.terminalMiddleClick) return
+        if (!inDungeons || clickQueue.isEmpty() || event.slot == null || !event.slot!!.hasStack ||
+            (!config.terminalPingless && !config.terminalBlockClicks && !config.terminalMiddleClick)
+        ) return
         event.isCanceled = true
         if (config.terminalBlockClicks) {
             when (currentTerminal) {
                 TerminalType.MAZE, TerminalType.NUMBERS -> if (clickQueue[0].slotNumber != event.slotId) return
                 TerminalType.CORRECTALL -> if (event.slot!!.stack.itemDamage == 5) return
-                TerminalType.COLOR, TerminalType.LETTER -> if (clickQueue.none { slot: Slot? ->
-                        slot!!.slotNumber == event.slotId
-                    }
-                ) return
-                else -> return
+                TerminalType.COLOR, TerminalType.LETTER -> if (clickQueue.none { it.slotNumber == event.slotId }) return
+                else -> {
+                }
             }
         }
         clickSlot(event.slot!!)
     }
 
     @SubscribeEvent
-    fun onTick(event: ClientTickEvent) {
-        if (!inDungeons || event.phase != TickEvent.Phase.START) return
-        if (mc.currentScreen !is GuiChest) {
-            currentTerminal = TerminalType.NONE
-            clickQueue.clear()
-            windowClicks = 0
-        }
+    fun onTick(event: TickEvent.ClientTickEvent) {
+        if (!inDungeons || event.phase != TickEvent.Phase.START || mc.currentScreen is GuiChest) return
+        currentTerminal = TerminalType.NONE
+        clickQueue.clear()
+        shouldClick = false
     }
 
     @SubscribeEvent
@@ -173,8 +162,8 @@ class Terminals {
 
     private fun getClicks(container: ContainerChest): Boolean {
         val invSlots = container.inventorySlots
-        val chestName = container.lowerChestInventory.displayName.unformattedText
         clickQueue.clear()
+        windowClicks = 0
         when (currentTerminal) {
             TerminalType.MAZE -> {
                 val mazeSlotDirection = intArrayOf(-9, -1, 1, 9)
@@ -184,36 +173,34 @@ class Terminals {
                     if (slot.inventory == mc.thePlayer.inventory) continue
                     val itemStack = slot.stack ?: continue
                     if (itemStack.item == Item.getItemFromBlock(Blocks.stained_glass_pane)) {
-                        if (itemStack.itemDamage == 5) {
-                            isStartSlot[slot.slotNumber] = true
-                        } else if (itemStack.itemDamage == 14) {
-                            endSlot = slot.slotNumber
+                        when (itemStack.itemDamage) {
+                            5 -> isStartSlot[slot.slotNumber] = true
+                            14 -> endSlot = slot.slotNumber
                         }
                     }
                 }
                 for (slot in isStartSlot.indices) {
-                    if (isStartSlot[slot]) {
-                        val mazeVisited = BooleanArray(54)
-                        var startSlot = slot
-                        var newSlotChosen: Boolean
-                        while (startSlot != endSlot) {
-                            newSlotChosen = false
-                            for (i in mazeSlotDirection) {
-                                val nextSlot = startSlot + i
-                                if (nextSlot < 0 || nextSlot > 53 || i == -1 && startSlot % 9 == 0 || i == 1 && startSlot % 9 == 8) continue
-                                if (nextSlot == endSlot) return false
-                                if (mazeVisited[nextSlot]) continue
-                                val itemStack = invSlots[nextSlot].stack ?: continue
-                                if (itemStack.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && itemStack.itemDamage == 0) {
-                                    clickQueue.add(invSlots[nextSlot])
-                                    startSlot = nextSlot
-                                    mazeVisited[nextSlot] = true
-                                    newSlotChosen = true
-                                    break
-                                }
+                    if (!isStartSlot[slot]) continue
+                    val mazeVisited = BooleanArray(54)
+                    var startSlot = slot
+                    var newSlotChosen: Boolean
+                    while (startSlot != endSlot) {
+                        newSlotChosen = false
+                        for (i in mazeSlotDirection) {
+                            val nextSlot = startSlot + i
+                            if (nextSlot < 0 || nextSlot > 53 || i == -1 && startSlot % 9 == 0 || i == 1 && startSlot % 9 == 8) continue
+                            if (mazeVisited[nextSlot]) continue
+                            if (nextSlot == endSlot) return false
+                            val itemStack = invSlots[nextSlot].stack ?: continue
+                            if (itemStack.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && itemStack.itemDamage == 0) {
+                                clickQueue.add(invSlots[nextSlot])
+                                startSlot = nextSlot
+                                mazeVisited[nextSlot] = true
+                                newSlotChosen = true
+                                break
                             }
-                            if (!newSlotChosen) break
                         }
+                        if (!newSlotChosen) break
                     }
                 }
                 return true
@@ -225,10 +212,9 @@ class Terminals {
                     if (i == 17 || i == 18) continue
                     val item = invSlots[i].stack ?: return true
                     if (item.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && item.stackSize < 15) {
-                        if (item.itemDamage == 14) {
-                            temp[item.stackSize - 1] = invSlots[i]
-                        } else if (item.itemDamage == 5) {
-                            min = 0.coerceAtLeast(item.stackSize)
+                        when (item.itemDamage) {
+                            5 -> min = 0.coerceAtLeast(item.stackSize)
+                            14 -> temp[item.stackSize - 1] = invSlots[i]
                         }
                     }
                 }
@@ -246,6 +232,7 @@ class Terminals {
                 }
             }
             TerminalType.LETTER -> {
+                val chestName = container.lowerChestInventory.displayName.unformattedText
                 if (chestName.length > chestName.indexOf("'") + 1) {
                     val letterNeeded = chestName[chestName.indexOf("'") + 1]
                     for (slot in invSlots) {
@@ -261,7 +248,9 @@ class Terminals {
             }
             TerminalType.COLOR -> {
                 val colorNeeded = EnumDyeColor.values().find {
-                    chestName.contains(it.getName().replace("_", " ").uppercase())
+                    container.lowerChestInventory.displayName.unformattedText.contains(
+                        it.getName().replace("_", " ").uppercase()
+                    )
                 }?.unlocalizedName ?: return false
                 for (slot in invSlots) {
                     if (slot.inventory == mc.thePlayer.inventory) continue
@@ -273,20 +262,10 @@ class Terminals {
                     }
                 }
             }
-            else ->
-                return false
+            TerminalType.NONE -> {
+            }
         }
         return false
-    }
-
-    @SubscribeEvent
-    fun onOverlay(event: RenderGameOverlayEvent.Post) {
-        if (!config.showTerminalInfo || mc.ingameGUI == null || event.type != RenderGameOverlayEvent.ElementType.HOTBAR) return
-        if (currentTerminal != TerminalType.NONE) {
-            renderText(mc, currentTerminal.name, 20, 20, 1.0)
-            renderText(mc, clickQueue.size.toString(), 20, 40, 1.0)
-            renderText(mc, "$windowId, $windowClicks", 20, 60, 1.0)
-        }
     }
 
     private fun clickSlot(slot: Slot) {
@@ -313,8 +292,9 @@ class Terminals {
         private val clickQueue = ArrayList<Slot>(28)
         private var currentTerminal = TerminalType.NONE
         private var lastClickTime: Long = 0
+        private var recalculate = false
+        private var shouldClick = false
         private var windowId = 0
         private var windowClicks = 0
-        private var recalculate = false
     }
 }
