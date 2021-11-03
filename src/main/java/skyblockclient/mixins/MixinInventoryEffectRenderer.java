@@ -9,7 +9,7 @@ import skyblockclient.features.HidePotionEffectsKt;
 @Mixin(InventoryEffectRenderer.class)
 public class MixinInventoryEffectRenderer {
     @ModifyVariable(method = "updateActivePotionEffects", at = @At(value = "STORE"))
-    public boolean hasVisibleEffect_updateActivePotionEffects(boolean hasVisibleEffect) {
+    public boolean updateActivePotionEffects(boolean hasVisibleEffect) {
         return HidePotionEffectsKt.hidePotionEffects(hasVisibleEffect);
     }
 }

@@ -28,41 +28,32 @@ class StarMobESP {
 
     @SubscribeEvent
     fun onPreRenderEntity(event: RenderLivingEvent.Pre<EntityLivingBase?>) {
-        if (!inDungeons || !config.espStarMobs) return
-        if (event.entity is EntityArmorStand) {
-            if (event.entity.hasCustomName() && event.entity.customNameTag.contains("✯")) {
-                if (checkedArmorStands.contains(event.entity)) return
-                val possibleEntities = event.entity.entityWorld.getEntitiesInAABBexcluding(
-                    event.entity, event.entity.entityBoundingBox.expand(0.0, 3.0, 0.0)
-                ) { entity: Entity? -> entity !is EntityArmorStand }
-                if (possibleEntities.isNotEmpty()) {
-                    for (e in possibleEntities) {
-                        if (e is EntityWither) continue
-                        if (e == mc.thePlayer) continue
-                        if (e is EntityOtherPlayerMP) {
-                            if (e.isInvisible() || e.getUniqueID().version() != 2) continue
-                            if (config.espMiniboss) {
-                                if (event.entity.name.contains(" Adventurer") && e.getName() == "Lost Adventurer") {
-                                    checkedArmorStands.add(event.entity)
-                                    return
-                                }
-                                if (event.entity.name.contains("Angry Archeologist") && e.getName() == "Diamond Guy") {
-                                    checkedArmorStands.add(event.entity)
-                                    return
-                                }
-                            }
-                        } else if (e is EntityEnderman && config.espFels) {
-                            return
-                        }
-                        if (starMobs.add(e)) {
-                            if (config.removeStarMobsNametag) {
-                                mc.theWorld.removeEntity(event.entity)
-                            } else {
-                                checkedArmorStands.add(event.entity)
-                            }
-                        }
+        if (!inDungeons || !config.espStarMobs || event.entity !is EntityArmorStand || !event.entity.hasCustomName() ||
+            !event.entity.customNameTag.contains("✯") || checked.contains(event.entity)
+        ) return
+        val possibleEntities = event.entity.entityWorld.getEntitiesInAABBexcluding(
+            event.entity, event.entity.entityBoundingBox.expand(0.0, 3.0, 0.0)
+        ) { entity: Entity? -> entity !is EntityArmorStand }
+        if (possibleEntities.isEmpty()) return
+        for (e in possibleEntities) {
+            if (e is EntityWither || e == mc.thePlayer) continue
+            if (e is EntityOtherPlayerMP) {
+                if (e.isInvisible() || e.getUniqueID().version() != 2) continue
+                if (config.espMiniboss) {
+                    if (event.entity.name.contains(" Adventurer") && e.name == "Lost Adventurer") {
+                        if (config.removeStarMobsNametag) mc.theWorld.removeEntity(event.entity) else checked.add(event.entity)
+                        return
+                    }
+                    if (event.entity.name.contains("Angry Archeologist") && e.name == "Diamond Guy") {
+                        if (config.removeStarMobsNametag) mc.theWorld.removeEntity(event.entity) else checked.add(event.entity)
+                        return
                     }
                 }
+            } else if (e is EntityEnderman && config.espFels && event.entity.name.contains("Fels")) {
+                if (config.removeStarMobsNametag) mc.theWorld.removeEntity(event.entity) else checked.add(event.entity)
+            }
+            if (starMobs.add(e)) {
+                if (config.removeStarMobsNametag) mc.theWorld.removeEntity(event.entity) else checked.add(event.entity)
             }
         }
     }
@@ -79,12 +70,12 @@ class StarMobESP {
 
     @SubscribeEvent
     fun onWorldLoad(event: WorldEvent.Load?) {
-        checkedArmorStands.clear()
+        checked.clear()
         starMobs.clear()
     }
 
     companion object {
-        private val checkedArmorStands = HashSet<Entity>()
+        private val checked = HashSet<Entity>()
         private val starMobs = HashSet<Entity>()
     }
 }

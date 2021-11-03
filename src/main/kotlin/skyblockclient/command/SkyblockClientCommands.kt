@@ -31,9 +31,7 @@ class SkyblockClientCommands : CommandBase() {
             args[0] = ""
             val message = args.joinToString(" ").trim()
             mimicMessage = message
-            player.addChatMessage(
-                ChatComponentText("§aMimic message changed to §f$message")
-            )
+            player.addChatMessage(ChatComponentText("§aMimic message changed to §f$message"))
         }
     }
 }

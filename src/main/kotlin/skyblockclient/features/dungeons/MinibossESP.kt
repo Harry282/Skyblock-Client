@@ -13,28 +13,26 @@ import skyblockclient.utils.RenderUtils
 class MinibossESP {
     @SubscribeEvent
     fun onRenderEntity(event: RenderLivingEntityEvent) {
-        if (!inDungeons || !config.espMiniboss || config.espType != 0) return
-        if (event.entity is EntityPlayer) {
-            if (event.entity.name == "Lost Adventurer") {
-                if (event.entity.getCurrentArmor(0) != null) {
-                    when (event.entity.getCurrentArmor(0).displayName) {
-                        "§6Unstable Dragon Boots" ->
-                            OutlineUtils.outlineESP(event, config.espColorUnstable)
-                        "§6Young Dragon Boots" ->
-                            OutlineUtils.outlineESP(event, config.espColorYoung)
-                        "§6Superior Dragon Boots" ->
-                            OutlineUtils.outlineESP(event, config.espColorSuperior)
-                        "§6Holy Dragon Boots" ->
-                            OutlineUtils.outlineESP(event, config.espColorHoly)
-                        "§6Frozen Blaze Boots" ->
-                            OutlineUtils.outlineESP(event, config.espColorFrozen)
-                    }
+        if (!inDungeons || !config.espMiniboss || config.espType != 0 || event.entity !is EntityPlayer) return
+        if (event.entity.name == "Lost Adventurer") {
+            if (event.entity.getCurrentArmor(0) != null) {
+                when (event.entity.getCurrentArmor(0).displayName) {
+                    "§6Unstable Dragon Boots" ->
+                        OutlineUtils.outlineESP(event, config.espColorUnstable)
+                    "§6Young Dragon Boots" ->
+                        OutlineUtils.outlineESP(event, config.espColorYoung)
+                    "§6Superior Dragon Boots" ->
+                        OutlineUtils.outlineESP(event, config.espColorSuperior)
+                    "§6Holy Dragon Boots" ->
+                        OutlineUtils.outlineESP(event, config.espColorHoly)
+                    "§6Frozen Blaze Boots" ->
+                        OutlineUtils.outlineESP(event, config.espColorFrozen)
                 }
-            } else if (event.entity.name == "Diamond Guy" && event.entity.getCurrentArmor(0) != null &&
-                event.entity.getCurrentArmor(0).displayName.startsWith("§6Perfect Boots - Tier")
-            ) {
-                OutlineUtils.outlineESP(event, config.espColorAngryArchaeologist)
             }
+        } else if (event.entity.name == "Diamond Guy" && event.entity.getCurrentArmor(0) != null &&
+            event.entity.getCurrentArmor(0).displayName.startsWith("§6Perfect Boots - Tier")
+        ) {
+            OutlineUtils.outlineESP(event, config.espColorAngryArchaeologist)
         }
     }
 

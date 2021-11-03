@@ -15,10 +15,8 @@ import skyblockclient.events.RightClickEvent
 class GhostBlock {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
-        if (!inSkyblock || event.phase != TickEvent.Phase.START) return
-        if (SkyblockClient.keyBinds[2]!!.isKeyDown) {
-            toAir(mc.objectMouseOver.blockPos)
-        }
+        if (!inSkyblock || event.phase != TickEvent.Phase.START || !SkyblockClient.keyBinds[2].isKeyDown) return
+        toAir(mc.objectMouseOver.blockPos)
     }
 
     @SubscribeEvent
@@ -66,6 +64,8 @@ class GhostBlock {
                 Blocks.hopper,
                 Blocks.jungle_door,
                 Blocks.lever,
+                Blocks.brown_mushroom,
+                Blocks.red_mushroom,
                 Blocks.noteblock,
                 Blocks.powered_comparator,
                 Blocks.unpowered_comparator,
