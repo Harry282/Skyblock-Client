@@ -75,16 +75,18 @@ class SkyblockClient {
 
     @Mod.EventHandler
     fun postInit(event: FMLLoadCompleteEvent) {
-        val response = UpdateChecker.hasUpdate()
-        if (response == 1 || response == -2) {
-            EssentialAPI.getNotifications()
-                .push("Skyblock Client", "New release available on Github. Click to open download link.", 10f) {
-                    try {
-                        Desktop.getDesktop().browse(URI("https://github.com/Harry282/Skyblock-Client/releases"))
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+        if (UpdateChecker.hasUpdate() > 0) {
+            try {
+                EssentialAPI.getNotifications().push(
+                    "Skyblock Client",
+                    "New release available on Github. Click to open download link.",
+                    10f
+                ) {
+                    Desktop.getDesktop().browse(URI("https://github.com/Harry282/Skyblock-Client/releases"))
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -98,8 +100,16 @@ class SkyblockClient {
         }
         if (tickCount % 20 == 0) {
             if (mc.thePlayer != null) {
-                inSkyblock = config.forceSkyblock || EssentialAPI.getMinecraftUtil()
-                    .isHypixel() && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
+                val onHypixel = try {
+                    EssentialAPI.getMinecraftUtil().isHypixel()
+                } catch (e: Throwable) {
+                    mc.runCatching {
+                        theWorld != null && !isSingleplayer && (thePlayer?.clientBrand?.lowercase()?.contains("hypixel")
+                            ?: currentServerData?.serverIP?.lowercase()?.contains("hypixel") ?: false)
+                    }.onFailure { }.getOrDefault(false)
+                }
+
+                inSkyblock = config.forceSkyblock || onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
                     ?.let { ScoreboardUtils.cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
 
                 inDungeons = config.forceSkyblock || inSkyblock && ScoreboardUtils.sidebarLines.any {
@@ -128,6 +138,7 @@ class SkyblockClient {
         const val MOD_NAME = "Scrollable Tooltips"
         const val MOD_VERSION = "1.4.0"
         const val SB_CLIENT_VERSION = "0.1.2-pre5"
+        const val CHAT_PREFIX = "§b§l<§fSkyblockClient§b§l>§r"
         var inSkyblock = false
         var inDungeons = false
         var mc: Minecraft = Minecraft.getMinecraft()

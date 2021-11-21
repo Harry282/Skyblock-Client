@@ -16,8 +16,9 @@ object UpdateChecker {
             val httpGet = HttpGet("https://api.github.com/repos/Harry282/Skyblock-Client/releases")
             val response = EntityUtils.toString(client.execute(httpGet).entity)
             val jsonArray = JsonParser().parse(response).asJsonArray
-            val version = jsonArray[0].asJsonObject["tag_name"]
-            return DefaultArtifactVersion(version.asString).compareTo(DefaultArtifactVersion(SkyblockClient.SB_CLIENT_VERSION))
+            val latest = jsonArray[0].asJsonObject["tag_name"]
+            return DefaultArtifactVersion(latest.asString.replace("pre", "beta"))
+                .compareTo(DefaultArtifactVersion(SkyblockClient.SB_CLIENT_VERSION.replace("pre", "beta")))
         } catch (e: Exception) {
             e.printStackTrace()
         }
