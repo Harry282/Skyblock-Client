@@ -6,16 +6,16 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
-import skyblockclient.SkyblockClient
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
+import skyblockclient.SkyblockClient.Companion.keyBinds
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RightClickEvent
 
 class GhostBlock {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
-        if (!inSkyblock || event.phase != TickEvent.Phase.START || !SkyblockClient.keyBinds[2].isKeyDown) return
+        if (!inSkyblock || event.phase != TickEvent.Phase.START || !keyBinds[2].isKeyDown) return
         toAir(mc.objectMouseOver.blockPos)
     }
 

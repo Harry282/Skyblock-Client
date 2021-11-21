@@ -502,9 +502,39 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         description = "Time between each bone throw in ms. Default 50.",
         category = "Macros",
         subcategory = "Bone Macro",
-        max = 200
+        max = 200,
+        increment = 5
     )
     var boneThrowDelay = 50
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Book Combine",
+        description = "Button to combine tier 1 books in anvil.",
+        category = "Macros",
+        subcategory = "Book Anvil Combine"
+    )
+    var bookCombine = false
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Book Combine Speed",
+        description = "Minimum time between clicks. Increase if you get please slow down messages.",
+        category = "Macros",
+        subcategory = "Book Anvil Combine",
+        max = 200,
+        increment = 5
+    )
+    var bookCombineSpeed = 50
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Book Combine Messages",
+        description = "Shows chat messages when starting and stopping book combining.",
+        category = "Macros",
+        subcategory = "Book Anvil Combine"
+    )
+    var bookCombineMessage = true
 
     @Property(
         type = PropertyType.SWITCH,
@@ -724,8 +754,8 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     }
 
     private object Sorting : SortingBehavior() {
-        override fun getCategoryComparator(): Comparator<in Category> = Comparator { o1, o2 ->
-            return@Comparator configCategories.indexOf(o1.name) - configCategories.indexOf(o2.name)
+        override fun getCategoryComparator(): Comparator<in Category> = Comparator.comparingInt { o: Category ->
+            configCategories.indexOf(o.name)
         }
     }
 

@@ -4,7 +4,9 @@ import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.ChatComponentText
-import skyblockclient.SkyblockClient
+import skyblockclient.SkyblockClient.Companion.CHAT_PREFIX
+import skyblockclient.SkyblockClient.Companion.config
+import skyblockclient.SkyblockClient.Companion.display
 import skyblockclient.config.Config.mimicMessage
 
 class SkyblockClientCommands : CommandBase() {
@@ -22,7 +24,7 @@ class SkyblockClientCommands : CommandBase() {
 
     override fun processCommand(sender: ICommandSender, args: Array<String>) {
         if (args.isEmpty()) {
-            SkyblockClient.display = SkyblockClient.config.gui()
+            display = config.gui()
             return
         }
         val player = sender as EntityPlayerSP
@@ -31,7 +33,7 @@ class SkyblockClientCommands : CommandBase() {
             args[0] = ""
             val message = args.joinToString(" ").trim()
             mimicMessage = message
-            player.addChatMessage(ChatComponentText("§aMimic message changed to §f$message"))
+            player.addChatMessage(ChatComponentText("$CHAT_PREFIX §aMimic message changed to §f$message"))
         }
     }
 }

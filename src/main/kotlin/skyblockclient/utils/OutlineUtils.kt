@@ -6,7 +6,7 @@ import net.minecraft.client.shader.Framebuffer
 import org.lwjgl.opengl.EXTFramebufferObject
 import org.lwjgl.opengl.EXTPackedDepthStencil
 import org.lwjgl.opengl.GL11
-import skyblockclient.SkyblockClient
+import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RenderLivingEntityEvent
 import java.awt.Color
@@ -19,7 +19,7 @@ object OutlineUtils {
         mc.gameSettings.gammaSetting = 100000f
         GlStateManager.resetColor()
         setColor(color)
-        renderOne(SkyblockClient.config.espOutlineWidth)
+        renderOne(config.espOutlineWidth)
         event.modelBase.render(
             event.entity,
             event.p_77036_2_,

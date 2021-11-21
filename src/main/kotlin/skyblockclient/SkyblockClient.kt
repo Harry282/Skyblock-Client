@@ -54,6 +54,7 @@ class SkyblockClient {
         MinecraftForge.EVENT_BUS.register(AntiBlind())
         MinecraftForge.EVENT_BUS.register(AnvilUses())
         MinecraftForge.EVENT_BUS.register(BloodReady())
+        MinecraftForge.EVENT_BUS.register(BookAnvilMacro())
         MinecraftForge.EVENT_BUS.register(BoneMacro())
         MinecraftForge.EVENT_BUS.register(EndstoneProtectorTimer())
         MinecraftForge.EVENT_BUS.register(GemstoneESP())
