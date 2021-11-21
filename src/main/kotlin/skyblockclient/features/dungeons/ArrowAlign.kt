@@ -131,6 +131,10 @@ class ArrowAlign {
             }
         private var ticks = 0
         private val neededRotations = HashMap<Point, Int>()
-        private val rightClickMouse: Method = Minecraft::class.java.getDeclaredMethod("func_147121_ag")
+        private val rightClickMouse: Method = try {
+            Minecraft::class.java.getDeclaredMethod("func_147121_ag")
+        } catch (e: NoSuchMethodException) {
+            Minecraft::class.java.getDeclaredMethod("rightClickMouse")
+        }
     }
 }
