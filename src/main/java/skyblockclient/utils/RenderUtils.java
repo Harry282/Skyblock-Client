@@ -124,6 +124,44 @@ public class RenderUtils {
         resetCaps();
     }
 
+    public static void drawBlockOutline(final BlockPos blockPos, final Color color, float partialTicks) {
+        final RenderManager renderManager = mc.getRenderManager();
+
+        final double x = blockPos.getX() - renderManager.viewerPosX;
+        final double y = blockPos.getY() - renderManager.viewerPosY;
+        final double z = blockPos.getZ() - renderManager.viewerPosZ;
+
+        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(x, y, z, x + 1.0, y + 1.0, z + 1.0);
+        final Block block = mc.theWorld.getBlockState(blockPos).getBlock();
+
+        if (block != null) {
+            final EntityPlayer player = mc.thePlayer;
+
+            final double posX = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+            final double posY = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+            final double posZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
+
+            block.setBlockBoundsBasedOnState(mc.theWorld, blockPos);
+
+            axisAlignedBB = block.getSelectedBoundingBox(mc.theWorld, blockPos)
+                    .expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)
+                    .offset(-posX, -posY, -posZ);
+        }
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        enableGlCap(GL_LINE_SMOOTH);
+        disableGlCap(GL_TEXTURE_2D, GL_DEPTH_TEST);
+        glDepthMask(false);
+        glLineWidth(1F);
+        glColor(color);
+
+        drawSelectionBoundingBox(axisAlignedBB);
+
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        glDepthMask(true);
+        resetCaps();
+    }
+
     public static void drawSelectionBoundingBox(AxisAlignedBB boundingBox) {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();

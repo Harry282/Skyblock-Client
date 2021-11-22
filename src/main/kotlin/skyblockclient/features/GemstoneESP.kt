@@ -55,7 +55,7 @@ class GemstoneESP {
         if (!inSkyblock || !config.gemstoneESP || !isCrystalHollow()) return
         synchronized(gemstoneList) {
             gemstoneList.forEach { (blockPos: BlockPos, color: Color) ->
-                RenderUtils.drawBlockBox(blockPos, color, true, event.partialTicks)
+                RenderUtils.drawBlockOutline(blockPos, color, event.partialTicks)
             }
         }
     }
