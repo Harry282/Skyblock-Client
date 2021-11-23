@@ -268,6 +268,87 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var terminalColorNumberThird = Color(85, 255, 255, 85)
 
     @Property(
+        type = PropertyType.SWITCH,
+        name = "Auto Experiments",
+        description = "Automatically click Chronomatron and Ultrasequencer experiments.",
+        category = "Experiment",
+        subcategory = "Auto"
+    )
+    var experimentAuto = false
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Terminal Click Delay",
+        description = "Time in ms between automatic terminal clicks.",
+        category = "Experiment",
+        subcategory = "Auto",
+        increment = 10,
+        max = 1000
+    )
+    var experimentClickDelay = 200
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Auto Exit Experiment",
+        description = "Closes experiment at +3 superpair clicks.",
+        category = "Experiment",
+        subcategory = "Auto"
+    )
+    var experimentAutoExit = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Block Incorrect Clicks",
+        category = "Experiment",
+        subcategory = "Clicks"
+    )
+    var experimentBlockClicks = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Middle Clicks",
+        category = "Experiment",
+        subcategory = "Clicks"
+    )
+    var experimentMiddleClick = false
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Experiment Highlight",
+        description = "Show next clicks for experiments.",
+        category = "Experiment",
+        subcategory = "Highlight"
+    )
+    var experimentHighlight = false
+
+    @Property(
+        type = PropertyType.COLOR,
+        name = "Experiment First Click Color",
+        description = "Default #55FFFFFF.",
+        category = "Experiment",
+        subcategory = "Highlight"
+    )
+    var experimentColorNumberFirst = Color(85, 255, 255, 255)
+
+    @Property(
+        type = PropertyType.COLOR,
+        name = "Experiment Second Click Color",
+        description = "Default #55FFFFAA.",
+        category = "Experiment",
+        subcategory = "Highlight"
+    )
+    var experimentColorNumberSecond = Color(85, 255, 255, 170)
+
+    @Property(
+        type = PropertyType.COLOR,
+        name = "Experiment Third Click Color",
+        description = "Default #55FFFF55.",
+        category = "Experiment",
+        subcategory = "Highlight"
+    )
+    var experimentColorNumberThird = Color(85, 255, 255, 85)
+
+    @Property(
         type = PropertyType.SELECTOR,
         name = "ESP Type",
         category = "ESP",
@@ -760,6 +841,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     }
 
     private val configCategories = listOf(
-        "Dungeons", "Terminals", "ESP", "ESP Colors", "GUI", "Macros", "Misc", "Dev"
+        "Dungeons", "Terminals", "Enchanting", "ESP", "ESP Colors", "GUI", "Macros", "Misc", "Dev"
     )
 }
