@@ -279,7 +279,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.NUMBER,
         name = "Terminal Click Delay",
-        description = "Time in ms between automatic terminal clicks.",
+        description = "Time in ms between automatic experiment clicks.",
         category = "Experiment",
         subcategory = "Auto",
         increment = 10,
@@ -311,6 +311,14 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         subcategory = "Clicks"
     )
     var experimentMiddleClick = false
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Hide Tooltips",
+        category = "Experiment",
+        subcategory = "Highlight"
+    )
+    var experimentHideTooltips = false
 
     @Property(
         type = PropertyType.CHECKBOX,

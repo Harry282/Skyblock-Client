@@ -1,5 +1,6 @@
 package skyblockclient.features
 
+import javafx.scene.control.Tooltip
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.gui.inventory.GuiChest
@@ -11,12 +12,15 @@ import net.minecraft.inventory.Slot
 import net.minecraft.item.Item
 import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.client.event.GuiScreenEvent
+import net.minecraftforge.event.entity.player.ItemTooltipEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import skyblockclient.SkyblockClient
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.GuiContainerEvent
 import skyblockclient.events.GuiContainerEvent.SlotClickEvent
+import skyblockclient.features.dungeons.Terminals
 import skyblockclient.utils.RenderUtilsKT.renderText
 
 class EnchantingExperiments {
@@ -198,6 +202,14 @@ class EnchantingExperiments {
                 }
             }
             else -> return
+        }
+    }
+
+    @SubscribeEvent
+    fun onTooltip(event: ItemTooltipEvent) {
+        if (!inSkyblock || !config.experimentHideTooltips || event.toolTip == null) return
+        if (currentExperiment == ExperimentType.CHRONOMATRON || currentExperiment == ExperimentType.ULTRASEQUENCER) {
+            event.toolTip.clear()
         }
     }
 
