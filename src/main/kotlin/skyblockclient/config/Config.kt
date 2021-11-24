@@ -160,7 +160,8 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.CHECKBOX,
-        name = "Highlight needed clicks in terminals",
+        name = "Terminal Highlight",
+        description = "Highlight needed clicks in terminals",
         category = "Terminals",
         subcategory = "Highlight"
     )

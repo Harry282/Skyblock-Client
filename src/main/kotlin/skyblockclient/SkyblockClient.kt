@@ -140,7 +140,7 @@ class SkyblockClient {
         const val MOD_ID = "text_overflow_scroll"
         const val MOD_NAME = "Scrollable Tooltips"
         const val MOD_VERSION = "1.4.0"
-        const val SB_CLIENT_VERSION = "0.1.2-pre5"
+        const val SB_CLIENT_VERSION = "0.1.2-pre6"
         const val CHAT_PREFIX = "§b§l<§fSkyblockClient§b§l>§r"
         var inSkyblock = false
         var inDungeons = false
