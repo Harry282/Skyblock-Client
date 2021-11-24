@@ -127,55 +127,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
-        name = "Separate Auto Terminals",
-        description = "Individual auto terminals control.",
-        category = "Terminals",
-        subcategory = "Auto"
-    )
-    var terminalAutoSeparate = false
-
-    @Property(
-        type = PropertyType.CHECKBOX,
-        name = "Auto Maze Terminal",
-        category = "Terminals",
-        subcategory = "Auto"
-    )
-    var terminalMaze = true
-
-    @Property(
-        type = PropertyType.CHECKBOX,
-        name = "Auto Number Terminal",
-        category = "Terminals",
-        subcategory = "Auto"
-    )
-    var terminalNumbers = true
-
-    @Property(
-        type = PropertyType.CHECKBOX,
-        name = "Auto Correct All Terminal",
-        category = "Terminals",
-        subcategory = "Auto"
-    )
-    var terminalCorrectAll = true
-
-    @Property(
-        type = PropertyType.CHECKBOX,
-        name = "Auto Starts With Letter Terminal",
-        category = "Terminals",
-        subcategory = "Auto"
-    )
-    var terminalLetter = true
-
-    @Property(
-        type = PropertyType.CHECKBOX,
-        name = "Auto Select All Color Terminal",
-        category = "Terminals",
-        subcategory = "Auto"
-    )
-    var terminalColor = true
-
-    @Property(
-        type = PropertyType.SWITCH,
         name = "Pingless Clicks",
         description = "Experimental! Sends clicks before terminal GUI is updated.",
         category = "Terminals",
@@ -209,34 +160,18 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.CHECKBOX,
-        name = "Number Terminal",
+        name = "Highlight needed clicks in terminals",
         category = "Terminals",
         subcategory = "Highlight"
     )
-    var terminalHighlightNumbers = false
-
-    @Property(
-        type = PropertyType.CHECKBOX,
-        name = "Starts With Letter Terminal",
-        category = "Terminals",
-        subcategory = "Highlight"
-    )
-    var terminalHighlightLetter = false
-
-    @Property(
-        type = PropertyType.CHECKBOX,
-        name = "Select All Color Terminal",
-        category = "Terminals",
-        subcategory = "Highlight"
-    )
-    var terminalHighlightColor = false
+    var terminalHighlight = false
 
     @Property(
         type = PropertyType.COLOR,
         name = "Terminal Highlight Color",
         description = "Default #55FF55AA.",
         category = "Terminals",
-        subcategory = "Highlight Color"
+        subcategory = "Highlight"
     )
     var terminalColorHighlight = Color(85, 255, 85, 170)
 
@@ -245,7 +180,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         name = "Terminal First Number Color",
         description = "Default #55FFFFFF.",
         category = "Terminals",
-        subcategory = "Highlight Color"
+        subcategory = "Highlight"
     )
     var terminalColorNumberFirst = Color(85, 255, 255, 255)
 
@@ -254,7 +189,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         name = "Terminal Second Number Color",
         description = "Default #55FFFFAA.",
         category = "Terminals",
-        subcategory = "Highlight Color"
+        subcategory = "Highlight"
     )
     var terminalColorNumberSecond = Color(85, 255, 255, 170)
 
@@ -263,7 +198,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         name = "Terminal Third Number Color",
         description = "Default #55FFFF55.",
         category = "Terminals",
-        subcategory = "Highlight Color"
+        subcategory = "Highlight"
     )
     var terminalColorNumberThird = Color(85, 255, 255, 85)
 
@@ -323,7 +258,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.CHECKBOX,
         name = "Experiment Highlight",
-        description = "Show next clicks for experiments.",
+        description = "Highlights next clicks for experiments.",
         category = "Experiment",
         subcategory = "Highlight"
     )
@@ -795,21 +730,39 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     )
     var showTerminalInfo = false
 
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "AFK Thorn Stun",
+        description = "WIP. If you don't know what this does, don't ask me and don't turn it on.",
+        category = "Dev"
+    )
+    var afkThornStun = false
+
     init {
         setCategoryDescription(
             "ESP",
             "Disable Optifine fast render and Patcher entity culling."
         )
-
         listOf(
-            "terminalMaze",
-            "terminalNumbers",
-            "terminalCorrectAll",
-            "terminalLetter",
-            "terminalColor"
+            "experimentColorNumberFirst",
+            "experimentColorNumberSecond",
+            "experimentColorNumberThird"
         ).forEach(Consumer { s: String ->
-            addDependency(s, "terminalAutoSeparate")
+            addDependency(s, "experimentHighlight")
         })
+        listOf(
+            "terminalColorHighlight",
+            "terminalColorNumberFirst",
+            "terminalColorNumberSecond",
+            "terminalColorNumberThird"
+        ).forEach(Consumer { s: String ->
+            addDependency(s, "terminalHighlight")
+        })
+        addDependency("mimicMessage", "mimicKillMessage")
+        addDependency("espColorLivid", "lividFinder")
+        addDependency("espColorBats", "espBats")
+        addDependency("espColorFels", "espFels")
+        addDependency("espColorShadowAssassin", "espShadowAssassin")
         listOf(
             "espColorUnstable",
             "espColorYoung",
@@ -820,9 +773,19 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         ).forEach(Consumer { s: String ->
             addDependency(s, "espMiniboss")
         })
+        listOf(
+            "espColorStarMobs",
+            "removeStarMobsNametag"
+        ).forEach(Consumer { s: String ->
+            addDependency(s, "espStarMobs")
+        })
         addDependency("removeStarMobsNametag", "espStarMobs")
-        addDependency("overlayColorSalvageable", "overlaySalvageable")
-        addDependency("overlayColorTopSalvageable", "overlaySalvageable")
+        listOf(
+            "overlayColorSalvageable",
+            "overlayColorTopSalvageable"
+        ).forEach(Consumer { s: String ->
+            addDependency(s, "overlaySalvageable")
+        })
         listOf(
             "gemstoneESPRadius",
             "gemstoneESPTime",
@@ -849,6 +812,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     }
 
     private val configCategories = listOf(
-        "Dungeons", "Terminals", "Enchanting", "ESP", "ESP Colors", "GUI", "Macros", "Misc", "Dev"
+        "Dungeons", "Terminals", "Experiments", "ESP", "ESP Colors", "GUI", "Macros", "Misc", "Dev"
     )
 }

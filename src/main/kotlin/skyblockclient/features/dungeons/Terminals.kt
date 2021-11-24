@@ -58,16 +58,7 @@ class Terminals {
                     if (clickQueue.isNotEmpty() && config.terminalAuto && (shouldClick || config.terminalPingless) &&
                         System.currentTimeMillis() - lastClickTime > config.terminalClickDelay
                     ) {
-                        if (!config.terminalAutoSeparate) {
-                            clickSlot(clickQueue[0])
-                        } else when (currentTerminal) {
-                            TerminalType.MAZE -> if (config.terminalMaze) clickSlot(clickQueue[0])
-                            TerminalType.NUMBERS -> if (config.terminalNumbers) clickSlot(clickQueue[0])
-                            TerminalType.CORRECTALL -> if (config.terminalCorrectAll) clickSlot(clickQueue[0])
-                            TerminalType.LETTER -> if (config.terminalLetter) clickSlot(clickQueue[0])
-                            TerminalType.COLOR -> if (config.terminalColor) clickSlot(clickQueue[0])
-                            TerminalType.NONE -> return
-                        }
+                        clickSlot(clickQueue[0])
                         shouldClick = false
                     }
                 }
@@ -82,19 +73,16 @@ class Terminals {
 
     @SubscribeEvent
     fun onDrawSlot(event: DrawSlotEvent.Pre) {
-        if (!inDungeons || event.gui !is GuiChest || event.slot.stack == null) return
+        if (!inDungeons || event.gui !is GuiChest || event.slot.stack == null || !config.experimentHighlight) return
         val x = event.slot.xDisplayPosition
         val y = event.slot.yDisplayPosition
         when (currentTerminal) {
-            TerminalType.NUMBERS -> if (config.terminalHighlightNumbers) {
-                if (clickQueue.isNotEmpty() && event.slot.slotNumber == clickQueue[0].slotNumber) {
-                    Gui.drawRect(x, y, x + 16, y + 16, config.terminalColorNumberFirst.rgb)
-                }
-                if (clickQueue.size > 1 && event.slot.slotNumber == clickQueue[1].slotNumber) {
-                    Gui.drawRect(x, y, x + 16, y + 16, config.terminalColorNumberSecond.rgb)
-                }
-                if (clickQueue.size > 2 && event.slot.slotNumber == clickQueue[2].slotNumber) {
-                    Gui.drawRect(x, y, x + 16, y + 16, config.terminalColorNumberThird.rgb)
+            TerminalType.NUMBERS -> {
+                for (i in 0..2) {
+                    if (clickQueue.size > i && event.slot.slotNumber == clickQueue[i].slotNumber) {
+                        Gui.drawRect(x, y, x + 16, y + 16, getColor(i))
+                        break
+                    }
                 }
                 if (event.slot.inventory != mc.thePlayer.inventory) {
                     val item = event.slot.stack
@@ -113,15 +101,8 @@ class Terminals {
                     }
                 }
             }
-            TerminalType.LETTER -> if (config.terminalHighlightLetter) {
-                if (clickQueue.any { it.slotNumber == event.slot.slotNumber }) {
-                    Gui.drawRect(x, y, x + 16, y + 16, config.terminalColorHighlight.rgb)
-                }
-            }
-            TerminalType.COLOR -> if (config.terminalHighlightColor) {
-                if (clickQueue.any { it.slotNumber == event.slot.slotNumber }) {
-                    Gui.drawRect(x, y, x + 16, y + 16, config.terminalColorHighlight.rgb)
-                }
+            TerminalType.LETTER, TerminalType.COLOR -> if (clickQueue.any { it.slotNumber == event.slot.slotNumber }) {
+                Gui.drawRect(x, y, x + 16, y + 16, config.terminalColorHighlight.rgb)
             }
             else -> {
             }
@@ -158,6 +139,15 @@ class Terminals {
     fun onTooltip(event: ItemTooltipEvent) {
         if (!inDungeons || !config.terminalHideTooltip || event.toolTip == null || currentTerminal == TerminalType.NONE) return
         event.toolTip.clear()
+    }
+
+    private fun getColor(index: Int): Int {
+        return when (index) {
+            0 -> config.terminalColorNumberFirst.rgb
+            1 -> config.terminalColorNumberSecond.rgb
+            2 -> config.terminalColorNumberThird.rgb
+            else -> 0xffffff
+        }
     }
 
     private fun getClicks(container: ContainerChest): Boolean {

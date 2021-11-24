@@ -69,6 +69,7 @@ class SkyblockClient {
         MinecraftForge.EVENT_BUS.register(NoRotate())
         MinecraftForge.EVENT_BUS.register(StarMobESP())
         MinecraftForge.EVENT_BUS.register(Terminals())
+        MinecraftForge.EVENT_BUS.register(ThornStun())
 
         for (keyBind in keyBinds) {
             ClientRegistry.registerKeyBinding(keyBind)
