@@ -14,7 +14,7 @@ class AnvilUses {
         val nbtTag = event.itemStack.tagCompound.getCompoundTag("ExtraAttributes")
         if (config.showAnvilUses && nbtTag.hasKey("anvil_uses", 3)) {
             val text = "§7Anvil uses: " + nbtTag.getInteger("anvil_uses")
-            event.toolTip.add(if (event.showAdvancedItemTooltips) event.toolTip.size - 2 else event.toolTip.size, text)
+            event.toolTip.add(if (event.showAdvancedItemTooltips && event.toolTip.size >= 2) event.toolTip.size - 2 else event.toolTip.size, text)
         }
     }
 }
