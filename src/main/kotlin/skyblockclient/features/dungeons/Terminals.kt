@@ -73,7 +73,7 @@ class Terminals {
 
     @SubscribeEvent
     fun onDrawSlot(event: DrawSlotEvent.Pre) {
-        if (!inDungeons || event.gui !is GuiChest || event.slot.stack == null || !config.experimentHighlight) return
+        if (!inDungeons || event.gui !is GuiChest || event.slot.stack == null || !config.terminalHighlight) return
         val x = event.slot.xDisplayPosition
         val y = event.slot.yDisplayPosition
         when (currentTerminal) {

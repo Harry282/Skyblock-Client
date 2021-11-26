@@ -1,6 +1,5 @@
 package skyblockclient.features
 
-import javafx.scene.control.Tooltip
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.gui.inventory.GuiChest
@@ -8,19 +7,16 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.inventory.ContainerChest
-import net.minecraft.inventory.Slot
 import net.minecraft.item.Item
 import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.client.event.GuiScreenEvent
 import net.minecraftforge.event.entity.player.ItemTooltipEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import skyblockclient.SkyblockClient
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.GuiContainerEvent
 import skyblockclient.events.GuiContainerEvent.SlotClickEvent
-import skyblockclient.features.dungeons.Terminals
 import skyblockclient.utils.RenderUtilsKT.renderText
 
 class EnchantingExperiments {
@@ -66,7 +62,7 @@ class EnchantingExperiments {
                         for (slot in invSlots) {
                             if (slot.slotNumber !in 10..43) continue
                             if (slot.stack?.isItemEnchanted == true) {
-                                chronomatronOrder.add(slot)
+                                chronomatronOrder.add(Pair(slot.slotNumber, slot.stack.displayName))
                                 lastAdded = slot.slotNumber
                                 hasAdded = true
                                 clicks = 0
@@ -79,7 +75,7 @@ class EnchantingExperiments {
                     ) {
                         mc.playerController.windowClick(
                             mc.thePlayer.openContainer.windowId,
-                            chronomatronOrder[clicks].slotNumber,
+                            chronomatronOrder[clicks].first,
                             2,
                             0,
                             mc.thePlayer
@@ -91,7 +87,7 @@ class EnchantingExperiments {
                         for ((i, slot) in chronomatronOrder.withIndex()) {
                             renderText(
                                 mc,
-                                if (i == clicks) "${slot.stack.displayName} §l<" else slot.stack.displayName,
+                                if (i == clicks) "${slot.second} §l<" else slot.second,
                                 ScaledResolution(mc).scaledWidth / 2 - 150,
                                 ScaledResolution(mc).scaledHeight / 2 - 150 + i * 15,
                                 1.0
@@ -140,7 +136,7 @@ class EnchantingExperiments {
     fun onSlotClick(event: SlotClickEvent) {
         if (!inSkyblock || event.gui !is GuiChest || event.slot == null) return
         val isCorrect = when (currentExperiment) {
-            ExperimentType.CHRONOMATRON -> chronomatronOrder.size > clicks && event.slot?.stack?.displayName == chronomatronOrder[clicks].stack.displayName
+            ExperimentType.CHRONOMATRON -> chronomatronOrder.size > clicks && event.slot?.stack?.displayName == chronomatronOrder[clicks].second
             ExperimentType.ULTRASEQUENCER -> event.slot?.slotNumber == (ultrasequencerOrder[clicks] ?: return)
             else -> return
         }
@@ -169,7 +165,7 @@ class EnchantingExperiments {
         when (currentExperiment) {
             ExperimentType.CHRONOMATRON -> {
                 for (i in 0..2) {
-                    if (chronomatronOrder.size > clicks + i && event.slot.stack.displayName == chronomatronOrder[clicks + i].stack.displayName) {
+                    if (chronomatronOrder.size > clicks + i && event.slot.stack.displayName == chronomatronOrder[clicks + i].second) {
                         Gui.drawRect(x, y, x + 16, y + 16, getColor(i))
                         return
                     }
@@ -234,7 +230,7 @@ class EnchantingExperiments {
         private var hasAdded = false
         private var clicks = 0
         private var lastClickTime: Long = 0
-        private val chronomatronOrder = ArrayList<Slot>(28)
+        private val chronomatronOrder = ArrayList<Pair<Int, String>>(28)
         private var lastAdded = 0
         private var ultrasequencerOrder = HashMap<Int, Int>()
     }

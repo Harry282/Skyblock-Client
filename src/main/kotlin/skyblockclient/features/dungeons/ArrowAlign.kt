@@ -14,7 +14,6 @@ import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RightClickEvent
 import skyblockclient.utils.ScoreboardUtils
-import java.awt.Point
 import java.lang.reflect.Method
 import java.util.*
 
@@ -39,12 +38,12 @@ class ArrowAlign {
                 val x = 278 - frame.hangingPosition.z
                 val y = 124 - frame.hangingPosition.y
                 if (x in 0..4 && y in 0..4) {
-                    val clicks = neededRotations[Point(x, y)] ?: return
+                    val clicks = neededRotations[Pair(x, y)] ?: return
                     if (clicks == 0) {
                         event.isCanceled = true
                         return
                     }
-                    neededRotations[Point(x, y)] = clicks - 1
+                    neededRotations[Pair(x, y)] = clicks - 1
                     if (config.autoCompleteArrowAlign && clicks > 1) {
                         rightClickMouse.isAccessible = true
                         rightClickMouse.invoke(mc)
@@ -70,9 +69,9 @@ class ArrowAlign {
             it != null && area.contains(it.position) && it.displayedItem != null
         }
         if (frames.isNotEmpty()) {
-            val solutions = HashMap<Point, Int>()
+            val solutions = HashMap<Pair<Int, Int>, Int>()
             val maze = Array(5) { IntArray(5) }
-            val queue = LinkedList<Point>()
+            val queue = LinkedList<Pair<Int, Int>>()
             val visited = Array(5) { BooleanArray(5) }
             neededRotations.clear()
             for ((i, pos) in area.withIndex()) {
@@ -92,27 +91,27 @@ class ArrowAlign {
                     else -> 0
                 }
                 when (maze[x][y]) {
-                    1 -> neededRotations[Point(x, y)] = frame.rotation
-                    3 -> queue.add(Point(x, y))
+                    1 -> neededRotations[Pair(x, y)] = frame.rotation
+                    3 -> queue.add(Pair(x, y))
                 }
             }
             while (queue.size != 0) {
                 val s = queue.poll()
                 val directions = arrayOf(intArrayOf(1, 0), intArrayOf(0, 1), intArrayOf(-1, 0), intArrayOf(0, -1))
                 for (i in 3 downTo 0) {
-                    val x = (s.x + directions[i][0])
-                    val y = (s.y + directions[i][1])
+                    val x = (s.first + directions[i][0])
+                    val y = (s.second + directions[i][1])
                     if (x in 0..4 && y in 0..4) {
                         val rotations = i * 2 + 1
-                        if (solutions[Point(x, y)] == null && maze[x][y] in 1..2) {
-                            queue.add(Point(x, y))
+                        if (solutions[Pair(x, y)] == null && maze[x][y] in 1..2) {
+                            queue.add(Pair(x, y))
                             solutions[s] = rotations
-                            if (!visited[s.x][s.y]) {
+                            if (!visited[s.first][s.second]) {
                                 var neededRotation = neededRotations[s] ?: continue
                                 neededRotation = rotations - neededRotation
                                 if (neededRotation < 0) neededRotation += 8
                                 neededRotations[s] = neededRotation
-                                visited[s.x][s.y] = true
+                                visited[s.first][s.second] = true
                             }
                         }
                     }
@@ -130,7 +129,7 @@ class ArrowAlign {
                 return@sortedWith 0
             }
         private var ticks = 0
-        private val neededRotations = HashMap<Point, Int>()
+        private val neededRotations = HashMap<Pair<Int, Int>, Int>()
         private val rightClickMouse: Method = try {
             Minecraft::class.java.getDeclaredMethod("func_147121_ag")
         } catch (e: NoSuchMethodException) {
