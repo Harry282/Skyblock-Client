@@ -1,37 +1,55 @@
-## Welcome to GitHub Pages
+# Skyblock Client Info
 
-You can use the [editor on GitHub](https://github.com/Harry282/Skyblock-Client/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Download the latest release [here](https://github.com/Harry282/Skyblock-Client/releases).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on Discord.
 
-### Markdown
+## Commands
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+- `/sbclient` to open config menu.
+- `/sbclient mimicmessage [message]` to set mimic message.
 
-```markdown
-Syntax highlighted code block
+## Features
 
-# Header 1
-## Header 2
-### Header 3
+### Floor 7
+- Terminals click blocker, solver, and auto
+- Arrow Align device click blocker and [quick solver](https://youtu.be/i1CvmrMCEtg)
+- Auto ghost blocks to jump to terminals from crush
 
-- Bulleted
-- List
+### Dungeons
+- Blood finished spawning message
+- Show and ESP hidden fels, Shadow Assassins, and stealthy blood mobs
+- Correct Livid finder with ESP
+- Customizable mimic killed message
+- Miniboss, bats, and star mob ESP
 
-1. Numbered
-2. List
+### Mining
+- Configurable Gemstone ESP
 
-**Bold** and _Italic_ and `Code` text
+### Misc
+- Remove blindness, nausea, and portal effect
+- Remove underwater FOV change
+- Remove under lava overlay
+- Hide potion effects in inventory
+- Highlight salvageable items
+- Hide Wither Shield particles
+- Keybind and right click Stonk ghost blocks
+- Endstone Protector Timer
 
-[Link](url) and ![Image](src)
-```
+### Macros
+- [Experiments](https://youtu.be/1_dP8UmHywA) click blocker, solver, and auto
+- Auto [single enchant book combine](https://youtu.be/zQe9VSttBb8)
+- Bone Macro
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+## Upcoming Features
+- Auto Rogue Sword
+- Left click leap to door opener
+- No block animation for swords with right click ability
 
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Harry282/Skyblock-Client/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+## Potential Upcoming Features
+- Auto Salvage
+- Universal Bridge port
+- Wardrobe Macro
+- Custom Item Macros
+- Custom Item Use Block
+- Dungeon Map Scanner
