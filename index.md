@@ -22,11 +22,13 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on D
 - Correct Livid finder with ESP
 - Customizable mimic killed message
 - Miniboss, bats, and star mob ESP
+- Left click leap to door opener
 
 ### Mining
 - Configurable Gemstone ESP
 
 ### Misc
+- No block animation for swords with right click ability
 - Remove blindness, nausea, and portal effect
 - Remove underwater FOV change
 - Remove under lava overlay
@@ -43,13 +45,12 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on D
 
 ## Upcoming Features
 - Auto Rogue Sword
-- Left click leap to door opener
-- No block animation for swords with right click ability
+- Auto Salvage
 
 ## Potential Upcoming Features
-- Auto Salvage
 - Universal Bridge port
 - Wardrobe Macro
+- Custom Mod ID Hider
 - Custom Item Macros
 - Custom Item Use Block
 - Dungeon Map Scanner
