@@ -4,10 +4,11 @@
   "package": "skyblockclient.mixins",
   "refmap": "mixins.skyblockclient.refmap.json",
   "client": [
+    "MixinEntityRenderer",
     "MixinGuiContainer",
     "MixinInventoryEffectRenderer",
     "MixinMinecraft",
-    "MixinNetHandlerPlayClient",
+    "MixinModList",
     "MixinNetworkManager",
     "MixinRendererLivingEntity"
   ]

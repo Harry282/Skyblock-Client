@@ -19,7 +19,7 @@ import java.awt.Color
 class GemstoneESP {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (!inSkyblock || !config.gemstoneESP || event.phase != TickEvent.Phase.START || !isCrystalHollow() ||
+        if (event.phase != TickEvent.Phase.START || !config.gemstoneESP || !isCrystalHollow() ||
             lastUpdate + config.gemstoneESPTime > System.currentTimeMillis()
         ) return
         if (thread == null || !thread!!.isAlive) {
@@ -52,7 +52,7 @@ class GemstoneESP {
 
     @SubscribeEvent
     fun onRenderWorld(event: RenderWorldLastEvent) {
-        if (!inSkyblock || !config.gemstoneESP || !isCrystalHollow()) return
+        if (!config.gemstoneESP || !isCrystalHollow()) return
         synchronized(gemstoneList) {
             gemstoneList.forEach { (blockPos: BlockPos, color: Color) ->
                 RenderUtils.drawBlockOutline(blockPos, color, event.partialTicks)
@@ -81,7 +81,7 @@ class GemstoneESP {
     }
 
     private fun isCrystalHollow(): Boolean {
-        for (s in ScoreboardUtils.sidebarLines) {
+        if (inSkyblock) for (s in ScoreboardUtils.sidebarLines) {
             val line = ScoreboardUtils.cleanSB(s)
             if (Locations.any { line.contains(it) }) return true
         }

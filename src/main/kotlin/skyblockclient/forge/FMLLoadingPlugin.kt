@@ -1,6 +1,5 @@
 package skyblockclient.forge
 
-import club.sk1er.mods.scrollabletooltips.forge.ClassTransformer
 import net.minecraftforge.common.ForgeVersion
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion
@@ -12,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixins
 class FMLLoadingPlugin : IFMLLoadingPlugin {
 
     override fun getASMTransformerClass(): Array<String> {
-        return arrayOf(ClassTransformer::class.java.name)
+        return emptyArray()
     }
 
     override fun getModContainerClass(): String? {
@@ -24,6 +23,7 @@ class FMLLoadingPlugin : IFMLLoadingPlugin {
     }
 
     override fun injectData(data: Map<String, Any>) {}
+
     override fun getAccessTransformerClass(): String? {
         return null
     }

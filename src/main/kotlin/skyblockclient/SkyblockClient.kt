@@ -43,31 +43,32 @@ class SkyblockClient {
     }
 
     @Mod.EventHandler
-    fun init(event: FMLInitializationEvent?) {
+    fun onInit(event: FMLInitializationEvent?) {
         config.init()
 
         ClientCommandHandler.instance.registerCommand(SkyblockClientCommands())
 
         MinecraftForge.EVENT_BUS.register(this)
-        MinecraftForge.EVENT_BUS.register(F7P3Ghost())
-        MinecraftForge.EVENT_BUS.register(ArrowAlign())
         MinecraftForge.EVENT_BUS.register(AntiBlind())
         MinecraftForge.EVENT_BUS.register(AnvilUses())
+        MinecraftForge.EVENT_BUS.register(ArrowAlign())
         MinecraftForge.EVENT_BUS.register(BloodReady())
-        MinecraftForge.EVENT_BUS.register(BookAnvilMacro())
         MinecraftForge.EVENT_BUS.register(BoneMacro())
+        MinecraftForge.EVENT_BUS.register(BookAnvilMacro())
         MinecraftForge.EVENT_BUS.register(EnchantingExperiments())
         MinecraftForge.EVENT_BUS.register(EndstoneProtectorTimer())
+        MinecraftForge.EVENT_BUS.register(F7P3Ghost())
+        MinecraftForge.EVENT_BUS.register(FastLeap())
         MinecraftForge.EVENT_BUS.register(GemstoneESP())
         MinecraftForge.EVENT_BUS.register(GhostBlock())
         MinecraftForge.EVENT_BUS.register(HiddenMobs())
-        MinecraftForge.EVENT_BUS.register(SalvageOverlay())
         MinecraftForge.EVENT_BUS.register(ImpactParticles())
         MinecraftForge.EVENT_BUS.register(LividESP())
         MinecraftForge.EVENT_BUS.register(MimicMessage())
-        MinecraftForge.EVENT_BUS.register(MinibossESP())
-        MinecraftForge.EVENT_BUS.register(NoRotate())
-        MinecraftForge.EVENT_BUS.register(StarMobESP())
+        MinecraftForge.EVENT_BUS.register(MobESP())
+        MinecraftForge.EVENT_BUS.register(NoBlockAnimation())
+        MinecraftForge.EVENT_BUS.register(NoWaterFOV())
+        MinecraftForge.EVENT_BUS.register(SalvageOverlay())
         MinecraftForge.EVENT_BUS.register(Terminals())
         MinecraftForge.EVENT_BUS.register(ThornStun())
 
@@ -137,10 +138,9 @@ class SkyblockClient {
     }
 
     companion object {
-        const val MOD_ID = "text_overflow_scroll"
-        const val MOD_NAME = "Scrollable Tooltips"
-        const val MOD_VERSION = "1.4.0"
-        const val SB_CLIENT_VERSION = "0.1.2-pre6"
+        const val MOD_ID = "sbclient"
+        const val MOD_NAME = "Skyblock Client"
+        const val MOD_VERSION = "0.1.2"
         const val CHAT_PREFIX = "§b§l<§fSkyblockClient§b§l>§r"
         var inSkyblock = false
         var inDungeons = false

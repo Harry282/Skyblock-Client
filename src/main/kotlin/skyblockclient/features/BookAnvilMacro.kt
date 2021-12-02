@@ -6,14 +6,13 @@ import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.gui.inventory.GuiChest
 import net.minecraft.init.Items
 import net.minecraft.inventory.ContainerChest
-import net.minecraft.util.ChatComponentText
 import net.minecraftforge.client.event.GuiScreenEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.lwjgl.input.Mouse
-import skyblockclient.SkyblockClient.Companion.CHAT_PREFIX
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.Utils.modMessage
 
 class BookAnvilMacro {
 
@@ -40,7 +39,7 @@ class BookAnvilMacro {
         if (thread == null || !thread!!.isAlive) {
             thread = Thread({
                 if (config.bookCombineMessage) {
-                    mc.thePlayer.addChatMessage(ChatComponentText("$CHAT_PREFIX §aStarting Book Combining..."))
+                    modMessage("§aStarting Book Combining...")
                 }
                 getPairs()
                 while (bookPairs.isNotEmpty() && bookPairs.values.maxOf { it.size } > 1) {
@@ -59,14 +58,14 @@ class BookAnvilMacro {
                     getPairs()
                 }
                 if (config.bookCombineMessage) {
-                    mc.thePlayer.addChatMessage(ChatComponentText("$CHAT_PREFIX §aFinished Book Combining!"))
+                    modMessage("§aFinished Book Combining!")
                 }
             }, "Book Combine")
             thread!!.start()
         } else {
             thread!!.interrupt()
             if (config.bookCombineMessage) {
-                mc.thePlayer.addChatMessage(ChatComponentText("$CHAT_PREFIX §aStopped Book Combining!"))
+                modMessage("§aStopped Book Combining!")
             }
         }
     }

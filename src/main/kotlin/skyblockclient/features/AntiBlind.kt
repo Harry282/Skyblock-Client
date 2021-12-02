@@ -9,14 +9,14 @@ import skyblockclient.SkyblockClient.Companion.inSkyblock
 class AntiBlind {
     @SubscribeEvent
     fun onRenderFog(event: FogDensity) {
-        if (!inSkyblock || !config.antiBlind) return
+        if (!config.antiBlind || !inSkyblock) return
         event.density = 0f
         event.isCanceled = true
     }
 
     @SubscribeEvent
-    fun onOverlay(event: RenderGameOverlayEvent) {
-        if (!inSkyblock || !config.antiPortal) return
+    fun onOverlay(event: RenderGameOverlayEvent.Pre) {
+        if (!config.antiPortal || !inSkyblock) return
         if (event.type == RenderGameOverlayEvent.ElementType.PORTAL) {
             event.isCanceled = true
         }

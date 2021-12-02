@@ -40,6 +40,32 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Fast Spirit Leap",
+        description = "Left click with spirit leap to leap to last door opener.",
+        category = "Dungeons",
+        subcategory = "Fast Leap"
+    )
+    var fastLeap = false
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Priority Leap Target",
+        description = "Set a username to take priority over door opener. Ignored if empty.",
+        category = "Dungeons",
+        subcategory = "Fast Leap"
+    )
+    var fastLeapTarget = ""
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Disable After Blood Open",
+        category = "Dungeons",
+        subcategory = "Fast Leap"
+    )
+    var fastLeapBloodDisable = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Block Incorrect Arrow Align Clicks",
         category = "Dungeons",
         subcategory = "F7"
@@ -360,6 +386,15 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     )
     var espMiniboss = false
 
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Seperate Miniboss Colors",
+        category = "ESP",
+        subcategory = "Dungeon ESP"
+    )
+    var espSeperateMinibossColor = true
+
     @Property(
         type = PropertyType.SWITCH,
         name = "Dungeon Starred Mobs",
@@ -371,7 +406,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.SWITCH,
         name = "Remove Starred Nametags",
-        description = "Will likely improve performance",
         category = "ESP",
         subcategory = "Dungeon ESP"
     )
@@ -416,6 +450,16 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         allowAlpha = false
     )
     var espColorShadowAssassin = Color(170, 0, 170)
+
+    @Property(
+        type = PropertyType.COLOR,
+        name = "Miniboss Color",
+        description = "Used for all minibosses except Shadow Assassins if seperate miniboss colors is off. Default #D70000.",
+        category = "ESP Colors",
+        subcategory = "Dungeon ESP Colors",
+        allowAlpha = false
+    )
+    var espColorMiniboss = Color(215, 0, 0)
 
     @Property(
         type = PropertyType.COLOR,
@@ -581,30 +625,29 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
-        name = "Teleport No Rotate",
-        description = "Most likely bannable! Prevents your view from being changed while holding any Wither Impact sword, AOTE, or AOTV.",
+        name = "No Water FOV",
+        description = "Disables FOV change in water.",
         category = "Misc",
-        subcategory = "No Rotate"
+        subcategory = "Clear Sight"
     )
-    var noRotate = false
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "No Rotate Auto Disable",
-        description = "Keep this on unless you want to be banned faster.",
-        category = "Misc",
-        subcategory = "No Rotate"
-    )
-    var noRotateAutoDisable = true
+    var antiWaterFOV = false
 
     @Property(
         type = PropertyType.SWITCH,
         name = "No Shield Particle",
         description = "Gets rid of purple particles and hearts from wither impact.",
         category = "Misc",
-        subcategory = "No Rotate"
+        subcategory = "Clear Sight"
     )
     var noShieldParticles = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "No Block Animation",
+        description = "Disable block animation on all swords with right click ability.",
+        category = "Misc"
+    )
+    var noBlockAnimation = false
 
     @Property(
         type = PropertyType.SWITCH,
@@ -772,7 +815,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
             "espColorFrozen",
             "espColorAngryArchaeologist"
         ).forEach(Consumer { s: String ->
-            addDependency(s, "espMiniboss")
+            addDependency(s, "espSeperateMinibossColor")
         })
         listOf(
             "espColorStarMobs",
@@ -813,6 +856,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     }
 
     private val configCategories = listOf(
-        "Dungeons", "Terminals", "Experiments", "ESP", "ESP Colors", "GUI", "Macros", "Misc", "Dev"
+        "Dungeons", "Terminals", "Experiment", "ESP", "ESP Colors", "GUI", "Macros", "Misc", "Dev"
     )
 }

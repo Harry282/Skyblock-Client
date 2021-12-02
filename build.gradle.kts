@@ -12,7 +12,7 @@ plugins {
     java
 }
 
-version = "0.1.2-pre6"
+version = "0.1.2"
 group = "skyblockclient"
 
 minecraft {
@@ -46,7 +46,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     packageLib("gg.essential:loader-launchwrapper:1.1.2")
-    implementation("gg.essential:essential-1.8.9-forge:1566")
+    implementation("gg.essential:essential-1.8.9-forge:1579")
 }
 
 mixin {

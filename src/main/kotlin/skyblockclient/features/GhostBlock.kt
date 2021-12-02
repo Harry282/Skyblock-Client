@@ -10,21 +10,22 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.keyBinds
 import skyblockclient.SkyblockClient.Companion.mc
-import skyblockclient.events.RightClickEvent
+import skyblockclient.events.ClickEvent
+import skyblockclient.utils.Utils.itemID
 
 class GhostBlock {
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
-        if (!inSkyblock || event.phase != TickEvent.Phase.START || !keyBinds[2].isKeyDown) return
+        if (event.phase != TickEvent.Phase.START || !inSkyblock || !keyBinds[2].isKeyDown) return
         toAir(mc.objectMouseOver.blockPos)
     }
 
     @SubscribeEvent
-    fun onRightClick(event: RightClickEvent) {
-        if (!inSkyblock || !config.stonkGhostBlock || mc.objectMouseOver == null) return
+    fun onRightClick(event: ClickEvent.RightClickEvent) {
+        if (!config.stonkGhostBlock || !inSkyblock || mc.objectMouseOver == null) return
         if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             val item = mc.thePlayer.heldItem ?: return
-            if (item.displayName.contains("Stonk")) {
+            if (item.itemID == "STONK_PICKAXE") {
                 event.isCanceled = toAir(mc.objectMouseOver.blockPos)
             }
         }

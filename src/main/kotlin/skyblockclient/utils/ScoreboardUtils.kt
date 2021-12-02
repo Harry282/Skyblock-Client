@@ -2,12 +2,12 @@ package skyblockclient.utils
 
 import net.minecraft.scoreboard.Score
 import net.minecraft.scoreboard.ScorePlayerTeam
-import net.minecraft.util.StringUtils
+import net.minecraft.util.StringUtils.stripControlCodes
 import skyblockclient.SkyblockClient.Companion.mc
 
 object ScoreboardUtils {
     fun cleanSB(scoreboard: String?): String {
-        return StringUtils.stripControlCodes(scoreboard).toCharArray().filter { it.code in 21..126 }.joinToString("")
+        return stripControlCodes(scoreboard).toCharArray().filter { it.code in 21..126 }.joinToString("")
     }
 
     val sidebarLines: List<String>

@@ -5,8 +5,7 @@ import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.entity.Entity
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.util.BlockPos
-import net.minecraft.util.ChatComponentText
-import net.minecraft.util.StringUtils
+import net.minecraft.util.StringUtils.stripControlCodes
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.event.world.WorldEvent
@@ -14,33 +13,30 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inDungeons
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RenderLivingEntityEvent
-import skyblockclient.utils.OutlineUtils
-import skyblockclient.utils.RenderUtils
-import skyblockclient.utils.ScoreboardUtils
+import skyblockclient.utils.OutlineUtils.outlineESP
+import skyblockclient.utils.RenderUtils.drawEntityBox
+import skyblockclient.utils.Utils.isFloor
+import skyblockclient.utils.Utils.modMessage
 
 class LividESP {
     @SubscribeEvent
     fun onRenderEntity(event: RenderLivingEntityEvent) {
-        if (!inDungeons || !config.lividFinder || !foundLivid || config.espType != 0) return
-        if (event.entity == livid) {
-            OutlineUtils.outlineESP(event, config.espColorLivid)
-        }
+        if (!config.lividFinder || !isFloor(5) || !foundLivid || config.espType != 0) return
+        if (event.entity == livid) outlineESP(event, config.espColorLivid)
     }
 
     @SubscribeEvent
     fun onRender(event: RenderWorldLastEvent) {
-        if (!inDungeons || !config.lividFinder || !foundLivid || config.espType == 0) return
-        RenderUtils.drawEntityBox(livid, config.espColorStarMobs, config.espType == 2, event.partialTicks)
+        if (!config.lividFinder || !isFloor(5) || !foundLivid || config.espType == 0) return
+        drawEntityBox(livid, config.espColorStarMobs, config.espBoxOutlineOpacity == 0F, event.partialTicks)
     }
 
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
-        if (!inSkyblock || !config.lividFinder || inBoss) return
-        val message = StringUtils.stripControlCodes(event.message.unformattedText)
+        if (!config.lividFinder || !isFloor(5) || inBoss) return
+        val message = stripControlCodes(event.message.unformattedText)
         if (message == "[BOSS] Livid: I respect you for making it to here, but I'll be your undoing.") {
             inBoss = true
         }
@@ -48,8 +44,8 @@ class LividESP {
 
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
-        if (!inDungeons || !config.lividFinder || event.phase != TickEvent.Phase.START) return
-        if (isF5() && !foundLivid && inBoss) {
+        if (event.phase != TickEvent.Phase.START || !config.lividFinder || !isFloor(5)) return
+        if (!foundLivid && inBoss) {
             val loadedLivids = mc.theWorld.loadedEntityList.filter {
                 it.name.contains("Livid") && it.name.length > 5 && it.name[1] == it.name[5]
             }
@@ -74,7 +70,7 @@ class LividESP {
                                 EnumDyeColor.RED -> 'c'
                                 EnumDyeColor.WHITE -> 'f'
                                 else -> {
-                                    mc.thePlayer.addChatMessage(ChatComponentText("Error encountered during Livid Check with color:" + color.name))
+                                    modMessage("Error encountered during Livid Check with color:" + color.name)
                                     return@Thread
                                 }
                             }
@@ -93,29 +89,10 @@ class LividESP {
         inBoss = false
     }
 
-    private fun isF5(): Boolean {
-        for (s in ScoreboardUtils.sidebarLines) {
-            val line = ScoreboardUtils.cleanSB(s)
-            if (line.contains("The Catacombs (")) {
-                val dungeonFloor = line.substringAfter("(").substringBefore(")")
-                return dungeonFloor == "M5" || dungeonFloor == "F5"
-            }
-        }
-        return config.forceSkyblock
-    }
-
     private fun closestLivid(chatFormatting: Char): Entity? {
-        var dist = 100.0
-        var entity: Entity? = null
-        for (livid in mc.theWorld.loadedEntityList.filter {
-            it is EntityOtherPlayerMP && it.name.equals(lividNames[chatFormatting])
-        }) {
-            if (lividTag!!.getDistanceSqToEntity(livid) < dist) {
-                dist = lividTag!!.getDistanceSqToEntity(livid)
-                entity = livid
-            }
-        }
-        return entity
+        return mc.theWorld.loadedEntityList.filterIsInstance<EntityOtherPlayerMP>()
+            .filter { it.name.equals(lividNames[chatFormatting]) }
+            .sortedWith(Comparator.comparingDouble { lividTag!!.getDistanceSqToEntity(it) }).firstOrNull()
     }
 
     companion object {

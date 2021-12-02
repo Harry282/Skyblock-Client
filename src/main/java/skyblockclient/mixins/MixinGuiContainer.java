@@ -21,7 +21,7 @@ public class MixinGuiContainer {
 
     @Inject(method = "drawSlot", at = @At("HEAD"), cancellable = true)
     private void onDrawSlot(Slot slot, CallbackInfo ci) {
-        if (MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.DrawSlotEvent.Pre(inventorySlots, gui, slot)))
+        if (MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.DrawSlotEvent(inventorySlots, gui, slot)))
             ci.cancel();
     }
 

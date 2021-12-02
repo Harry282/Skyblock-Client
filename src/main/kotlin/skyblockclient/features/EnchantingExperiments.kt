@@ -17,7 +17,7 @@ import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.GuiContainerEvent
 import skyblockclient.events.GuiContainerEvent.SlotClickEvent
-import skyblockclient.utils.RenderUtilsKT.renderText
+import skyblockclient.utils.Utils.renderText
 
 class EnchantingExperiments {
 
@@ -158,8 +158,8 @@ class EnchantingExperiments {
     }
 
     @SubscribeEvent
-    fun onDrawSlot(event: GuiContainerEvent.DrawSlotEvent.Pre) {
-        if (!inSkyblock || event.gui !is GuiChest || event.slot.stack == null || !config.experimentHighlight) return
+    fun onDrawSlot(event: GuiContainerEvent.DrawSlotEvent) {
+        if (!config.experimentHighlight || !inSkyblock || event.gui !is GuiChest || event.slot.stack == null) return
         val x = event.slot.xDisplayPosition
         val y = event.slot.yDisplayPosition
         when (currentExperiment) {
@@ -203,7 +203,7 @@ class EnchantingExperiments {
 
     @SubscribeEvent
     fun onTooltip(event: ItemTooltipEvent) {
-        if (!inSkyblock || !config.experimentHideTooltips || event.toolTip == null) return
+        if (!config.experimentHideTooltips || !inSkyblock || event.toolTip == null) return
         if (currentExperiment == ExperimentType.CHRONOMATRON || currentExperiment == ExperimentType.ULTRASEQUENCER) {
             event.toolTip.clear()
         }

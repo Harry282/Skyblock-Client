@@ -6,6 +6,7 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.keyBinds
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.Utils.rightClick
 
 class BoneMacro {
     @SubscribeEvent
@@ -16,7 +17,7 @@ class BoneMacro {
                 val item = mc.thePlayer.inventory.getStackInSlot(i) ?: continue
                 if (item.displayName.contains("Bonemerang")) {
                     mc.thePlayer.inventory.currentItem = i
-                    mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem())
+                    rightClick()
                     Thread.sleep(config.boneThrowDelay.toLong())
                 }
             }

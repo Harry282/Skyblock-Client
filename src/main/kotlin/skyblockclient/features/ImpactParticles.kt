@@ -8,13 +8,14 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ReceivePacketEvent
+import skyblockclient.utils.Utils.equalsOneOf
 
 class ImpactParticles {
     @SubscribeEvent
     fun onPacket(event: ReceivePacketEvent) {
-        if (!inSkyblock || !config.noShieldParticles || event.packet !is S2APacketParticles) return
+        if (!config.noShieldParticles || !inSkyblock || event.packet !is S2APacketParticles) return
         val packet = event.packet as S2APacketParticles
-        if (packet.particleType == EnumParticleTypes.SPELL_WITCH || packet.particleType == EnumParticleTypes.HEART) {
+        if (packet.particleType.equalsOneOf(EnumParticleTypes.SPELL_WITCH, EnumParticleTypes.HEART)) {
             val player = mc.thePlayer
             val particlePos = Vec3(packet.xCoordinate, packet.yCoordinate, packet.zCoordinate)
             if (particlePos.squareDistanceTo(player.positionVector) <= 11 * 11) {

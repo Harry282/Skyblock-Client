@@ -9,18 +9,19 @@ import skyblockclient.events.GuiContainerEvent.DrawSlotEvent
 
 class SalvageOverlay {
     @SubscribeEvent
-    fun onDrawSlot(event: DrawSlotEvent.Pre) {
-        if (!inSkyblock || !config.overlaySalvageable || event.gui !is GuiChest) return
+    fun onDrawSlot(event: DrawSlotEvent) {
+        if (!config.overlaySalvageable || !inSkyblock || event.gui !is GuiChest) return
         val item = event.slot.stack ?: return
         val attributes = item.getSubCompound("ExtraAttributes", false) ?: return
         if (attributes.hasKey("baseStatBoostPercentage") && !attributes.hasKey("dungeon_item_level")) {
             val x = event.slot.xDisplayPosition
             val y = event.slot.yDisplayPosition
-            if (attributes.getInteger("baseStatBoostPercentage") == 50) {
-                Gui.drawRect(x, y, x + 16, y + 16, config.overlayColorTopSalvageable.rgb)
-            } else {
-                Gui.drawRect(x, y, x + 16, y + 16, config.overlayColorSalvageable.rgb)
-            }
+            Gui.drawRect(
+                x, y, x + 16, y + 16,
+                if (attributes.getInteger("baseStatBoostPercentage") == 50) {
+                    config.overlayColorTopSalvageable.rgb
+                } else config.overlayColorSalvageable.rgb
+            )
         }
     }
 }

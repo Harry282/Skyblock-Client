@@ -1,6 +1,5 @@
 package skyblockclient.features.dungeons
 
-import net.minecraft.client.Minecraft
 import net.minecraft.entity.item.EntityItemFrame
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
@@ -10,17 +9,16 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.mc
-import skyblockclient.events.RightClickEvent
-import skyblockclient.utils.ScoreboardUtils
-import java.lang.reflect.Method
+import skyblockclient.events.ClickEvent
+import skyblockclient.utils.Utils.isFloor
+import skyblockclient.utils.Utils.rightClick
 import java.util.*
 
 class ArrowAlign {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (!config.arrowAlign && !config.autoCompleteArrowAlign || !inDungeons || !isF7() || event.phase != TickEvent.Phase.START) return
+        if (event.phase != TickEvent.Phase.START || !config.arrowAlign && !config.autoCompleteArrowAlign || !isFloor(7)) return
         if (ticks % 20 == 0) {
             if (mc.thePlayer.getDistanceSq(BlockPos(197, 122, 276)) <= 20 * 20) calculate()
             ticks = 0
@@ -29,8 +27,8 @@ class ArrowAlign {
     }
 
     @SubscribeEvent
-    fun onRightClick(event: RightClickEvent) {
-        if (!config.arrowAlign && !config.autoCompleteArrowAlign || !isF7() || mc.objectMouseOver == null) return
+    fun onRightClick(event: ClickEvent.RightClickEvent) {
+        if (!config.arrowAlign && !config.autoCompleteArrowAlign || !isFloor(7) || mc.objectMouseOver == null) return
         if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
             if (mc.objectMouseOver.entityHit is EntityItemFrame) {
                 if (mc.thePlayer.isSneaking && config.arrowAlignSneakOverride) return
@@ -45,23 +43,11 @@ class ArrowAlign {
                     }
                     neededRotations[Pair(x, y)] = clicks - 1
                     if (config.autoCompleteArrowAlign && clicks > 1) {
-                        rightClickMouse.isAccessible = true
-                        rightClickMouse.invoke(mc)
+                        rightClick()
                     }
                 }
             }
         }
-    }
-
-    private fun isF7(): Boolean {
-        for (s in ScoreboardUtils.sidebarLines) {
-            val line = ScoreboardUtils.cleanSB(s)
-            if (line.contains("The Catacombs (")) {
-                val dungeonFloor = line.substring(line.indexOf("(") + 1, line.indexOf(")"))
-                return dungeonFloor == "F7"
-            }
-        }
-        return config.forceSkyblock
     }
 
     private fun calculate() {
@@ -130,10 +116,5 @@ class ArrowAlign {
             }
         private var ticks = 0
         private val neededRotations = HashMap<Pair<Int, Int>, Int>()
-        private val rightClickMouse: Method = try {
-            Minecraft::class.java.getDeclaredMethod("func_147121_ag")
-        } catch (e: NoSuchMethodException) {
-            Minecraft::class.java.getDeclaredMethod("rightClickMouse")
-        }
     }
 }
