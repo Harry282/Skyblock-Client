@@ -113,8 +113,8 @@ class MobESP {
     }
 
     companion object {
-        private val starMobs = HashSet<Entity>()
+        val starMobs = HashSet<Entity>()
         private val checked = HashSet<Entity>()
-        private val highlightMobs = HashMap<Entity, Color>()
+        val highlightMobs = HashMap<Entity, Color>()
     }
 }

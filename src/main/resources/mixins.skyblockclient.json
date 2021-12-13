@@ -11,5 +11,8 @@
     "MixinModList",
     "MixinNetworkManager",
     "MixinRendererLivingEntity"
+  ],
+  "mixins": [
+    "MixinPatcherEntityCulling"
   ]
 }
