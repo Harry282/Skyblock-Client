@@ -5,11 +5,24 @@ import gg.essential.vigilance.data.Category
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import gg.essential.vigilance.data.SortingBehavior
+import skyblockclient.SkyblockClient.Companion.display
+import skyblockclient.guis.BlockAnimationBlacklist
+import skyblockclient.guis.HideModID
 import java.awt.Color
 import java.io.File
 import java.util.function.Consumer
 
 object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient", sortingBehavior = Sorting) {
+
+    @Property(
+        type = PropertyType.BUTTON,
+        name = "Mod ID Hider",
+        category = "Info",
+        placeholder = "Edit"
+    )
+    fun openHideModID() {
+        display = HideModID()
+    }
 
     @Property(
         type = PropertyType.SWITCH,
@@ -240,7 +253,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.NUMBER,
-        name = "Terminal Click Delay",
+        name = "Experiment Click Delay",
         description = "Time in ms between automatic experiment clicks.",
         category = "Experiment",
         subcategory = "Auto",
@@ -650,6 +663,16 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var noBlockAnimation = false
 
     @Property(
+        type = PropertyType.BUTTON,
+        name = "No Block Animation Blacklist",
+        category = "Misc",
+        placeholder = "Edit"
+    )
+    fun openBlockAnimationBlacklist() {
+        display = BlockAnimationBlacklist()
+    }
+
+    @Property(
         type = PropertyType.SWITCH,
         name = "Gemstone ESP",
         category = "Misc",
@@ -856,6 +879,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     }
 
     private val configCategories = listOf(
-        "Dungeons", "Terminals", "Experiment", "ESP", "ESP Colors", "GUI", "Macros", "Misc", "Dev"
+        "Info", "Dungeons", "Terminals", "Experiment", "ESP", "ESP Colors", "GUI", "Macros", "Misc", "Dev"
     )
 }

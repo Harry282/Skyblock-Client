@@ -1,5 +1,9 @@
 package skyblockclient
 
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import gg.essential.api.EssentialAPI
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
@@ -40,10 +44,18 @@ class SkyblockClient {
         if (!directory.exists()) {
             directory.mkdirs()
         }
+        configFile = File(directory, "config.json")
+        loadConfig()
+        for ((dataCategory, type) in dataCategories) {
+            if (!data.containsKey(dataCategory)) {
+                data[dataCategory] = type
+            }
+        }
+        writeConfig()
     }
 
     @Mod.EventHandler
-    fun onInit(event: FMLInitializationEvent?) {
+    fun onInit(event: FMLInitializationEvent) {
         config.init()
 
         ClientCommandHandler.instance.registerCommand(SkyblockClientCommands())
@@ -142,16 +154,45 @@ class SkyblockClient {
         const val MOD_NAME = "Skyblock Client"
         const val MOD_VERSION = "0.1.2"
         const val CHAT_PREFIX = "§b§l<§fSkyblockClient§b§l>§r"
+        var configFile: File? = null
         var inSkyblock = false
         var inDungeons = false
         var mc: Minecraft = Minecraft.getMinecraft()
         var config = Config
+        var data = HashMap<String, JsonElement>()
         var display: GuiScreen? = null
+        var dataCategories = mapOf<String, JsonElement>(
+            Pair("Block Animation Blacklist", JsonArray()),
+            Pair("Item Macros", JsonArray()),
+            Pair("Hidden Mod IDs", JsonArray())
+        )
         var keyBinds = arrayOf(
             KeyBinding("Open Settings", Keyboard.KEY_RSHIFT, "Skyblock Client"),
             KeyBinding("Bone Macro", Keyboard.KEY_B, "Skyblock Client"),
             KeyBinding("Ghost Block", Keyboard.KEY_G, "Skyblock Client")
         )
         var tickCount = 0
+
+        fun loadConfig() {
+            try {
+                if (configFile?.exists() != true) configFile?.createNewFile()
+                val dataGson = Gson().fromJson(configFile?.readText(), JsonElement::class.java)?.asJsonObject ?: JsonObject()
+                data.clear()
+                dataGson.entrySet().forEach { data[it.key] = it.value }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        fun writeConfig() {
+            try {
+                configFile?.bufferedWriter()?.run {
+                    write(Gson().toJson(data))
+                    close()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

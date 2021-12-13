@@ -1,5 +1,7 @@
 package skyblockclient.mixins;
 
+import com.google.gson.JsonArray;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +14,7 @@ import skyblockclient.SkyblockClient;
 import java.util.List;
 import java.util.Map;
 
-@Mixin(FMLHandshakeMessage.ModList.class)
+@Mixin(value = FMLHandshakeMessage.ModList.class, remap = false)
 public abstract class MixinModList {
 
     @Shadow
@@ -20,6 +22,9 @@ public abstract class MixinModList {
 
     @Inject(method = "<init>(Ljava/util/List;)V", at = @At("RETURN"))
     private void removeMod(List<ModContainer> modList, CallbackInfo ci) {
-        modTags.remove(SkyblockClient.MOD_ID);
+        if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
+            modTags.remove(SkyblockClient.MOD_ID);
+            SkyblockClient.Companion.getData().getOrDefault("Hidden Mod IDs", new JsonArray()).getAsJsonArray().forEach(it -> modTags.remove(it.getAsString()));
+        }
     }
 }
