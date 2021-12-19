@@ -54,3 +54,7 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on D
 - Custom Item Macros
 - Custom Item Use Block
 - Dungeon Map Scanner
+
+## Known Bugs
+- Box ESP is kinda broken
+- No blindness breaks world fog
