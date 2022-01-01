@@ -1,9 +1,6 @@
 package skyblockclient
 
-import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
+import com.google.gson.*
 import gg.essential.api.EssentialAPI
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
@@ -187,7 +184,7 @@ class SkyblockClient {
         fun writeConfig() {
             try {
                 configFile?.bufferedWriter()?.run {
-                    write(Gson().toJson(data))
+                    write(GsonBuilder().setPrettyPrinting().create().toJson(data))
                     close()
                 }
             } catch (e: Exception) {
