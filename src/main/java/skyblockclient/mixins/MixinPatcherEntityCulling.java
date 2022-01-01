@@ -15,7 +15,7 @@ public class MixinPatcherEntityCulling {
     @Dynamic
     @Inject(method = "checkEntity", at = @At("HEAD"), cancellable = true)
     private static void overrideEntityCulling(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (MobESP.Companion.getHighlightMobs().containsKey(entity) || MobESP.Companion.getStarMobs().contains(entity)) {
+        if (MobESP.Companion.getColor(entity) != null || MobESP.Companion.getStarMobs().contains(entity)) {
             cir.setReturnValue(false);
         }
     }

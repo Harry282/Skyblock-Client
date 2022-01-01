@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
-import skyblockclient.utils.RenderUtils
+import skyblockclient.utils.RenderUtilsKT.drawBlockBox
 import skyblockclient.utils.ScoreboardUtils
 import java.awt.Color
 
@@ -55,7 +55,7 @@ class GemstoneESP {
         if (!config.gemstoneESP || !isCrystalHollow()) return
         synchronized(gemstoneList) {
             gemstoneList.forEach { (blockPos: BlockPos, color: Color) ->
-                RenderUtils.drawBlockOutline(blockPos, color, event.partialTicks)
+                drawBlockBox(blockPos, color, outline = true, fill = false, event.partialTicks)
             }
         }
     }

@@ -16,7 +16,7 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RenderLivingEntityEvent
 import skyblockclient.utils.OutlineUtils.outlineESP
-import skyblockclient.utils.RenderUtils.drawEntityBox
+import skyblockclient.utils.RenderUtilsKT.drawEntityBox
 import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.modMessage
 
@@ -30,7 +30,15 @@ class LividESP {
     @SubscribeEvent
     fun onRender(event: RenderWorldLastEvent) {
         if (!config.lividFinder || !isFloor(5) || !foundLivid || config.espType == 0) return
-        drawEntityBox(livid, config.espColorStarMobs, config.espBoxOutlineOpacity == 0F, event.partialTicks)
+        livid?.let {
+            drawEntityBox(
+                it,
+                config.espColorLivid,
+                config.espBoxOutlineOpacity != 0F,
+                config.espBoxOpacity != 0f,
+                event.partialTicks
+            )
+        }
     }
 
     @SubscribeEvent

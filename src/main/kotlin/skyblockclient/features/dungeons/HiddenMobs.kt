@@ -11,16 +11,15 @@ class HiddenMobs {
     @SubscribeEvent
     fun onRenderEntity(event: RenderLivingEntityEvent) {
         if (!inDungeons) return
-        if (event.entity.isInvisible) {
-            if (when (event.entity) {
-                    is EntityEnderman -> config.showFels && event.entity.name == "Dinnerbone"
-                    is EntityPlayer -> {
-                        config.showShadowAssassin && event.entity.name.contains("Shadow Assassin") ||
-                                config.showStealthy && watcherMobs.any { event.entity.name.trim() == it }
-                    }
-                    else -> false
-                }
-            ) event.entity.isInvisible = false
+        if (event.entity.isInvisible &&
+            when (event.entity) {
+                is EntityEnderman -> config.showFels && event.entity.name == "Dinnerbone"
+                is EntityPlayer -> config.showShadowAssassin && event.entity.name.contains("Shadow Assassin") ||
+                        config.showStealthy && watcherMobs.any { event.entity.name.trim() == it }
+                else -> false
+            }
+        ) {
+            event.entity.isInvisible = false
         }
     }
 
