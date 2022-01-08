@@ -8,10 +8,10 @@ import net.minecraft.inventory.Slot
 import net.minecraft.item.EnumDyeColor
 import net.minecraft.item.Item
 import net.minecraft.util.StringUtils.stripControlCodes
-import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent
 import net.minecraftforge.event.entity.player.ItemTooltipEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.GuiContainerEvent.DrawSlotEvent
@@ -23,51 +23,45 @@ import skyblockclient.utils.Utils.renderText
 class Terminals {
 
     @SubscribeEvent
-    fun onGuiOpen(event: GuiOpenEvent) {
-        currentTerminal = TerminalType.NONE
-        clickQueue.clear()
+    fun onGuiDraw(event: BackgroundDrawnEvent) {
         if (!isFloor(7) || event.gui !is GuiChest) return
         val container = (event.gui as GuiChest).inventorySlots
         if (container is ContainerChest) {
-            val chestName = container.lowerChestInventory.displayName.unformattedText
-            if (chestName == "Navigate the maze!") {
-                currentTerminal = TerminalType.MAZE
-            } else if (chestName == "Click in order!") {
-                currentTerminal = TerminalType.NUMBERS
-            } else if (chestName == "Correct all the panes!") {
-                currentTerminal = TerminalType.CORRECTALL
-            } else if (chestName.startsWith("What starts with: '")) {
-                currentTerminal = TerminalType.LETTER
-            } else if (chestName.startsWith("Select all the")) {
-                currentTerminal = TerminalType.COLOR
+            if (currentTerminal == TerminalType.NONE) {
+                val chestName = container.lowerChestInventory.displayName.unformattedText
+                if (chestName == "Navigate the maze!") {
+                    currentTerminal = TerminalType.MAZE
+                } else if (chestName == "Click in order!") {
+                    currentTerminal = TerminalType.NUMBERS
+                } else if (chestName == "Correct all the panes!") {
+                    currentTerminal = TerminalType.CORRECTALL
+                } else if (chestName.startsWith("What starts with: '")) {
+                    currentTerminal = TerminalType.LETTER
+                } else if (chestName.startsWith("Select all the")) {
+                    currentTerminal = TerminalType.COLOR
+                }
+                shouldClick = true
             }
-            shouldClick = true
-        }
-    }
-
-    @SubscribeEvent
-    fun onGuiDraw(event: BackgroundDrawnEvent) {
-        if (!isFloor(7) || event.gui !is GuiChest || currentTerminal == TerminalType.NONE) return
-        val container = (event.gui as GuiChest).inventorySlots
-        if (container is ContainerChest) {
-            if (clickQueue.isEmpty() || recalculate) {
-                recalculate = getClicks(container)
-            } else {
-                val invSlots = container.inventorySlots
-                shouldClick = when (currentTerminal) {
-                    TerminalType.MAZE, TerminalType.NUMBERS, TerminalType.CORRECTALL -> clickQueue.removeIf {
-                        invSlots[it.slotNumber].hasStack && invSlots[it.slotNumber].stack.itemDamage == 5
+            if (currentTerminal != TerminalType.NONE) {
+                if (clickQueue.isEmpty() || recalculate) {
+                    recalculate = getClicks(container)
+                } else {
+                    val invSlots = container.inventorySlots
+                    shouldClick = when (currentTerminal) {
+                        TerminalType.MAZE, TerminalType.NUMBERS, TerminalType.CORRECTALL -> clickQueue.removeIf {
+                            invSlots[it.slotNumber].hasStack && invSlots[it.slotNumber].stack.itemDamage == 5
+                        }
+                        TerminalType.LETTER, TerminalType.COLOR -> clickQueue.removeIf {
+                            invSlots[it.slotNumber].hasStack && invSlots[it.slotNumber].stack.isItemEnchanted
+                        }
+                        TerminalType.NONE -> false
+                    } || shouldClick
+                    if (clickQueue.isNotEmpty() && config.terminalAuto && (shouldClick || config.terminalPingless) &&
+                        System.currentTimeMillis() - lastClickTime > config.terminalClickDelay
+                    ) {
+                        clickSlot(clickQueue[0])
+                        shouldClick = false
                     }
-                    TerminalType.LETTER, TerminalType.COLOR -> clickQueue.removeIf {
-                        invSlots[it.slotNumber].hasStack && invSlots[it.slotNumber].stack.isItemEnchanted
-                    }
-                    TerminalType.NONE -> false
-                } || shouldClick
-                if (clickQueue.isNotEmpty() && config.terminalAuto && (shouldClick || config.terminalPingless) &&
-                    System.currentTimeMillis() - lastClickTime > config.terminalClickDelay
-                ) {
-                    clickSlot(clickQueue[0])
-                    shouldClick = false
                 }
             }
             if (config.showTerminalInfo) {
@@ -83,28 +77,32 @@ class Terminals {
         if (!config.terminalHighlight || !isFloor(7) || event.gui !is GuiChest || event.slot.stack == null) return
         val x = event.slot.xDisplayPosition
         val y = event.slot.yDisplayPosition
-        if (event.slot.inventory != mc.thePlayer.inventory) when (currentTerminal) {
-            TerminalType.NUMBERS -> {
-                for (i in 0..2) if (clickQueue.size > i && event.slot.slotNumber == clickQueue[i].slotNumber) {
-                    Gui.drawRect(x, y, x + 16, y + 16, getColor(i))
-                    break
-                }
-                if (event.slot.inventory != mc.thePlayer.inventory) {
-                    val item = event.slot.stack
-                    if (item.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && item.itemDamage == 14) {
-                        renderText(
-                            text = item.stackSize.toString(),
-                            x = x + 9 - mc.fontRendererObj.getStringWidth(item.stackSize.toString()) / 2,
-                            y = y + 4
-                        )
-                        event.isCanceled = true
+        if (event.slot.inventory != mc.thePlayer.inventory) {
+            when (currentTerminal) {
+                TerminalType.NUMBERS -> {
+                    for (i in 0..2) {
+                        if (clickQueue.size > i && event.slot.slotNumber == clickQueue[i].slotNumber) {
+                            Gui.drawRect(x, y, x + 16, y + 16, getColor(i))
+                            break
+                        }
+                    }
+                    if (event.slot.inventory != mc.thePlayer.inventory) {
+                        val item = event.slot.stack
+                        if (item.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && item.itemDamage == 14) {
+                            renderText(
+                                text = item.stackSize.toString(),
+                                x = x + 9 - mc.fontRendererObj.getStringWidth(item.stackSize.toString()) / 2,
+                                y = y + 4
+                            )
+                            event.isCanceled = true
+                        }
                     }
                 }
-            }
-            TerminalType.LETTER, TerminalType.COLOR -> if (clickQueue.any { it.slotNumber == event.slot.slotNumber }) {
-                Gui.drawRect(x, y, x + 16, y + 16, config.terminalColorHighlight.rgb)
-            }
-            else -> {
+                TerminalType.LETTER, TerminalType.COLOR -> if (clickQueue.any { it.slotNumber == event.slot.slotNumber }) {
+                    Gui.drawRect(x, y, x + 16, y + 16, config.terminalColorHighlight.rgb)
+                }
+                else -> {
+                }
             }
         }
     }
@@ -128,8 +126,16 @@ class Terminals {
     }
 
     @SubscribeEvent
+    fun onTick(event: TickEvent.ClientTickEvent) {
+        if (event.phase != TickEvent.Phase.START || !isFloor(7) || mc.currentScreen is GuiChest) return
+        currentTerminal = TerminalType.NONE
+        clickQueue.clear()
+        shouldClick = false
+    }
+
+    @SubscribeEvent
     fun onTooltip(event: ItemTooltipEvent) {
-        if (!config.terminalHideTooltip || isFloor(7) || currentTerminal == TerminalType.NONE || event.toolTip == null) return
+        if (!config.terminalHideTooltip || !isFloor(7) || currentTerminal == TerminalType.NONE || event.toolTip == null) return
         event.toolTip.clear()
     }
 
