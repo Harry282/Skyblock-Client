@@ -84,12 +84,7 @@ object OutlineUtils {
     }
 
     private fun setColor(color: Color) {
-        glColor4d(
-            (color.red / 255f).toDouble(),
-            (color.green / 255f).toDouble(),
-            (color.blue / 255f).toDouble(),
-            (color.alpha / 255f).toDouble()
-        )
+        glColor4f(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
     }
 
     private fun checkSetupFBO() {
