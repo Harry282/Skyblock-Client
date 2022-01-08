@@ -1,6 +1,6 @@
 package skyblockclient.mixins;
 
-import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage;
@@ -24,7 +24,10 @@ public abstract class MixinModList {
     private void removeMod(List<ModContainer> modList, CallbackInfo ci) {
         if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
             modTags.remove(SkyblockClient.MOD_ID);
-            SkyblockClient.Companion.getData().getOrDefault("Hidden Mod IDs", new JsonArray()).getAsJsonArray().forEach(it -> modTags.remove(it.getAsString()));
+            JsonElement json = SkyblockClient.Companion.getConfigData().get("Hidden Mod IDs");
+            if (json != null && json.isJsonArray()) {
+                json.getAsJsonArray().forEach(it -> modTags.remove(it.getAsString()));
+            }
         }
     }
 }

@@ -12,12 +12,16 @@ import gg.essential.elementa.constraints.RelativeConstraint
 import gg.essential.elementa.constraints.SiblingConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
+import gg.essential.universal.GuiScale
 import gg.essential.vigilance.utils.onLeftClick
-import skyblockclient.SkyblockClient.Companion.data
-import skyblockclient.SkyblockClient.Companion.writeConfig
+import skyblockclient.SkyblockClient
+import skyblockclient.SkyblockClient.Companion.configData
+import skyblockclient.config.ConfigManager.parseData
+import skyblockclient.config.ConfigManager.writeConfig
+import skyblockclient.features.NoBlockAnimation.Companion.blacklist
 import java.awt.Color
 
-class BlockAnimationBlacklist : WindowScreen(newGuiScale = 2) {
+class BlockAnimationBlacklist : WindowScreen(newGuiScale = GuiScale.scaleForScreenSize().ordinal) {
 
     private val scrollComponent: ScrollComponent
 
@@ -49,8 +53,8 @@ class BlockAnimationBlacklist : WindowScreen(newGuiScale = 2) {
             height = 75.percent()
         } childOf window
 
-        data["Block Animation Blacklist"]?.asJsonArray?.forEach {
-            addEntry(it.asString)
+        blacklist.forEach {
+            addEntry(it)
         }
     }
 
@@ -92,9 +96,12 @@ class BlockAnimationBlacklist : WindowScreen(newGuiScale = 2) {
             val textInput = container.childrenOfType<UITextInput>().find {
                 it.placeholder == "Item Name / Item ID"
             } ?: continue
-            jsonArray.add(JsonPrimitive(textInput.getText()))
+            if (textInput.getText() != "") {
+                jsonArray.add(JsonPrimitive(textInput.getText()))
+            }
         }
-        data["Block Animation Blacklist"] = jsonArray
-        writeConfig()
+        configData["Block Animation Blacklist"] = jsonArray
+        parseData()
+        SkyblockClient.configFile?.let { writeConfig(it) }
     }
 }

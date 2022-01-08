@@ -10,6 +10,7 @@ import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.utils.ScoreboardUtils.sidebarLines
 import kotlin.math.round
 
+
 object Utils {
     fun Any?.equalsOneOf(vararg other: Any): Boolean {
         for (obj in other) {
@@ -95,6 +96,16 @@ object Utils {
             Minecraft::class.java.getDeclaredMethod("func_147121_ag")
         } catch (e: NoSuchMethodException) {
             Minecraft::class.java.getDeclaredMethod("rightClickMouse")
+        }
+        method.isAccessible = true
+        method.invoke(Minecraft.getMinecraft())
+    }
+
+    fun leftClick() {
+        val method = try {
+            Minecraft::class.java.getDeclaredMethod("func_147116_af")
+        } catch (e: NoSuchMethodException) {
+            Minecraft::class.java.getDeclaredMethod("clickMouse")
         }
         method.isAccessible = true
         method.invoke(Minecraft.getMinecraft())

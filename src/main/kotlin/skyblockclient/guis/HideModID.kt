@@ -12,12 +12,15 @@ import gg.essential.elementa.constraints.RelativeConstraint
 import gg.essential.elementa.constraints.SiblingConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
+import gg.essential.universal.GuiScale
 import gg.essential.vigilance.utils.onLeftClick
-import skyblockclient.SkyblockClient.Companion.data
-import skyblockclient.SkyblockClient.Companion.writeConfig
+import skyblockclient.SkyblockClient
+import skyblockclient.SkyblockClient.Companion.configData
+import skyblockclient.config.ConfigManager.parseData
+import skyblockclient.config.ConfigManager.writeConfig
 import java.awt.Color
 
-class HideModID : WindowScreen(newGuiScale = 2) {
+class HideModID : WindowScreen(newGuiScale = GuiScale.scaleForScreenSize().ordinal) {
 
     private val scrollComponent: ScrollComponent
 
@@ -65,7 +68,7 @@ class HideModID : WindowScreen(newGuiScale = 2) {
             y = CenterConstraint()
         } childOf container
 
-        data["Hidden Mod IDs"]?.asJsonArray?.forEach {
+        configData["Hidden Mod IDs"]?.asJsonArray?.forEach {
             addEntry(it.asString)
         }
     }
@@ -108,9 +111,12 @@ class HideModID : WindowScreen(newGuiScale = 2) {
             val textInput = container.childrenOfType<UITextInput>().find {
                 it.placeholder == "Mod ID"
             } ?: continue
-            jsonArray.add(JsonPrimitive(textInput.getText()))
+            if (textInput.getText() != "") {
+                jsonArray.add(JsonPrimitive(textInput.getText()))
+            }
         }
-        data["Hidden Mod IDs"] = jsonArray
-        writeConfig()
+        configData["Hidden Mod IDs"] = jsonArray
+        parseData()
+        SkyblockClient.configFile?.let { writeConfig(it) }
     }
 }

@@ -8,21 +8,12 @@ import gg.essential.vigilance.data.SortingBehavior
 import skyblockclient.SkyblockClient.Companion.display
 import skyblockclient.guis.BlockAnimationBlacklist
 import skyblockclient.guis.HideModID
+import skyblockclient.guis.ItemMacros
 import java.awt.Color
 import java.io.File
 import java.util.function.Consumer
 
 object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient", sortingBehavior = Sorting) {
-
-    @Property(
-        type = PropertyType.BUTTON,
-        name = "Mod ID Hider",
-        category = "Info",
-        placeholder = "Edit"
-    )
-    fun openHideModID() {
-        display = HideModID()
-    }
 
     @Property(
         type = PropertyType.SWITCH,
@@ -335,7 +326,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         type = PropertyType.SELECTOR,
         name = "ESP Type",
         category = "ESP",
-        subcategory = "Dungeon ESP",
         options = ["Outline", "Box"]
     )
     var espType = 0
@@ -344,7 +334,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         type = PropertyType.DECIMAL_SLIDER,
         name = "OutlineESP Width",
         category = "ESP",
-        subcategory = "Dungeon ESP",
         maxF = 10f
     )
     var espOutlineWidth = 1f
@@ -353,17 +342,21 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         type = PropertyType.PERCENT_SLIDER,
         name = "Box Outline Opacity",
         category = "ESP",
-        subcategory = "Dungeon ESP",
-        maxF = 10f
     )
     var espBoxOutlineOpacity = 0.95f
+
+    @Property(
+        type = PropertyType.DECIMAL_SLIDER,
+        name = "Box Outline Width",
+        category = "ESP",
+        maxF = 10f
+    )
+    var espBoxOutlineWidth = 1f
 
     @Property(
         type = PropertyType.PERCENT_SLIDER,
         name = "Box Opacity",
         category = "ESP",
-        subcategory = "Dungeon ESP",
-        maxF = 10f
     )
     var espBoxOpacity = 0.3f
 
@@ -579,6 +572,16 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var overlayColorTopSalvageable = Color(106, 255, 106, 170)
 
     @Property(
+        type = PropertyType.BUTTON,
+        name = "Item Macros",
+        category = "Macros",
+        placeholder = "Edit"
+    )
+    fun openItemMacros() {
+        display = ItemMacros()
+    }
+
+    @Property(
         type = PropertyType.NUMBER,
         name = "Throw Delay",
         description = "Time between each bone throw in ms. Default 50.",
@@ -617,6 +620,16 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         subcategory = "Book Anvil Combine"
     )
     var bookCombineMessage = true
+
+    @Property(
+        type = PropertyType.BUTTON,
+        name = "Mod ID Hider",
+        category = "Misc",
+        placeholder = "Edit"
+    )
+    fun openHideModID() {
+        display = HideModID()
+    }
 
     @Property(
         type = PropertyType.SWITCH,

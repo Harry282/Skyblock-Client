@@ -1,6 +1,6 @@
 package skyblockclient
 
-import com.google.gson.*
+import com.google.gson.JsonElement
 import gg.essential.api.EssentialAPI
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
@@ -20,6 +20,9 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import org.lwjgl.input.Keyboard
 import skyblockclient.command.SkyblockClientCommands
 import skyblockclient.config.Config
+import skyblockclient.config.ConfigManager.loadConfig
+import skyblockclient.config.ConfigManager.parseData
+import skyblockclient.config.ConfigManager.writeConfig
 import skyblockclient.features.*
 import skyblockclient.features.dungeons.*
 import skyblockclient.utils.ScoreboardUtils
@@ -42,13 +45,6 @@ class SkyblockClient {
             directory.mkdirs()
         }
         configFile = File(directory, "config.json")
-        loadConfig()
-        for ((dataCategory, type) in dataCategories) {
-            if (!data.containsKey(dataCategory)) {
-                data[dataCategory] = type
-            }
-        }
-        writeConfig()
     }
 
     @Mod.EventHandler
@@ -72,6 +68,7 @@ class SkyblockClient {
         MinecraftForge.EVENT_BUS.register(GhostBlock())
         MinecraftForge.EVENT_BUS.register(HiddenMobs())
         MinecraftForge.EVENT_BUS.register(ImpactParticles())
+        MinecraftForge.EVENT_BUS.register(ItemMacro())
         MinecraftForge.EVENT_BUS.register(LividESP())
         MinecraftForge.EVENT_BUS.register(MimicMessage())
         MinecraftForge.EVENT_BUS.register(MobESP())
@@ -88,6 +85,9 @@ class SkyblockClient {
 
     @Mod.EventHandler
     fun postInit(event: FMLLoadCompleteEvent) {
+        configFile?.let { loadConfig(it) }
+        parseData()
+        configFile?.let { writeConfig(it) }
         if (UpdateChecker.hasUpdate() > 0) {
             try {
                 EssentialAPI.getNotifications().push(
@@ -113,14 +113,7 @@ class SkyblockClient {
         }
         if (tickCount % 20 == 0) {
             if (mc.thePlayer != null) {
-                val onHypixel = try {
-                    EssentialAPI.getMinecraftUtil().isHypixel()
-                } catch (e: Throwable) {
-                    mc.runCatching {
-                        theWorld != null && !isSingleplayer && (thePlayer?.clientBrand?.lowercase()?.contains("hypixel")
-                            ?: currentServerData?.serverIP?.lowercase()?.contains("hypixel") ?: false)
-                    }.onFailure { }.getOrDefault(false)
-                }
+                val onHypixel = EssentialAPI.getMinecraftUtil().isHypixel()
 
                 inSkyblock = config.forceSkyblock || onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
                     ?.let { ScoreboardUtils.cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
@@ -151,45 +144,18 @@ class SkyblockClient {
         const val MOD_NAME = "Skyblock Client"
         const val MOD_VERSION = "0.1.2"
         const val CHAT_PREFIX = "§b§l<§fSkyblockClient§b§l>§r"
+        val mc: Minecraft = Minecraft.getMinecraft()
+        var config = Config
+        val configData = HashMap<String, JsonElement>()
         var configFile: File? = null
+        var display: GuiScreen? = null
         var inSkyblock = false
         var inDungeons = false
-        var mc: Minecraft = Minecraft.getMinecraft()
-        var config = Config
-        var data = HashMap<String, JsonElement>()
-        var display: GuiScreen? = null
-        var dataCategories = mapOf<String, JsonElement>(
-            Pair("Block Animation Blacklist", JsonArray()),
-            Pair("Item Macros", JsonArray()),
-            Pair("Hidden Mod IDs", JsonArray())
-        )
-        var keyBinds = arrayOf(
+        val keyBinds = arrayOf(
             KeyBinding("Open Settings", Keyboard.KEY_RSHIFT, "Skyblock Client"),
             KeyBinding("Bone Macro", Keyboard.KEY_B, "Skyblock Client"),
             KeyBinding("Ghost Block", Keyboard.KEY_G, "Skyblock Client")
         )
         var tickCount = 0
-
-        fun loadConfig() {
-            try {
-                if (configFile?.exists() != true) configFile?.createNewFile()
-                val dataGson = Gson().fromJson(configFile?.readText(), JsonElement::class.java)?.asJsonObject ?: JsonObject()
-                data.clear()
-                dataGson.entrySet().forEach { data[it.key] = it.value }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        fun writeConfig() {
-            try {
-                configFile?.bufferedWriter()?.run {
-                    write(GsonBuilder().setPrettyPrinting().create().toJson(data))
-                    close()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 }
