@@ -24,9 +24,9 @@ class ItemMacro {
             else -> return
         }
         macros.forEach { macro ->
-            if (macro.keycode == pressedKey && macro.onlyWhileHolding.any {
+            if (macro.keycode == pressedKey && (macro.onlyWhileHolding.toString() == "[]" || macro.onlyWhileHolding.any {
                     mc.thePlayer.currentEquippedItem?.run { displayName.contains(it) || itemID == it } == true
-                }) {
+                })) {
                 macroItem(macro.item, macro.mouseButton == 1)
             }
         }
