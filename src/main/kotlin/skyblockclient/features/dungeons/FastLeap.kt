@@ -15,12 +15,16 @@ import skyblockclient.utils.Utils.rightClick
 
 class FastLeap {
 
+    private var lastOpener = ""
+    private var bloodOpened = false
+    private var thread: Thread? = null
+
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
         if (!config.fastLeap || !inDungeons || event.type.toInt() == 2) return
         val message = stripControlCodes(event.message.unformattedText)
         if (message.endsWith(" opened a WITHER door!")) {
-            val opener = message.split(" ")[0]
+            val opener = message.substringBefore(" ")
             if (opener != mc.thePlayer.name) {
                 lastOpener = opener
             }
@@ -38,15 +42,16 @@ class FastLeap {
             rightClick()
             if (thread == null || !thread!!.isAlive) {
                 thread = Thread({
-                    for (i in 0..100) if (mc.thePlayer.openContainer !is ContainerChest) {
-                        Thread.sleep(20)
-                    } else {
-                        val invSlots = mc.thePlayer.openContainer.inventorySlots
-                        if (config.fastLeapTarget != "") {
-                            for (slot in 10..18) if (invSlots[slot].stack?.displayName?.contains(config.fastLeapTarget) == true) {
+                    for (i in 0..100) {
+                        if (mc.thePlayer.openContainer is ContainerChest) {
+                            val invSlots = mc.thePlayer.openContainer.inventorySlots
+                            val name = if (config.fastLeapTarget != "") config.fastLeapTarget else lastOpener
+                            invSlots.subList(10, 19).find {
+                                it.stack?.displayName?.contains(name) == true
+                            }?.let {
                                 mc.playerController.windowClick(
                                     mc.thePlayer.openContainer.windowId,
-                                    slot,
+                                    it.slotNumber,
                                     2,
                                     0,
                                     mc.thePlayer
@@ -54,16 +59,7 @@ class FastLeap {
                                 return@Thread
                             }
                         }
-                        for (slot in 10..18) if (invSlots[slot].stack?.displayName?.contains(lastOpener) == true) {
-                            mc.playerController.windowClick(
-                                mc.thePlayer.openContainer.windowId,
-                                slot,
-                                2,
-                                0,
-                                mc.thePlayer
-                            )
-                            return@Thread
-                        }
+                        Thread.sleep(20)
                     }
                     modMessage("§aFast Spirit Leap failed for player $lastOpener")
                 }, "Auto Spirit Leap")
@@ -76,11 +72,5 @@ class FastLeap {
     fun onWorldLoad(event: WorldEvent.Load?) {
         lastOpener = ""
         bloodOpened = false
-    }
-
-    companion object {
-        private var lastOpener = ""
-        private var bloodOpened = false
-        private var thread: Thread? = null
     }
 }
