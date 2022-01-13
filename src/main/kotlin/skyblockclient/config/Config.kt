@@ -44,6 +44,15 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "AFK Thorn Stun",
+        description = "Makes right click toggled while holding Tribal Spear or Bonemerang in F4/M4",
+        category = "Dungeons",
+        subcategory = "General"
+    )
+    var afkThornStun = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Fast Spirit Leap",
         description = "Left click with spirit leap to leap to last door opener.",
         category = "Dungeons",
@@ -809,14 +818,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         category = "Dev"
     )
     var showTerminalInfo = false
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "AFK Thorn Stun",
-        description = "WIP. If you don't know what this does, don't ask me and don't turn it on.",
-        category = "Dev"
-    )
-    var afkThornStun = false
 
     init {
         setCategoryDescription(
