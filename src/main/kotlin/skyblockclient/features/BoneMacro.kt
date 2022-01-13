@@ -13,10 +13,10 @@ class BoneMacro {
     fun onKey(event: KeyInputEvent?) {
         if (!inSkyblock || !keyBinds[1].isPressed) return
         Thread {
-            for (i in 0..7) {
-                val item = mc.thePlayer.inventory.getStackInSlot(i) ?: continue
+            (0..8).forEach {
+                val item = mc.thePlayer.inventory.getStackInSlot(it) ?: return@forEach
                 if (item.displayName.contains("Bonemerang")) {
-                    mc.thePlayer.inventory.currentItem = i
+                    mc.thePlayer.inventory.currentItem = it
                     rightClick()
                     Thread.sleep(config.boneThrowDelay.toLong())
                 }

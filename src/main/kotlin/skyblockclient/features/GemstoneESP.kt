@@ -12,49 +12,65 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
-import skyblockclient.utils.RenderUtilsKT.drawBlockBox
-import skyblockclient.utils.ScoreboardUtils
+import skyblockclient.utils.RenderUtils.drawBlockBox
+import skyblockclient.utils.ScoreboardUtils.cleanSB
+import skyblockclient.utils.ScoreboardUtils.sidebarLines
 import java.awt.Color
 
 class GemstoneESP {
+
+    private val gemstoneList = HashMap<BlockPos, Color>()
+    private var lastUpdate: Long = 0
+    private val locations = listOf(
+        "Jungle",
+        "Jungle Temple",
+        "Mithril Deposits",
+        "Mines of Divan",
+        "Goblin Holdout",
+        "Goblin Queen's Den",
+        "Precursor Remnants",
+        "Lost Precursor City",
+        "Crystal Nucleus",
+        "Magma Fields",
+        "Khazad-dûm",
+        "Fairy Grotto",
+        "Dragon's Lair"
+    )
+    private var thread: Thread? = null
+
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START || !config.gemstoneESP || !isCrystalHollow() ||
-            lastUpdate + config.gemstoneESPTime > System.currentTimeMillis()
-        ) return
-        if (thread == null || !thread!!.isAlive) {
-            thread = Thread({
-                val blockList = HashMap<BlockPos, Color>()
-                val player = mc.thePlayer.position
-                val radius = config.gemstoneESPRadius
-                val vec3i = Vec3i(radius, radius, radius)
-                for (blockPos in BlockPos.getAllInBox(player.add(vec3i), player.subtract(vec3i))) {
-                    val blockState = mc.theWorld.getBlockState(blockPos)
-                    val dyeColor = when (blockState.block) {
-                        Blocks.stained_glass ->
-                            blockState.getValue(BlockStainedGlass.COLOR)
-                        Blocks.stained_glass_pane ->
-                            blockState.getValue(BlockStainedGlassPane.COLOR)
-                        else -> continue
-                    }
-                    val color = getColor(dyeColor) ?: continue
-                    blockList[blockPos] = color
+        if (event.phase != TickEvent.Phase.START || !config.gemstoneESP || !isCrystalHollow()) return
+        if (thread?.isAlive == true || lastUpdate + config.gemstoneESPTime > System.currentTimeMillis()) return
+        thread = Thread({
+            val blockList = HashMap<BlockPos, Color>()
+            val player = mc.thePlayer.position
+            val radius = config.gemstoneESPRadius
+            val vec3i = Vec3i(radius, radius, radius)
+            BlockPos.getAllInBox(player.add(vec3i), player.subtract(vec3i)).forEach {
+                val blockState = mc.theWorld.getBlockState(it)
+                val dyeColor = when (blockState.block) {
+                    Blocks.stained_glass -> blockState.getValue(BlockStainedGlass.COLOR)
+                    Blocks.stained_glass_pane -> blockState.getValue(BlockStainedGlassPane.COLOR)
+                    else -> return@forEach
                 }
-                synchronized(gemstoneList) {
-                    gemstoneList.clear()
-                    gemstoneList.putAll(blockList)
-                }
-                lastUpdate = System.currentTimeMillis()
-            }, "Gemstone ESP")
-            thread!!.start()
-        }
+                val color = getColor(dyeColor) ?: return@forEach
+                blockList[it] = color
+            }
+            synchronized(gemstoneList) {
+                gemstoneList.clear()
+                gemstoneList.putAll(blockList)
+            }
+            lastUpdate = System.currentTimeMillis()
+        }, "Gemstone ESP")
+        thread!!.start()
     }
 
     @SubscribeEvent
     fun onRenderWorld(event: RenderWorldLastEvent) {
         if (!config.gemstoneESP || !isCrystalHollow()) return
         synchronized(gemstoneList) {
-            gemstoneList.forEach { (blockPos: BlockPos, color: Color) ->
+            gemstoneList.forEach { (blockPos, color) ->
                 drawBlockBox(blockPos, color, outline = true, fill = false, event.partialTicks)
             }
         }
@@ -62,50 +78,18 @@ class GemstoneESP {
 
     private fun getColor(dyeColor: EnumDyeColor): Color? {
         return when (dyeColor) {
-            EnumDyeColor.ORANGE ->              // AMBER
-                if (config.gemstoneAmber) Color(237, 139, 35) else null
-            EnumDyeColor.PURPLE ->              // AMETHYST
-                if (config.gemstoneAmethyst) Color(137, 0, 201) else null
-            EnumDyeColor.LIME ->                // JADE
-                if (config.gemstoneJade) Color(157, 249, 32) else null
-            EnumDyeColor.MAGENTA ->             // JASPER
-                if (config.gemstoneJasper) Color(214, 15, 150) else null
-            EnumDyeColor.RED ->                 // RUBY
-                if (config.gemstoneRuby) Color(188, 3, 29) else null
-            EnumDyeColor.LIGHT_BLUE ->          // SAPPHIRE
-                if (config.gemstoneSapphire) Color(60, 121, 224) else null
-            EnumDyeColor.YELLOW ->              // TOPAZ
-                if (config.gemstoneTopaz) Color(249, 215, 36) else null
+            EnumDyeColor.ORANGE -> if (config.gemstoneAmber) Color(237, 139, 35) else null
+            EnumDyeColor.PURPLE -> if (config.gemstoneAmethyst) Color(137, 0, 201) else null
+            EnumDyeColor.LIME -> if (config.gemstoneJade) Color(157, 249, 32) else null
+            EnumDyeColor.MAGENTA -> if (config.gemstoneJasper) Color(214, 15, 150) else null
+            EnumDyeColor.RED -> if (config.gemstoneRuby) Color(188, 3, 29) else null
+            EnumDyeColor.LIGHT_BLUE -> if (config.gemstoneSapphire) Color(60, 121, 224) else null
+            EnumDyeColor.YELLOW -> if (config.gemstoneTopaz) Color(249, 215, 36) else null
             else -> null
         }
     }
 
     private fun isCrystalHollow(): Boolean {
-        if (inSkyblock) for (s in ScoreboardUtils.sidebarLines) {
-            val line = ScoreboardUtils.cleanSB(s)
-            if (Locations.any { line.contains(it) }) return true
-        }
-        return config.forceSkyblock
-    }
-
-    companion object {
-        private val gemstoneList = HashMap<BlockPos, Color>()
-        private var lastUpdate: Long = 0
-        private val Locations = listOf(
-            "Jungle",
-            "Jungle Temple",
-            "Mithril Deposits",
-            "Mines of Divan",
-            "Goblin Holdout",
-            "Goblin Queen's Den",
-            "Precursor Remnants",
-            "Lost Precursor City",
-            "Crystal Nucleus",
-            "Magma Fields",
-            "Khazad-dûm",
-            "Fairy Grotto",
-            "Dragon's Lair"
-        )
-        private var thread: Thread? = null
+        return inSkyblock && sidebarLines.any { s -> locations.any { cleanSB(s).contains(it) } } || config.forceSkyblock
     }
 }

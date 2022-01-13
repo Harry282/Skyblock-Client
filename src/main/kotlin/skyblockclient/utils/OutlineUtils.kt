@@ -19,14 +19,14 @@ object OutlineUtils {
         glPushMatrix()
         glPushAttrib(GL_ALL_ATTRIB_BITS)
         checkSetupFBO()
-        setColor(color)
-        renderOne(config.espOutlineWidth)
+        glColor4f(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
+        renderOne()
         render(event)
         renderTwo()
         render(event)
         renderThree()
         render(event)
-        renderFour(color)
+        renderFour()
         render(event)
         glPopAttrib()
         glPopMatrix()
@@ -46,13 +46,13 @@ object OutlineUtils {
         )
     }
 
-    private fun renderOne(lineWidth: Float) {
+    private fun renderOne() {
         glDisable(GL_ALPHA_TEST)
         glDisable(GL_TEXTURE_2D)
         glDisable(GL_LIGHTING)
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        glLineWidth(lineWidth)
+        glLineWidth(config.espOutlineWidth)
         glEnable(GL_LINE_SMOOTH)
         glEnable(GL_STENCIL_TEST)
         glClear(GL_STENCIL_BUFFER_BIT)
@@ -74,17 +74,12 @@ object OutlineUtils {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     }
 
-    private fun renderFour(color: Color) {
-        setColor(color)
+    private fun renderFour() {
         glDepthMask(false)
         glDisable(GL_DEPTH_TEST)
         glEnable(GL_POLYGON_OFFSET_LINE)
         glPolygonOffset(1.0f, -2000000f)
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f)
-    }
-
-    private fun setColor(color: Color) {
-        glColor4f(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
     }
 
     private fun checkSetupFBO() {

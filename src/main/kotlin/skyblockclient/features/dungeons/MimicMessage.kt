@@ -9,12 +9,14 @@ import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.mc
 
 class MimicMessage {
+
+    private var mimicKilled = false
+
     @SubscribeEvent
     fun onEntityDeath(event: LivingDeathEvent) {
         if (!config.mimicKillMessage || !inDungeons || event.entity !is EntityZombie || mimicKilled) return
         val entity = event.entity as EntityZombie
-        if (entity.isChild) {
-            for (i in 0..3) if (entity.getCurrentArmor(i) != null) return
+        if (entity.isChild && (0..3).none { entity.getCurrentArmor(it) != null }) {
             mimicKilled = true
             mc.thePlayer.sendChatMessage("/pc ${config.mimicMessage}")
         }
@@ -23,9 +25,5 @@ class MimicMessage {
     @SubscribeEvent
     fun onWorldLoad(event: WorldEvent.Load?) {
         mimicKilled = false
-    }
-
-    companion object {
-        private var mimicKilled = false
     }
 }

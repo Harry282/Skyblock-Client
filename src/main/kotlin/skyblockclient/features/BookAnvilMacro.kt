@@ -16,6 +16,17 @@ import skyblockclient.utils.Utils.modMessage
 
 class BookAnvilMacro {
 
+    private val bookPairs = HashMap<String, List<Int>>()
+    private var thread: Thread? = null
+    private val button = GuiButton(
+        69,
+        0,
+        0,
+        100,
+        20,
+        "Auto Combine",
+    )
+
     @SubscribeEvent
     fun onGuiBackground(event: GuiScreenEvent.BackgroundDrawnEvent) {
         if (isAnvil(event.gui)) {
@@ -36,7 +47,12 @@ class BookAnvilMacro {
     }
 
     private fun combine() {
-        if (thread == null || !thread!!.isAlive) {
+        if (thread?.isAlive == true) {
+            thread!!.interrupt()
+            if (config.bookCombineMessage) {
+                modMessage("§aStopped Book Combining!")
+            }
+        } else {
             thread = Thread({
                 if (config.bookCombineMessage) {
                     modMessage("§aStarting Book Combining...")
@@ -62,11 +78,6 @@ class BookAnvilMacro {
                 }
             }, "Book Combine")
             thread!!.start()
-        } else {
-            thread!!.interrupt()
-            if (config.bookCombineMessage) {
-                modMessage("§aStopped Book Combining!")
-            }
         }
     }
 
@@ -79,13 +90,13 @@ class BookAnvilMacro {
 
     private fun getPairs() {
         bookPairs.clear()
-        for (slot in mc.thePlayer.openContainer.inventorySlots.drop(54)) {
-            val attributes = slot.stack?.getSubCompound("ExtraAttributes", false) ?: continue
-            if (slot.stack.item == Items.enchanted_book && attributes.hasKey("enchantments")) {
+        mc.thePlayer.openContainer.inventorySlots.drop(54).forEach {
+            val attributes = it.stack?.getSubCompound("ExtraAttributes", false) ?: return@forEach
+            if (it.stack.item == Items.enchanted_book && attributes.hasKey("enchantments")) {
                 val tag = attributes.getCompoundTag("enchantments")
                 if (tag.keySet.size == 1) {
                     val enchant = tag.keySet.first() + tag.getInteger(tag.keySet.first()).toString()
-                    bookPairs[enchant] = bookPairs.getOrDefault(enchant, emptyList()).plus(slot.slotNumber)
+                    bookPairs[enchant] = bookPairs.getOrDefault(enchant, emptyList()).plus(it.slotNumber)
                 }
             }
         }
@@ -99,18 +110,5 @@ class BookAnvilMacro {
             }
         }
         return false
-    }
-
-    companion object {
-        private val bookPairs = HashMap<String, List<Int>>()
-        private var thread: Thread? = null
-        private val button = GuiButton(
-            69,
-            0,
-            0,
-            100,
-            20,
-            "Auto Combine",
-        )
     }
 }

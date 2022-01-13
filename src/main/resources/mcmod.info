@@ -1,9 +1,12 @@
 [
   {
-    "modid": "skyblockclient",
-    "name": "SkyblockClient",
+    "modid": "sbclient",
+    "name": "Skyblock Client",
     "description": "The best skyblock mod.",
     "version": "${version}",
-    "mcversion": "${mcversion}"
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/Harry282/Skyblock-Client",
+    "updateUrl": "https://github.com/Harry282/Skyblock-Client/releases",
+    "authorList": ["Harry282"]
   }
 ]

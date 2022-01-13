@@ -159,7 +159,7 @@ class ItemMacros : WindowScreen(newGuiScale = GuiScale.scaleForScreenSize().ordi
 
     override fun onTick() {
         super.onTick()
-        for ((_, macro) in components) {
+        components.forEach { (_, macro) ->
             macro.button.text.setText(GameSettings.getKeyDisplayString(macro.keycode))
             if (clickedButton === macro) {
                 macro.button.text.setText("§f> §e${macro.button.text.getText()}§f <")
@@ -171,13 +171,13 @@ class ItemMacros : WindowScreen(newGuiScale = GuiScale.scaleForScreenSize().ordi
         super.onScreenClose()
         macros.clear()
         val jsonArray = JsonArray()
-        for ((container, macro) in components) {
+        components.forEach { (container, macro) ->
             val jsonObject = JsonObject()
 
             macro.item = container.childrenOfType<UITextInput>().firstOrNull {
                 it.placeholder == "Item Name / Item ID"
-            }?.getText() ?: continue
-            if (macro.item == "") continue
+            }?.getText() ?: return@forEach
+            if (macro.item == "") return@forEach
             jsonObject.addProperty("item", macro.item)
 
             jsonObject.addProperty("keycode", macro.keycode)
@@ -186,10 +186,10 @@ class ItemMacros : WindowScreen(newGuiScale = GuiScale.scaleForScreenSize().ordi
                 it.placeholder == "Only While Holding Item (ignored if empty)"
             }?.getText()?.split(", ") ?: emptyList()
 
-            jsonObject.add("onlyWhileHolding", macro.onlyWhileHolding.let { list ->
+            jsonObject.add("onlyWhileHolding", macro.onlyWhileHolding.run {
                 val arr = JsonArray()
-                list.forEach { arr.add(JsonPrimitive(it)) }
-                return@let arr
+                forEach { arr.add(JsonPrimitive(it)) }
+                return@run arr
             })
 
             jsonObject.addProperty("mouseButton", macro.mouseButton)

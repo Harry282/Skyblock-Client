@@ -1,6 +1,5 @@
 package skyblockclient.features
 
-import net.minecraft.block.material.Material
 import net.minecraft.network.play.client.C09PacketHeldItemChange
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -24,11 +23,9 @@ class ItemMacro {
             event is InputEvent.MouseInputEvent && Mouse.getEventButtonState() -> Mouse.getEventButton() - 100
             else -> return
         }
-        for (macro in macros) {
+        macros.forEach { macro ->
             if (macro.keycode == pressedKey && macro.onlyWhileHolding.any {
-                    mc.thePlayer.currentEquippedItem?.let { item ->
-                        item.displayName.contains(it) || item.itemID == it
-                    } == true
+                    mc.thePlayer.currentEquippedItem?.run { displayName.contains(it) || itemID == it } == true
                 }) {
                 macroItem(macro.item, macro.mouseButton == 1)
             }
@@ -36,21 +33,20 @@ class ItemMacro {
     }
 
     private fun macroItem(name: String, leftMouse: Boolean) {
-        for (i in 0..8) {
+        (0..8).forEach {
             val previous = mc.thePlayer.inventory.currentItem
-            if (i == previous) continue
-            val item = mc.thePlayer.inventory.getStackInSlot(i) ?: continue
-            if (item.displayName.contains(name) || item.itemID == name) {
-                mc.thePlayer.inventory.currentItem = i
+            if (it == previous) return@forEach
+            if (mc.thePlayer.inventory.getStackInSlot(it)
+                    ?.run { displayName.contains(name) || itemID == name } == true
+            ) {
+                mc.thePlayer.inventory.currentItem = it
                 if (leftMouse) {
-                    if (mc.objectMouseOver?.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                        if (mc.theWorld.getBlockState(mc.objectMouseOver.blockPos).block.material != Material.air) {
-                            mc.netHandler.addToSendQueue(C09PacketHeldItemChange(i))
-                            leftClick()
-                            mc.netHandler.addToSendQueue(C09PacketHeldItemChange(previous))
-                            mc.thePlayer.inventory.currentItem = previous
-                            return
-                        }
+                    if (mc.objectMouseOver?.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) {
+                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(it))
+                        leftClick()
+                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(previous))
+                        mc.thePlayer.inventory.currentItem = previous
+                        return
                     }
                     leftClick()
                 } else rightClick()

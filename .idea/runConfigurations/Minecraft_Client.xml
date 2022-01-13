@@ -2,6 +2,7 @@
   <configuration default="false" name="Minecraft Client" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="GradleStart" />
     <module name="Skyblock-Client.main" />
+    <option name="PROGRAM_PARAMETERS" value="--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker" />
     <option name="VM_PARAMETERS" value="-Dfml.coreMods.load=skyblockclient.forge.FMLLoadingPlugin" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <RunnerSettings RunnerId="Run" />

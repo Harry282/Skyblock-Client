@@ -14,7 +14,7 @@ import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RenderLivingEntityEvent
 import skyblockclient.utils.OutlineUtils.outlineESP
-import skyblockclient.utils.RenderUtilsKT.drawEntityBox
+import skyblockclient.utils.RenderUtils.drawEntityBox
 import java.awt.Color
 
 class MobESP {
@@ -29,20 +29,18 @@ class MobESP {
                 val possibleEntities = event.entity.entityWorld.getEntitiesInAABBexcluding(
                     event.entity, event.entity.entityBoundingBox.offset(0.0, -1.0, 0.0)
                 ) { it !is EntityArmorStand }
-                for (entity in possibleEntities) {
-                    val shouldAdd = when (entity) {
-                        is EntityPlayer -> !entity.isInvisible() && entity.getUniqueID()
-                            .version() == 2 && entity != mc.thePlayer
+                possibleEntities.find {
+                    !starMobs.contains(it) && when (it) {
+                        is EntityPlayer -> !it.isInvisible() && it.getUniqueID()
+                            .version() == 2 && it != mc.thePlayer
                         is EntityWither -> false
                         else -> true
                     }
-                    if (shouldAdd && !starMobs.contains(entity)) {
-                        if (getColor(entity) == null) starMobs.add(entity)
-                        if (config.removeStarMobsNametag) {
-                            mc.theWorld.removeEntity(event.entity)
-                        } else checked.add(event.entity)
-                        break
-                    }
+                }?.let {
+                    if (getColor(it) == null) starMobs.add(it)
+                    if (config.removeStarMobsNametag) {
+                        mc.theWorld.removeEntity(event.entity)
+                    } else checked.add(event.entity)
                 }
             }
             return
@@ -59,19 +57,19 @@ class MobESP {
     @SubscribeEvent
     fun onRenderWorld(event: RenderWorldLastEvent) {
         if (!inDungeons || config.espType == 0) return
-        for (entity in mc.theWorld.loadedEntityList) {
-            if (starMobs.contains(entity)) {
+        mc.theWorld.loadedEntityList.forEach {
+            if (starMobs.contains(it)) {
                 drawEntityBox(
-                    entity,
+                    it,
                     config.espColorStarMobs,
                     config.espBoxOutlineOpacity != 0f,
                     config.espBoxOpacity != 0f,
                     event.partialTicks
                 )
-            } else getColor(entity)?.let {
+            } else getColor(it)?.let { color ->
                 drawEntityBox(
-                    entity,
                     it,
+                    color,
                     config.espBoxOutlineOpacity != 0F,
                     config.espBoxOpacity != 0f,
                     event.partialTicks
@@ -87,8 +85,8 @@ class MobESP {
     }
 
     companion object {
-        val starMobs = HashSet<Entity>()
         private val checked = HashSet<Entity>()
+        val starMobs = HashSet<Entity>()
 
         fun getColor(entity: Entity): Color? {
             return when (entity) {

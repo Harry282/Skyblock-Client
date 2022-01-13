@@ -22,6 +22,14 @@ import skyblockclient.utils.Utils.renderText
 
 class Terminals {
 
+    private val clickQueue = ArrayList<Slot>(28)
+    private var currentTerminal = TerminalType.NONE
+    private var lastClickTime: Long = 0
+    private var recalculate = false
+    private var shouldClick = false
+    private var windowId = 0
+    private var windowClicks = 0
+
     @SubscribeEvent
     fun onGuiDraw(event: BackgroundDrawnEvent) {
         if (!isFloor(7) || event.gui !is GuiChest) return
@@ -65,9 +73,9 @@ class Terminals {
                 }
             }
             if (config.showTerminalInfo) {
-                renderText(mc, "Terminal: " + currentTerminal.name, 20, 20, 1.0)
-                renderText(mc, "Clicks left: " + clickQueue.size, 20, 40, 1.0)
-                renderText(mc, "Window ID: $windowId, Pingless Clicks: $windowClicks", 20, 60, 1.0)
+                renderText("Terminal: " + currentTerminal.name, 20, 20)
+                renderText("Clicks left: " + clickQueue.size, 20, 40)
+                renderText("Window ID: $windowId, Pingless Clicks: $windowClicks", 20, 60)
             }
         }
     }
@@ -80,12 +88,9 @@ class Terminals {
         if (event.slot.inventory != mc.thePlayer.inventory) {
             when (currentTerminal) {
                 TerminalType.NUMBERS -> {
-                    for (i in 0..2) {
-                        if (clickQueue.size > i && event.slot.slotNumber == clickQueue[i].slotNumber) {
-                            Gui.drawRect(x, y, x + 16, y + 16, getColor(i))
-                            break
-                        }
-                    }
+                    (0..2).find {
+                        clickQueue.size > it && event.slot.slotNumber == clickQueue[it].slotNumber
+                    }?.let { Gui.drawRect(x, y, x + 16, y + 16, getColor(it)) }
                     if (event.slot.inventory != mc.thePlayer.inventory) {
                         val item = event.slot.stack
                         if (item.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && item.itemDamage == 14) {
@@ -264,15 +269,5 @@ class Terminals {
 
     private enum class TerminalType {
         MAZE, NUMBERS, CORRECTALL, LETTER, COLOR, NONE
-    }
-
-    companion object {
-        private val clickQueue = ArrayList<Slot>(28)
-        private var currentTerminal = TerminalType.NONE
-        private var lastClickTime: Long = 0
-        private var recalculate = false
-        private var shouldClick = false
-        private var windowId = 0
-        private var windowClicks = 0
     }
 }

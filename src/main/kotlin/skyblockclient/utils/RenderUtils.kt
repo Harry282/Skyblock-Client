@@ -12,9 +12,9 @@ import skyblockclient.SkyblockClient.Companion.mc
 import java.awt.Color
 
 
-object RenderUtilsKT {
+object RenderUtils {
 
-    fun drawFilledAABB(aabb: AxisAlignedBB, color: Color) {
+    private fun drawFilledAABB(aabb: AxisAlignedBB, color: Color) {
         val tessellator = Tessellator.getInstance()
         val worldRenderer = tessellator.worldRenderer
         glColor4f(color.red / 255f, color.green / 255f, color.blue / 255f, config.espBoxOpacity)
@@ -77,7 +77,7 @@ object RenderUtilsKT {
         tessellator.draw()
     }
 
-    fun drawOutlinedAABB(aabb: AxisAlignedBB, color: Color) {
+    private fun drawOutlinedAABB(aabb: AxisAlignedBB, color: Color) {
         val tessellator = Tessellator.getInstance()
         val worldRenderer = tessellator.worldRenderer
         glColor4f(color.red / 255f, color.green / 255f, color.blue / 255f, config.espBoxOpacity)

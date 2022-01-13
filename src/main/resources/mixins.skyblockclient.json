@@ -10,9 +10,7 @@
     "MixinMinecraft",
     "MixinModList",
     "MixinNetworkManager",
+    "MixinPatcherEntityCulling",
     "MixinRendererLivingEntity"
-  ],
-  "mixins": [
-    "MixinPatcherEntityCulling"
   ]
 }

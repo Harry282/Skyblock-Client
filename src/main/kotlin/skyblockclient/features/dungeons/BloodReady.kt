@@ -13,11 +13,14 @@ import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.renderText
 
 class BloodReady {
+
+    private var bloodReady = false
+    private var timer: Long = 0
+
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
         if (!config.bloodReadyNotify || !inDungeons) return
-        val message = stripControlCodes(event.message.unformattedText)
-        if (!bloodReady && message.equalsOneOf(
+        if (!bloodReady && stripControlCodes(event.message.unformattedText).equalsOneOf(
                 "[BOSS] The Watcher: That will be enough for now.",
                 "[BOSS] The Watcher: You have proven yourself. You may pass."
             )
@@ -34,10 +37,10 @@ class BloodReady {
         if (timer > System.currentTimeMillis()) {
             val sr = ScaledResolution(mc)
             renderText(
-                text = "§cBlood Spawned",
-                x = sr.scaledWidth / 2 - mc.fontRendererObj.getStringWidth("Blood Spawned") * 2,
-                y = sr.scaledHeight / 4,
-                scale = 4.0
+                "§cBlood Spawned",
+                sr.scaledWidth / 2 - mc.fontRendererObj.getStringWidth("Blood Spawned") * 2,
+                sr.scaledHeight / 4,
+                4.0
             )
         }
     }
@@ -45,10 +48,5 @@ class BloodReady {
     @SubscribeEvent
     fun onWorldLoad(event: WorldEvent.Load?) {
         bloodReady = false
-    }
-
-    companion object {
-        private var bloodReady = false
-        private var timer: Long = 0
     }
 }

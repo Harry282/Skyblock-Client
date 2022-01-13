@@ -8,6 +8,7 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 
 class AntiBlind {
+
     @SubscribeEvent
     fun onRenderFog(event: FogDensity) {
         if (!config.antiBlind || !inSkyblock) return

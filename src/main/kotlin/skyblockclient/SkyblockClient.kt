@@ -53,30 +53,32 @@ class SkyblockClient {
 
         ClientCommandHandler.instance.registerCommand(SkyblockClientCommands())
 
-        MinecraftForge.EVENT_BUS.register(this)
-        MinecraftForge.EVENT_BUS.register(AntiBlind())
-        MinecraftForge.EVENT_BUS.register(AnvilUses())
-        MinecraftForge.EVENT_BUS.register(ArrowAlign())
-        MinecraftForge.EVENT_BUS.register(BloodReady())
-        MinecraftForge.EVENT_BUS.register(BoneMacro())
-        MinecraftForge.EVENT_BUS.register(BookAnvilMacro())
-        MinecraftForge.EVENT_BUS.register(EnchantingExperiments())
-        MinecraftForge.EVENT_BUS.register(EndstoneProtectorTimer())
-        MinecraftForge.EVENT_BUS.register(F7P3Ghost())
-        MinecraftForge.EVENT_BUS.register(FastLeap())
-        MinecraftForge.EVENT_BUS.register(GemstoneESP())
-        MinecraftForge.EVENT_BUS.register(GhostBlock())
-        MinecraftForge.EVENT_BUS.register(HiddenMobs())
-        MinecraftForge.EVENT_BUS.register(ImpactParticles())
-        MinecraftForge.EVENT_BUS.register(ItemMacro())
-        MinecraftForge.EVENT_BUS.register(LividESP())
-        MinecraftForge.EVENT_BUS.register(MimicMessage())
-        MinecraftForge.EVENT_BUS.register(MobESP())
-        MinecraftForge.EVENT_BUS.register(NoBlockAnimation())
-        MinecraftForge.EVENT_BUS.register(NoWaterFOV())
-        MinecraftForge.EVENT_BUS.register(SalvageOverlay())
-        MinecraftForge.EVENT_BUS.register(Terminals())
-        MinecraftForge.EVENT_BUS.register(ThornStun())
+        listOf(
+            this,
+            AntiBlind(),
+            AnvilUses(),
+            ArrowAlign(),
+            BloodReady(),
+            BoneMacro(),
+            BookAnvilMacro(),
+            EnchantingExperiments(),
+            EndstoneProtectorTimer(),
+            F7P3Ghost(),
+            FastLeap(),
+            GemstoneESP(),
+            GhostBlock(),
+            HiddenMobs(),
+            ImpactParticles(),
+            ItemMacro(),
+            LividESP(),
+            MimicMessage(),
+            MobESP(),
+            NoBlockAnimation(),
+            NoWaterFOV(),
+            SalvageOverlay(),
+            Terminals(),
+            ThornStun(),
+        ).forEach(MinecraftForge.EVENT_BUS::register)
 
         for (keyBind in keyBinds) {
             ClientRegistry.registerKeyBinding(keyBind)
@@ -85,9 +87,11 @@ class SkyblockClient {
 
     @Mod.EventHandler
     fun postInit(event: FMLLoadCompleteEvent) {
-        configFile?.let { loadConfig(it) }
-        parseData()
-        configFile?.let { writeConfig(it) }
+        configFile?.let {
+            loadConfig(it)
+            parseData()
+            writeConfig(it)
+        }
         if (UpdateChecker.hasUpdate() > 0) {
             try {
                 EssentialAPI.getNotifications().push(

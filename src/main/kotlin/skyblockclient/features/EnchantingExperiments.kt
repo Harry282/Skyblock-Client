@@ -3,7 +3,6 @@ package skyblockclient.features
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.gui.inventory.GuiChest
-import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.inventory.ContainerChest
@@ -20,6 +19,14 @@ import skyblockclient.events.GuiContainerEvent.SlotClickEvent
 import skyblockclient.utils.Utils.renderText
 
 class EnchantingExperiments {
+
+    private var currentExperiment = ExperimentType.NONE
+    private var hasAdded = false
+    private var clicks = 0
+    private var lastClickTime: Long = 0
+    private val chronomatronOrder = ArrayList<Pair<Int, String>>(28)
+    private var lastAdded = 0
+    private var ultrasequencerOrder = HashMap<Int, Int>()
 
     @SubscribeEvent
     fun onGuiOpen(event: GuiOpenEvent) {
@@ -59,15 +66,13 @@ class EnchantingExperiments {
                         }
                     }
                     if (!hasAdded && invSlots[49].stack?.item == Items.clock) {
-                        for (slot in invSlots) {
-                            if (slot.slotNumber !in 10..43) continue
-                            if (slot.stack?.isItemEnchanted == true) {
-                                chronomatronOrder.add(Pair(slot.slotNumber, slot.stack.displayName))
-                                lastAdded = slot.slotNumber
-                                hasAdded = true
-                                clicks = 0
-                                break
-                            }
+                        invSlots.filter { it.slotNumber in 10..43 }.find {
+                            it.stack?.isItemEnchanted == true
+                        }?.let {
+                            chronomatronOrder.add(Pair(it.slotNumber, it.stack.displayName))
+                            lastAdded = it.slotNumber
+                            hasAdded = true
+                            clicks = 0
                         }
                     }
                     if (hasAdded && invSlots[49].stack?.item == Items.clock && chronomatronOrder.size > clicks &&
@@ -84,9 +89,8 @@ class EnchantingExperiments {
                         clicks++
                     }
                     if (config.experimentHighlight) {
-                        for ((i, slot) in chronomatronOrder.withIndex()) {
+                        chronomatronOrder.withIndex().forEach { (i, slot) ->
                             renderText(
-                                mc,
                                 if (i == clicks) "${slot.second} §l<" else slot.second,
                                 ScaledResolution(mc).scaledWidth / 2 - 150,
                                 ScaledResolution(mc).scaledHeight / 2 - 150 + i * 15,
@@ -102,10 +106,9 @@ class EnchantingExperiments {
                     if (!hasAdded && invSlots[49].stack?.item == Item.getItemFromBlock(Blocks.glowstone)) {
                         if (!invSlots[44].hasStack) return
                         ultrasequencerOrder.clear()
-                        for (slot in invSlots) {
-                            if (slot.slotNumber !in 9..44) continue
-                            if (slot.stack?.item == Items.dye) {
-                                ultrasequencerOrder[slot.stack.stackSize - 1] = slot.slotNumber
+                        invSlots.filter { it.slotNumber in 9..44 }.forEach {
+                            if (it.stack?.item == Items.dye) {
+                                ultrasequencerOrder[it.stack.stackSize - 1] = it.slotNumber
                             }
                         }
                         hasAdded = true
@@ -164,36 +167,22 @@ class EnchantingExperiments {
         val y = event.slot.yDisplayPosition
         when (currentExperiment) {
             ExperimentType.CHRONOMATRON -> {
-                for (i in 0..2) {
-                    if (chronomatronOrder.size > clicks + i && event.slot.stack.displayName == chronomatronOrder[clicks + i].second) {
-                        Gui.drawRect(x, y, x + 16, y + 16, getColor(i))
-                        return
-                    }
-                }
+                (0..2).find {
+                    chronomatronOrder.size > clicks + it && event.slot.stack.displayName == chronomatronOrder[clicks + it].second
+                }?.let { Gui.drawRect(x, y, x + 16, y + 16, getColor(it)) }
             }
             ExperimentType.ULTRASEQUENCER -> {
                 if (event.container.inventorySlots[49].stack?.item == Items.clock && event.slot.slotNumber in 9..44) {
                     event.isCanceled = event.slot.stack.item == Item.getItemFromBlock(Blocks.stained_glass_pane)
-                    for (i in 0..2) {
-                        if (event.slot.slotNumber == ultrasequencerOrder[clicks + i]) {
-                            Gui.drawRect(x, y, x + 16, y + 16, getColor(i))
-                            break
-                        }
-                    }
-                    for ((int, slot) in ultrasequencerOrder) {
-                        if (event.slot.slotNumber == slot) {
-                            GlStateManager.pushMatrix()
-                            GlStateManager.disableLighting()
-                            GlStateManager.disableDepth()
-                            GlStateManager.disableBlend()
-                            mc.fontRendererObj.drawStringWithShadow(
-                                (int + 1).toString(),
-                                (x + 9 - mc.fontRendererObj.getStringWidth((int + 1).toString()) / 2).toFloat(),
-                                (y + 4).toFloat(), 0xffffff
-                            )
-                            GlStateManager.popMatrix()
-                            return
-                        }
+                    (0..2).find {
+                        event.slot.slotNumber == ultrasequencerOrder[clicks + it]
+                    }?.let { Gui.drawRect(x, y, x + 16, y + 16, getColor(it)) }
+                    ultrasequencerOrder.entries.find { event.slot.slotNumber == it.value }?.let {
+                        renderText(
+                            (it.key + 1).toString(),
+                            x + 9 - mc.fontRendererObj.getStringWidth((it.key + 1).toString()) / 2,
+                            y + 4
+                        )
                     }
                 }
             }
@@ -223,15 +212,5 @@ class EnchantingExperiments {
         ULTRASEQUENCER,
         SUPERPAIRS,
         NONE
-    }
-
-    companion object {
-        private var currentExperiment = ExperimentType.NONE
-        private var hasAdded = false
-        private var clicks = 0
-        private var lastClickTime: Long = 0
-        private val chronomatronOrder = ArrayList<Pair<Int, String>>(28)
-        private var lastAdded = 0
-        private var ultrasequencerOrder = HashMap<Int, Int>()
     }
 }

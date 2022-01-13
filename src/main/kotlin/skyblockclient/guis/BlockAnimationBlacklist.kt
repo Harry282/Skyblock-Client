@@ -92,10 +92,10 @@ class BlockAnimationBlacklist : WindowScreen(newGuiScale = GuiScale.scaleForScre
     override fun onScreenClose() {
         super.onScreenClose()
         val jsonArray = JsonArray()
-        for (container in scrollComponent.allChildren) {
+        scrollComponent.allChildren.forEach { container ->
             val textInput = container.childrenOfType<UITextInput>().find {
                 it.placeholder == "Item Name / Item ID"
-            } ?: continue
+            } ?: return@forEach
             if (textInput.getText() != "") {
                 jsonArray.add(JsonPrimitive(textInput.getText()))
             }

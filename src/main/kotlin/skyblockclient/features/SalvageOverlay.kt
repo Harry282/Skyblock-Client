@@ -11,8 +11,7 @@ class SalvageOverlay {
     @SubscribeEvent
     fun onDrawSlot(event: DrawSlotEvent) {
         if (!config.overlaySalvageable || !inSkyblock || event.gui !is GuiChest) return
-        val item = event.slot.stack ?: return
-        val attributes = item.getSubCompound("ExtraAttributes", false) ?: return
+        val attributes = event.slot.stack?.getSubCompound("ExtraAttributes", false) ?: return
         if (attributes.hasKey("baseStatBoostPercentage") && !attributes.hasKey("dungeon_item_level")) {
             val x = event.slot.xDisplayPosition
             val y = event.slot.yDisplayPosition

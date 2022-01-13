@@ -16,11 +16,29 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RenderLivingEntityEvent
 import skyblockclient.utils.OutlineUtils.outlineESP
-import skyblockclient.utils.RenderUtilsKT.drawEntityBox
+import skyblockclient.utils.RenderUtils.drawEntityBox
 import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.modMessage
 
 class LividESP {
+
+    private val lividNames = mapOf(
+        '2' to "Frog Livid",
+        '5' to "Purple Livid",
+        '7' to "Doctor Livid",
+        '9' to "Scream Livid",
+        'a' to "Smile Livid",
+        'c' to "Hockey Livid",
+        'd' to "Crossed Livid",
+        'e' to "Arcade Livid",
+        'f' to "Vendetta Livid"
+    )
+    private var foundLivid = false
+    private var livid: Entity? = null
+    private var lividTag: Entity? = null
+    private var inBoss = false
+    private var thread: Thread? = null
+
     @SubscribeEvent
     fun onRenderEntity(event: RenderLivingEntityEvent) {
         if (!config.lividFinder || !isFloor(5) || !foundLivid || config.espType != 0) return
@@ -101,24 +119,5 @@ class LividESP {
         return mc.theWorld.loadedEntityList.filterIsInstance<EntityOtherPlayerMP>()
             .filter { it.name.equals(lividNames[chatFormatting]) }
             .sortedWith(Comparator.comparingDouble { lividTag!!.getDistanceSqToEntity(it) }).firstOrNull()
-    }
-
-    companion object {
-        private val lividNames = mapOf(
-            '2' to "Frog Livid",
-            '5' to "Purple Livid",
-            '7' to "Doctor Livid",
-            '9' to "Scream Livid",
-            'a' to "Smile Livid",
-            'c' to "Hockey Livid",
-            'd' to "Crossed Livid",
-            'e' to "Arcade Livid",
-            'f' to "Vendetta Livid"
-        )
-        private var foundLivid = false
-        private var livid: Entity? = null
-        private var lividTag: Entity? = null
-        private var inBoss = false
-        private var thread: Thread? = null
     }
 }

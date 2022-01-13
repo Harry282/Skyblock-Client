@@ -1,9 +1,9 @@
 package skyblockclient.utils
 
+import gg.essential.universal.UChat
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.item.ItemStack
-import net.minecraft.util.ChatComponentText
 import skyblockclient.SkyblockClient.Companion.CHAT_PREFIX
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
@@ -13,15 +13,14 @@ import kotlin.math.round
 
 object Utils {
     fun Any?.equalsOneOf(vararg other: Any): Boolean {
-        for (obj in other) {
-            if (this == obj) return true
+        return other.any {
+            this == it
         }
-        return false
     }
 
     fun isFloor(floor: Int): Boolean {
-        for (s in sidebarLines) {
-            val line = ScoreboardUtils.cleanSB(s)
+        sidebarLines.forEach {
+            val line = ScoreboardUtils.cleanSB(it)
             if (line.contains("The Catacombs (")) {
                 if (line.substringAfter("(").substringBefore(")").equalsOneOf("F$floor", "M$floor")) {
                     return true
@@ -49,8 +48,8 @@ object Utils {
                 if (display.hasKey("Lore", 9)) {
                     val nbt = display.getTagList("Lore", 8)
                     val lore = ArrayList<String>()
-                    for (lineNumber in 0..nbt.tagCount()) {
-                        lore.add(nbt.getStringTagAt(lineNumber))
+                    (0..nbt.tagCount()).forEach {
+                        lore.add(nbt.getStringTagAt(it))
                     }
                     return lore
                 }
@@ -58,30 +57,25 @@ object Utils {
             return emptyList()
         }
 
-    fun modMessage(message: String) {
-        mc.thePlayer.addChatMessage(ChatComponentText("$CHAT_PREFIX $message"))
-    }
+    fun modMessage(message: String) = UChat.chat("$CHAT_PREFIX $message")
 
     fun renderText(
-        mc: Minecraft = Minecraft.getMinecraft(),
         text: String,
         x: Int,
         y: Int,
         scale: Double = 1.0,
         color: Int = 0xFFFFFF
     ) {
-        var yOffset = y
-
         GlStateManager.pushMatrix()
         GlStateManager.disableLighting()
         GlStateManager.disableDepth()
         GlStateManager.disableBlend()
         GlStateManager.scale(scale, scale, scale)
-        yOffset -= mc.fontRendererObj.FONT_HEIGHT
-        for (line in text.split("\n")) {
+        var yOffset = y - mc.fontRendererObj.FONT_HEIGHT
+        text.split("\n").forEach {
             yOffset += (mc.fontRendererObj.FONT_HEIGHT * scale).toInt()
             mc.fontRendererObj.drawString(
-                line,
+                it,
                 round(x / scale).toFloat(),
                 round(yOffset / scale).toFloat(),
                 color,

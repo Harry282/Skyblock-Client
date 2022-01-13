@@ -24,10 +24,8 @@ class NoBlockAnimation {
         if (!config.noBlockAnimation || !inSkyblock) return
         if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) {
             val item = mc.thePlayer.heldItem ?: return
-            if (item.item !is ItemSword || blacklist.any {
-                    item.itemID == it || item.displayName.contains(it)
-                }) return
-            for (line in mc.thePlayer.heldItem.lore) if (line.contains("§6Ability: ") && line.endsWith("§e§lRIGHT CLICK")) {
+            if (item.item !is ItemSword || blacklist.any { item.itemID == it || item.displayName.contains(it) }) return
+            if (mc.thePlayer.heldItem.lore.any { it.contains("§6Ability: ") && it.endsWith("§e§lRIGHT CLICK") }) {
                 event.isCanceled = true
                 if (!isRightClickKeyDown) {
                     mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.heldItem))

@@ -14,6 +14,45 @@ import skyblockclient.events.ClickEvent
 import skyblockclient.utils.Utils.itemID
 
 class GhostBlock {
+
+    private val blacklist = listOf(
+        Blocks.acacia_door,
+        Blocks.anvil,
+        Blocks.beacon,
+        Blocks.bed,
+        Blocks.birch_door,
+        Blocks.brewing_stand,
+        Blocks.brown_mushroom,
+        Blocks.chest,
+        Blocks.command_block,
+        Blocks.crafting_table,
+        Blocks.dark_oak_door,
+        Blocks.daylight_detector,
+        Blocks.daylight_detector_inverted,
+        Blocks.dispenser,
+        Blocks.dropper,
+        Blocks.enchanting_table,
+        Blocks.ender_chest,
+        Blocks.furnace,
+        Blocks.hopper,
+        Blocks.jungle_door,
+        Blocks.lever,
+        Blocks.noteblock,
+        Blocks.oak_door,
+        Blocks.powered_comparator,
+        Blocks.powered_repeater,
+        Blocks.red_mushroom,
+        Blocks.skull,
+        Blocks.standing_sign,
+        Blocks.stone_button,
+        Blocks.trapdoor,
+        Blocks.trapped_chest,
+        Blocks.unpowered_comparator,
+        Blocks.unpowered_repeater,
+        Blocks.wall_sign,
+        Blocks.wooden_button
+    )
+
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || !inSkyblock || !keyBinds[2].isKeyDown) return
@@ -24,8 +63,7 @@ class GhostBlock {
     fun onRightClick(event: ClickEvent.RightClickEvent) {
         if (!config.stonkGhostBlock || !inSkyblock || mc.objectMouseOver == null) return
         if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            val item = mc.thePlayer.heldItem ?: return
-            if (item.itemID == "STONK_PICKAXE") {
+            if (mc.thePlayer.heldItem?.itemID == "STONK_PICKAXE") {
                 event.isCanceled = toAir(mc.objectMouseOver.blockPos)
             }
         }
@@ -40,47 +78,5 @@ class GhostBlock {
             }
         }
         return false
-    }
-
-    companion object {
-        private val blacklist = ArrayList(
-            listOf(
-                Blocks.acacia_door,
-                Blocks.anvil,
-                Blocks.beacon,
-                Blocks.bed,
-                Blocks.birch_door,
-                Blocks.brewing_stand,
-                Blocks.command_block,
-                Blocks.crafting_table,
-                Blocks.chest,
-                Blocks.dark_oak_door,
-                Blocks.daylight_detector,
-                Blocks.daylight_detector_inverted,
-                Blocks.dispenser,
-                Blocks.dropper,
-                Blocks.enchanting_table,
-                Blocks.ender_chest,
-                Blocks.furnace,
-                Blocks.hopper,
-                Blocks.jungle_door,
-                Blocks.lever,
-                Blocks.brown_mushroom,
-                Blocks.red_mushroom,
-                Blocks.noteblock,
-                Blocks.powered_comparator,
-                Blocks.unpowered_comparator,
-                Blocks.powered_repeater,
-                Blocks.unpowered_repeater,
-                Blocks.standing_sign,
-                Blocks.wall_sign,
-                Blocks.trapdoor,
-                Blocks.trapped_chest,
-                Blocks.wooden_button,
-                Blocks.stone_button,
-                Blocks.oak_door,
-                Blocks.skull
-            )
-        )
     }
 }

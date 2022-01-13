@@ -16,6 +16,17 @@ import skyblockclient.utils.Utils.rightClick
 import java.util.*
 
 class ArrowAlign {
+
+    private val area = BlockPos.getAllInBox(BlockPos(197, 125, 278), BlockPos(197, 121, 274))
+            .toList().sortedWith { a, b ->
+            if (a.y == b.y) return@sortedWith b.z - a.z
+            if (a.y < b.y) return@sortedWith 1
+            if (a.y > b.y) return@sortedWith -1
+            return@sortedWith 0
+        }
+    private val neededRotations = HashMap<Pair<Int, Int>, Int>()
+    private var ticks = 0
+
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || !config.arrowAlign && !config.autoCompleteArrowAlign || !isFloor(7)) return
@@ -60,10 +71,10 @@ class ArrowAlign {
             val queue = LinkedList<Pair<Int, Int>>()
             val visited = Array(5) { BooleanArray(5) }
             neededRotations.clear()
-            for ((i, pos) in area.withIndex()) {
+            area.withIndex().forEach { (i, pos) ->
                 val x = i % 5
                 val y = i / 5
-                val frame = frames.find { it.position == pos } ?: continue
+                val frame = frames.find { it.position == pos } ?: return@forEach
                 // 0 = null, 1 = arrow, 2 = end, 3 = start
                 maze[x][y] = when (frame.displayedItem.item) {
                     Items.arrow -> 1
@@ -84,16 +95,16 @@ class ArrowAlign {
             while (queue.size != 0) {
                 val s = queue.poll()
                 val directions = arrayOf(intArrayOf(1, 0), intArrayOf(0, 1), intArrayOf(-1, 0), intArrayOf(0, -1))
-                for (i in 3 downTo 0) {
-                    val x = (s.first + directions[i][0])
-                    val y = (s.second + directions[i][1])
+                (3 downTo 0).forEach {
+                    val x = (s.first + directions[it][0])
+                    val y = (s.second + directions[it][1])
                     if (x in 0..4 && y in 0..4) {
-                        val rotations = i * 2 + 1
+                        val rotations = it * 2 + 1
                         if (solutions[Pair(x, y)] == null && maze[x][y] in 1..2) {
                             queue.add(Pair(x, y))
                             solutions[s] = rotations
                             if (!visited[s.first][s.second]) {
-                                var neededRotation = neededRotations[s] ?: continue
+                                var neededRotation = neededRotations[s] ?: return@forEach
                                 neededRotation = rotations - neededRotation
                                 if (neededRotation < 0) neededRotation += 8
                                 neededRotations[s] = neededRotation
@@ -104,17 +115,5 @@ class ArrowAlign {
                 }
             }
         }
-    }
-
-    companion object {
-        private val area =
-            BlockPos.getAllInBox(BlockPos(197, 125, 278), BlockPos(197, 121, 274)).toList().sortedWith { a, b ->
-                if (a.y == b.y) return@sortedWith b.z - a.z
-                if (a.y < b.y) return@sortedWith 1
-                if (a.y > b.y) return@sortedWith -1
-                return@sortedWith 0
-            }
-        private var ticks = 0
-        private val neededRotations = HashMap<Pair<Int, Int>, Int>()
     }
 }

@@ -10,23 +10,15 @@ import org.spongepowered.asm.mixin.Mixins
 @MCVersion(ForgeVersion.mcVersion)
 class FMLLoadingPlugin : IFMLLoadingPlugin {
 
-    override fun getASMTransformerClass(): Array<String> {
-        return emptyArray()
-    }
+    override fun getASMTransformerClass(): Array<String> = emptyArray()
 
-    override fun getModContainerClass(): String? {
-        return null
-    }
+    override fun getModContainerClass(): String? = null
 
-    override fun getSetupClass(): String? {
-        return null
-    }
+    override fun getSetupClass(): String? = null
 
     override fun injectData(data: Map<String, Any>) {}
 
-    override fun getAccessTransformerClass(): String? {
-        return null
-    }
+    override fun getAccessTransformerClass(): String? = null
 
     init {
         MixinBootstrap.init()
