@@ -2,7 +2,7 @@
 
 Download the latest release [here](https://github.com/Harry282/Skyblock-Client/releases).
 
-Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on Discord.
+Report crashes (WITH A CRASH REPORT) or broken features to `Harry282#1031` on Discord.
 
 ## Commands
 
