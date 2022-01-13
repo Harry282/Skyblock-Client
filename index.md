@@ -52,8 +52,6 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on D
 ## Potential Upcoming Features
 - Universal Bridge port
 - Wardrobe Macro
-- Custom Mod ID Hider
-- Custom Item Macros
 - Custom Item Use Block
 - Dungeon Map Scanner
 
