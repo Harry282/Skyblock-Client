@@ -6,7 +6,7 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on D
 
 ## Commands
 
-- `/sbclient` to open config menu.
+- `/sbclient` to open config menu. Aliases `/sbc` and `/skyblockclient`
 - `/sbclient mimicmessage [message]` to set mimic message.
 
 ## Features
@@ -22,6 +22,7 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on D
 - Correct Livid finder with ESP
 - Customizable mimic killed message
 - Miniboss, bats, and star mob ESP
+- AFK hold right click for thorn stun
 - Left click leap to door opener
 
 ### Mining
@@ -29,18 +30,19 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on D
 
 ### Misc
 - No block animation for swords with right click ability
-- Remove blindness, nausea, and portal effect
+- Remove blindness, lava overlay, nausea, and portal effect
 - Remove underwater FOV change
-- Remove under lava overlay
 - Hide potion effects in inventory
 - Highlight salvageable items
 - Hide Wither Shield particles
 - Keybind and right click Stonk ghost blocks
+- Custom mod-ID hider
 - Endstone Protector Timer
 
 ### Macros
 - [Experiments](https://youtu.be/1_dP8UmHywA) click blocker, solver, and auto
 - Auto [single enchant book combine](https://youtu.be/zQe9VSttBb8)
+- Custom Item Use Macros
 - Bone Macro
 
 ## Upcoming Features
@@ -56,5 +58,3 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282 #1031` on D
 - Dungeon Map Scanner
 
 ## Known Bugs
-- Box ESP is kinda broken
-- No blindness breaks world fog
