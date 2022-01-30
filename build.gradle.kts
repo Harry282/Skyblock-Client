@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.6.10"
     id("net.minecraftforge.gradle.forge") version "6f53277"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.spongepowered.mixin") version "0.6-SNAPSHOT"
     java
     idea
