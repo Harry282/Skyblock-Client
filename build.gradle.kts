@@ -10,6 +10,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.spongepowered.mixin") version "0.6-SNAPSHOT"
     java
+    idea
 }
 
 version = "0.1.3-pre1"
