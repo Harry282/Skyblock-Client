@@ -14,10 +14,11 @@ jobs:
         java-version: '8'
         distribution: 'temurin'
         cache: gradle
+    - uses: gradle/gradle-build-action@v2
     - name: Grant Gradle Permission
       run: chmod +x gradlew
     - name: Setup ForgeGradle
-      run: ./gradlew setupCiWorkspace
+      run: ./gradlew setupCiWorkspace --no-daemon
     - name: Build with Gradle
       run: ./gradlew build --no-daemon
     - name: Upload Build Artifact
