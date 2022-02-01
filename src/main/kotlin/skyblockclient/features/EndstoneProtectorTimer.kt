@@ -27,7 +27,7 @@ class EndstoneProtectorTimer {
     fun onOverlay(event: RenderGameOverlayEvent.Post) {
         if (event.type != RenderGameOverlayEvent.ElementType.HOTBAR || !config.endstoneProtectorTimer || !inSkyblock || mc.ingameGUI == null) return
         if (timer - System.currentTimeMillis() > 0) {
-            val time = (timer - System.currentTimeMillis()) / 1000
+            val time = (timer - System.currentTimeMillis()) / 1000f
             val sr = ScaledResolution(mc)
             val width = sr.scaledWidth / 2 - mc.fontRendererObj.getStringWidth("00.00") / 2
             renderText(
