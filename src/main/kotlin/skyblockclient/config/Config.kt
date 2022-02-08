@@ -5,6 +5,7 @@ import gg.essential.vigilance.data.Category
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import gg.essential.vigilance.data.SortingBehavior
+import net.minecraft.util.EnumChatFormatting
 import skyblockclient.SkyblockClient.Companion.display
 import skyblockclient.guis.BlockAnimationBlacklist
 import skyblockclient.guis.HideModID
@@ -780,6 +781,53 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Worm fishing esp",
+        description = "Detects lava in precursor remnants above Y=64.\n\nMade by TheStachelfisch",
+        category = "Misc",
+        subcategory = "Mining"
+    )
+    var wormFishingLavaESP = false
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Worm fishing ESP Radius",
+        category = "Misc",
+        subcategory = "Mining",
+        max = 150
+    )
+    var wormFishingLavaESPRadius = 50
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Worm fishing ESP Time",
+        description = "Time in ms between scan cycles.",
+        category = "Misc",
+        subcategory = "Mining",
+        increment = 10,
+        max = 5000
+    )
+    var wormFishingLavaESPTime = 750
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Hide ESP near lava",
+        description = "Hide ESP when near lava.",
+        category = "Misc",
+        subcategory = "Mining",
+    )
+    var wormFishingLavaHideNear = true
+
+    @Property(
+        type = PropertyType.CHECKBOX,
+        name = "Turn off ESP after fishing up worm.",
+        description = "Only turns it off for current session.",
+        category = "Misc",
+        subcategory = "Mining",
+    )
+    var wormFishingHideFished = true
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Right Click Ghost Block",
         description = "Right click with a Stonk to create ghost block.",
         category = "Misc",
@@ -879,6 +927,14 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
             "gemstoneTopaz"
         ).forEach(Consumer { s: String ->
             addDependency(s, "gemstoneESP")
+        })
+        listOf(
+            "wormFishingLavaESPRadius",
+            "wormFishingLavaESPTime",
+            "wormFishingLavaHideNear",
+            "wormFishingHideFished"
+        ).forEach(Consumer { s: String ->
+            addDependency(s, "wormFishingLavaESP")
         })
     }
 
