@@ -5,7 +5,6 @@ import gg.essential.vigilance.data.Category
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import gg.essential.vigilance.data.SortingBehavior
-import net.minecraft.util.EnumChatFormatting
 import skyblockclient.SkyblockClient.Companion.display
 import skyblockclient.guis.BlockAnimationBlacklist
 import skyblockclient.guis.HideModID
