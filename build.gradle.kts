@@ -13,7 +13,7 @@ plugins {
     idea
 }
 
-version = "0.1.3-pre1"
+version = "0.1.3-pre2"
 group = "skyblockclient"
 
 minecraft {
