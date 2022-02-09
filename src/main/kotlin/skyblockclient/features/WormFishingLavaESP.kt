@@ -9,6 +9,9 @@ import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient
+import skyblockclient.SkyblockClient.Companion.config
+import skyblockclient.SkyblockClient.Companion.inSkyblock
+import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.utils.RenderUtils
 import skyblockclient.utils.ScoreboardUtils
 import java.awt.Color
@@ -28,16 +31,16 @@ class WormFishingLavaESP {
     //#region ESP
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START || !SkyblockClient.config.wormFishingLavaESP || !isCrystalHollow()) return
-        if (thread?.isAlive == true || lastUpdate + SkyblockClient.config.wormFishingLavaESPTime > System.currentTimeMillis()) return
+        if (event.phase != TickEvent.Phase.START || !config.wormFishingLavaESP || !isCrystalHollow()) return
+        if (thread?.isAlive == true || lastUpdate + config.wormFishingLavaESPTime > System.currentTimeMillis()) return
         thread = Thread({
             val blockList: MutableList<BlockPos> = mutableListOf()
-            val player = SkyblockClient.mc.thePlayer.position
-            val radius = SkyblockClient.config.wormFishingLavaESPRadius
+            val player = mc.thePlayer.position
+            val radius = config.wormFishingLavaESPRadius
             val vec3i = Vec3i(radius, radius, radius)
 
             BlockPos.getAllInBox(player.add(vec3i), player.subtract(vec3i)).forEach {
-                val blockState = SkyblockClient.mc.theWorld.getBlockState(it)
+                val blockState = mc.theWorld.getBlockState(it)
 
                 if ((blockState.block == Blocks.lava || blockState.block == Blocks.flowing_lava) && it.y > 64)
                     blockList.add(it)
@@ -53,15 +56,15 @@ class WormFishingLavaESP {
 
     @SubscribeEvent
     fun onRenderWorld(event: RenderWorldLastEvent) {
-        if (!SkyblockClient.config.wormFishingLavaESP || !isCrystalHollow()) return
+        if (!config.wormFishingLavaESP || !isCrystalHollow()) return
 
-        val player = SkyblockClient.mc.thePlayer.position
+        val player = mc.thePlayer.position
         synchronized(lavaBlocksList) {
             lavaBlocksList.forEach { blockPos ->
                 if (!disabledInSession)
-                    if (player.distanceSq(blockPos) > 40 && SkyblockClient.config.wormFishingLavaHideNear)
+                    if (player.distanceSq(blockPos) > 40 && config.wormFishingLavaHideNear)
                         RenderUtils.drawBlockBox(blockPos, Color.ORANGE, outline = true, fill = true, event.partialTicks)
-                    else if (!SkyblockClient.config.wormFishingLavaHideNear)
+                    else if (!config.wormFishingLavaHideNear)
                         RenderUtils.drawBlockBox(blockPos, Color.ORANGE, outline = true, fill = true, event.partialTicks)
             }
         }
@@ -69,7 +72,7 @@ class WormFishingLavaESP {
 
     @SubscribeEvent
     fun onChatMessage(event: ClientChatReceivedEvent) {
-        if (!SkyblockClient.config.wormFishingHideFished) return
+        if (!config.wormFishingHideFished) return
 
         if (event.message.unformattedText == "A flaming worm surfaces from the depths!")
             disabledInSession = true
@@ -77,13 +80,13 @@ class WormFishingLavaESP {
 
     @SubscribeEvent
     fun onChangeWorld(event: WorldEvent.Load) {
-        if (!SkyblockClient.config.wormFishingHideFished || !disabledInSession) return
+        if (!config.wormFishingHideFished || !disabledInSession) return
 
         disabledInSession = false
     }
     //#endregion
 
     private fun isCrystalHollow(): Boolean {
-        return SkyblockClient.inSkyblock && ScoreboardUtils.sidebarLines.any { s -> locations.any { ScoreboardUtils.cleanSB(s).contains(it) } } || SkyblockClient.config.forceSkyblock
+        return inSkyblock && ScoreboardUtils.sidebarLines.any { s -> locations.any { ScoreboardUtils.cleanSB(s).contains(it) } } || config.forceSkyblock
     }
 }
