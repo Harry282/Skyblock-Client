@@ -818,7 +818,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.CHECKBOX,
-        name = "Turn off ESP after fishing up worm.",
+        name = "Turn off ESP after fishing up worm",
         description = "Only turns it off for current session.",
         category = "Misc",
         subcategory = "Mining",
