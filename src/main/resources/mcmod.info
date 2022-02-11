@@ -7,6 +7,8 @@
     "mcversion": "${mcversion}",
     "url": "https://github.com/Harry282/Skyblock-Client",
     "updateUrl": "https://github.com/Harry282/Skyblock-Client/releases",
-    "authorList": ["Harry282"]
+    "authorList": [
+      "Harry282"
+    ]
   }
 ]

@@ -96,12 +96,13 @@ class SkyblockClient {
         if (UpdateChecker.hasUpdate() > 0) {
             try {
                 EssentialAPI.getNotifications().push(
-                    "Skyblock Client",
+                    MOD_NAME,
                     "New release available on Github. Click to open download link.",
-                    10f
-                ) {
-                    Desktop.getDesktop().browse(URI("https://github.com/Harry282/Skyblock-Client/releases"))
-                }
+                    10f,
+                    action = {
+                        Desktop.getDesktop().browse(URI("https://github.com/Harry282/Skyblock-Client/releases"))
+                    }
+                )
             } catch (e: Exception) {
                 e.printStackTrace()
             }
