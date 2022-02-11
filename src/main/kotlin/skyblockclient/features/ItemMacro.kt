@@ -33,16 +33,16 @@ class ItemMacro {
     }
 
     private fun macroItem(name: String, leftMouse: Boolean) {
-        (0..8).forEach {
+        for (i in 0..8) {
             val previous = mc.thePlayer.inventory.currentItem
-            if (it == previous) return@forEach
-            if (mc.thePlayer.inventory.getStackInSlot(it)
+            if (i == previous) continue
+            if (mc.thePlayer.inventory.getStackInSlot(i)
                     ?.run { displayName.contains(name) || itemID == name } == true
             ) {
-                mc.thePlayer.inventory.currentItem = it
+                mc.thePlayer.inventory.currentItem = i
                 if (leftMouse) {
                     if (mc.objectMouseOver?.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) {
-                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(it))
+                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(i))
                         leftClick()
                         mc.netHandler.addToSendQueue(C09PacketHeldItemChange(previous))
                         mc.thePlayer.inventory.currentItem = previous
