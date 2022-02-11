@@ -8,7 +8,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
-import skyblockclient.SkyblockClient
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
@@ -17,6 +16,7 @@ import skyblockclient.utils.ScoreboardUtils
 import java.awt.Color
 
 class WormFishingLavaESP {
+
     private val lavaBlocksList: MutableList<BlockPos> = mutableListOf()
     private var lastUpdate: Long = 0
     private val locations = listOf(
@@ -28,7 +28,6 @@ class WormFishingLavaESP {
     private var thread: Thread? = null
     private var disabledInSession: Boolean = false
 
-    //#region ESP
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || !config.wormFishingLavaESP || !isCrystalHollow()) return
@@ -42,8 +41,9 @@ class WormFishingLavaESP {
             BlockPos.getAllInBox(player.add(vec3i), player.subtract(vec3i)).forEach {
                 val blockState = mc.theWorld.getBlockState(it)
 
-                if ((blockState.block == Blocks.lava || blockState.block == Blocks.flowing_lava) && it.y > 64)
+                if ((blockState.block == Blocks.lava || blockState.block == Blocks.flowing_lava) && it.y > 64) {
                     blockList.add(it)
+                }
             }
             synchronized(lavaBlocksList) {
                 lavaBlocksList.clear()
@@ -56,37 +56,34 @@ class WormFishingLavaESP {
 
     @SubscribeEvent
     fun onRenderWorld(event: RenderWorldLastEvent) {
-        if (!config.wormFishingLavaESP || !isCrystalHollow()) return
-
+        if (!config.wormFishingLavaESP || !isCrystalHollow() || disabledInSession) return
         val player = mc.thePlayer.position
         synchronized(lavaBlocksList) {
             lavaBlocksList.forEach { blockPos ->
-                if (!disabledInSession)
-                    if (player.distanceSq(blockPos) > 40 && config.wormFishingLavaHideNear)
-                        RenderUtils.drawBlockBox(blockPos, Color.ORANGE, outline = true, fill = true, event.partialTicks)
-                    else if (!config.wormFishingLavaHideNear)
-                        RenderUtils.drawBlockBox(blockPos, Color.ORANGE, outline = true, fill = true, event.partialTicks)
+                if (!config.wormFishingLavaHideNear || player.distanceSq(blockPos) > 40 && config.wormFishingLavaHideNear) {
+                    RenderUtils.drawBlockBox(blockPos, Color.ORANGE, outline = true, fill = true, event.partialTicks)
+                }
             }
         }
     }
 
     @SubscribeEvent
     fun onChatMessage(event: ClientChatReceivedEvent) {
-        if (!config.wormFishingHideFished) return
-
-        if (event.message.unformattedText == "A flaming worm surfaces from the depths!")
+        if (!config.wormFishingHideFished || event.type.toInt() == 2) return
+        if (event.message.unformattedText == "A flaming worm surfaces from the depths!") {
             disabledInSession = true
+        }
     }
 
     @SubscribeEvent
     fun onChangeWorld(event: WorldEvent.Load) {
         if (!config.wormFishingHideFished || !disabledInSession) return
-
         disabledInSession = false
     }
-    //#endregion
 
     private fun isCrystalHollow(): Boolean {
-        return inSkyblock && ScoreboardUtils.sidebarLines.any { s -> locations.any { ScoreboardUtils.cleanSB(s).contains(it) } } || config.forceSkyblock
+        return inSkyblock && ScoreboardUtils.sidebarLines.any { s ->
+            locations.any { ScoreboardUtils.cleanSB(s).contains(it) }
+        } || config.forceSkyblock
     }
 }
