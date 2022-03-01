@@ -828,7 +828,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.SWITCH,
         name = "Right Click Ghost Block",
-        description = "Right click with a Stonk to create ghost block.",
+        description = "Right click with any pickaxe to create ghost block.",
         category = "Misc",
         subcategory = "QOL"
     )

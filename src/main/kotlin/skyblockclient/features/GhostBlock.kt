@@ -1,6 +1,7 @@
 package skyblockclient.features
 
 import net.minecraft.init.Blocks
+import net.minecraft.item.ItemPickaxe
 import net.minecraft.util.BlockPos
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -11,7 +12,6 @@ import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.keyBinds
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ClickEvent
-import skyblockclient.utils.Utils.itemID
 
 class GhostBlock {
 
@@ -63,7 +63,7 @@ class GhostBlock {
     fun onRightClick(event: ClickEvent.RightClickEvent) {
         if (!config.stonkGhostBlock || !inSkyblock || mc.objectMouseOver == null) return
         if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            if (mc.thePlayer.heldItem?.itemID == "STONK_PICKAXE") {
+            if (mc.thePlayer.heldItem?.item is ItemPickaxe) {
                 event.isCanceled = toAir(mc.objectMouseOver.blockPos)
             }
         }
