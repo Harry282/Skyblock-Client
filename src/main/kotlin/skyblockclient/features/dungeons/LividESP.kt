@@ -82,7 +82,7 @@ class LividESP {
                 if (thread == null || !thread!!.isAlive) {
                     thread = Thread({
                         Thread.sleep(1500)
-                        val state = mc.theWorld.getBlockState(BlockPos(205, 109, 242))
+                        val state = mc.theWorld.getBlockState(BlockPos(5, 109, 42))
                         val color = state.getValue(BlockStainedGlass.COLOR)
                         livid = closestLivid(
                             when (color) {
