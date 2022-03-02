@@ -17,7 +17,7 @@ import java.util.*
 
 class ArrowAlign {
 
-    private val area = BlockPos.getAllInBox(BlockPos(-3, 125, 78), BlockPos(-3, 121, 74))
+    private val area = BlockPos.getAllInBox(BlockPos(-2, 125, 79), BlockPos(-2, 121, 75))
         .toList().sortedWith { a, b ->
             if (a.y == b.y) return@sortedWith b.z - a.z
             if (a.y < b.y) return@sortedWith 1
@@ -31,7 +31,7 @@ class ArrowAlign {
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || !config.arrowAlign && !config.autoCompleteArrowAlign || !isFloor(7)) return
         if (ticks % 20 == 0) {
-            if (mc.thePlayer.getDistanceSq(BlockPos(-3, 122, 76)) <= 20 * 20) calculate()
+            if (mc.thePlayer.getDistanceSq(BlockPos(-2, 122, 76)) <= 20 * 20) calculate()
             ticks = 0
         }
         ticks++
@@ -44,7 +44,7 @@ class ArrowAlign {
             if (mc.objectMouseOver.entityHit is EntityItemFrame) {
                 if (mc.thePlayer.isSneaking && config.arrowAlignSneakOverride) return
                 val frame = mc.objectMouseOver.entityHit as EntityItemFrame
-                val x = 78 - frame.hangingPosition.z
+                val x = 79 - frame.hangingPosition.z
                 val y = 124 - frame.hangingPosition.y
                 if (x in 0..4 && y in 0..4) {
                     val clicks = neededRotations[Pair(x, y)] ?: return

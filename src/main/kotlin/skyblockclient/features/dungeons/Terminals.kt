@@ -19,6 +19,7 @@ import skyblockclient.events.GuiContainerEvent.SlotClickEvent
 import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.renderText
+import kotlin.math.roundToInt
 
 class Terminals {
 
@@ -29,6 +30,7 @@ class Terminals {
     private var shouldClick = false
     private var windowId = 0
     private var windowClicks = 0
+    private var closestColor = 15
 
     @SubscribeEvent
     fun onGuiDraw(event: BackgroundDrawnEvent) {
@@ -160,12 +162,20 @@ class Terminals {
                         }
                     }
                     TerminalType.TOGGLECOLOR -> {
-                        val pane = invSlots.firstOrNull {
-                            it.inventory != mc.thePlayer.inventory && it.stack?.item == Item.getItemFromBlock(
-                                Blocks.stained_glass_pane
-                            ) && it.stack?.itemDamage != 1 && it.stack?.itemDamage != 15
-                        } ?: return
-                        clickSlot(pane)
+                        if (closestColor == 15) {
+                            closestColor = findClosestColor(invSlots.filter {
+                                it.inventory != mc.thePlayer.inventory && it.stack?.item == Item.getItemFromBlock(
+                                    Blocks.stained_glass_pane
+                                ) && it.stack?.itemDamage != 15
+                            })
+                        } else {
+                            val pane = invSlots.firstOrNull {
+                                it.inventory != mc.thePlayer.inventory && it.stack?.item == Item.getItemFromBlock(
+                                    Blocks.stained_glass_pane
+                                ) && it.stack?.itemDamage != closestColor && it.stack?.itemDamage != 15
+                            } ?: return
+                            clickSlot(pane)
+                        }
                     }
                     else -> return
                 }
@@ -174,6 +184,7 @@ class Terminals {
             currentTerminal = TerminalType.NONE
             clickQueue.clear()
             shouldClick = false
+            closestColor = 15
         }
     }
 
@@ -287,6 +298,23 @@ class Terminals {
             else -> {}
         }
         return false
+    }
+
+    private fun findClosestColor(panes: List<Slot>): Int {
+        val mapping = mapOf(
+            14 to 0,
+            1 to 1,
+            4 to 2,
+            5 to 3,
+            11 to 4
+        )
+        var sum = 0.0
+        panes.forEach { sum += mapping[it.stack?.itemDamage] ?: 0 }
+        val index = (sum / panes.size).roundToInt()
+        mapping.entries.forEach { (key, value) ->
+            if (value == index) return key
+        }
+        return 15
     }
 
     private fun clickSlot(slot: Slot) {
