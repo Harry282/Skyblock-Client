@@ -37,16 +37,15 @@ class Terminals {
         if (container is ContainerChest) {
             if (currentTerminal == TerminalType.NONE) {
                 val chestName = container.lowerChestInventory.displayName.unformattedText
-                if (chestName == "Navigate the maze!") {
-                    currentTerminal = TerminalType.MAZE
-                } else if (chestName == "Click in order!") {
-                    currentTerminal = TerminalType.NUMBERS
-                } else if (chestName == "Correct all the panes!") {
-                    currentTerminal = TerminalType.CORRECTALL
-                } else if (chestName.startsWith("What starts with: '")) {
-                    currentTerminal = TerminalType.LETTER
-                } else if (chestName.startsWith("Select all the")) {
-                    currentTerminal = TerminalType.COLOR
+                currentTerminal = when {
+                    chestName == "Navigate the maze!" -> TerminalType.MAZE
+                    chestName == "Click in order!" -> TerminalType.NUMBERS
+                    chestName == "Correct all the panes!" -> TerminalType.CORRECTALL
+                    chestName.startsWith("What starts with: '") -> TerminalType.LETTER
+                    chestName.startsWith("Select all the") -> TerminalType.COLOR
+                    chestName == "Click the button on time!" -> TerminalType.TIMING
+                    chestName == "Change all to same color!" -> TerminalType.TOGGLECOLOR
+                    else -> TerminalType.NONE
                 }
                 shouldClick = true
             }
@@ -62,7 +61,7 @@ class Terminals {
                         TerminalType.LETTER, TerminalType.COLOR -> clickQueue.removeIf {
                             invSlots[it.slotNumber].hasStack && invSlots[it.slotNumber].stack.isItemEnchanted
                         }
-                        TerminalType.NONE -> false
+                        else -> true
                     } || shouldClick
                     if (clickQueue.isNotEmpty() && config.terminalAuto && (shouldClick || config.terminalPingless) &&
                         System.currentTimeMillis() - lastClickTime > config.terminalClickDelay
@@ -132,10 +131,50 @@ class Terminals {
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START || !isFloor(7) || mc.currentScreen is GuiChest) return
-        currentTerminal = TerminalType.NONE
-        clickQueue.clear()
-        shouldClick = false
+        if (event.phase != TickEvent.Phase.START || !isFloor(7)) return
+        if (mc.currentScreen is GuiChest) {
+            if (config.terminalAutoNew && System.currentTimeMillis() - lastClickTime > config.terminalClickDelay) {
+                val invSlots = mc.thePlayer.openContainer.inventorySlots
+                when (currentTerminal) {
+                    TerminalType.TIMING -> {
+                        val currentRow = invSlots.indexOfFirst {
+                            it.inventory != mc.thePlayer.inventory &&
+                                    it.stack?.item == Item.getItemFromBlock(Blocks.stained_glass_pane) &&
+                                    it.stack?.itemDamage == 10
+                        }
+                        if (currentRow == -1) return
+                        val greenPaneIndex = invSlots.indexOfFirst {
+                            it.inventory != mc.thePlayer.inventory &&
+                                    it.stack?.item == Item.getItemFromBlock(Blocks.stained_glass_pane) &&
+                                    it.stack?.itemDamage == 5
+                        }
+                        if (greenPaneIndex == -1) return
+                        if (currentRow % 9 == greenPaneIndex % 9) {
+                            mc.playerController.windowClick(
+                                mc.thePlayer.openContainer.windowId,
+                                (greenPaneIndex / 9) * 9 + 7,
+                                if (config.terminalMiddleClick) 2 else 0,
+                                1,
+                                mc.thePlayer
+                            )
+                        }
+                    }
+                    TerminalType.TOGGLECOLOR -> {
+                        val pane = invSlots.firstOrNull {
+                            it.inventory != mc.thePlayer.inventory && it.stack?.item == Item.getItemFromBlock(
+                                Blocks.stained_glass_pane
+                            ) && it.stack?.itemDamage != 1 && it.stack?.itemDamage != 15
+                        } ?: return
+                        clickSlot(pane)
+                    }
+                    else -> return
+                }
+            }
+        } else {
+            currentTerminal = TerminalType.NONE
+            clickQueue.clear()
+            shouldClick = false
+        }
     }
 
     @SubscribeEvent
@@ -245,8 +284,7 @@ class Terminals {
                     }
                 }
             }
-            TerminalType.NONE -> {
-            }
+            else -> {}
         }
         return false
     }
@@ -268,6 +306,6 @@ class Terminals {
     }
 
     private enum class TerminalType {
-        MAZE, NUMBERS, CORRECTALL, LETTER, COLOR, NONE
+        MAZE, NUMBERS, CORRECTALL, LETTER, COLOR, TIMING, TOGGLECOLOR, NONE
     }
 }
