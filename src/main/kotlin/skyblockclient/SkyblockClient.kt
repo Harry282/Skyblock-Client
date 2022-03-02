@@ -66,7 +66,6 @@ class SkyblockClient {
             F7P3Ghost(),
             FastLeap(),
             GemstoneESP(),
-            WormFishingLavaESP(),
             GhostBlock(),
             HiddenMobs(),
             ImpactParticles(),
@@ -79,6 +78,7 @@ class SkyblockClient {
             SalvageOverlay(),
             Terminals(),
             ThornStun(),
+            WormFishingLavaESP()
         ).forEach(MinecraftForge.EVENT_BUS::register)
 
         for (keyBind in keyBinds) {

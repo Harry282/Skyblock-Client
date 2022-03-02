@@ -697,16 +697,16 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.SWITCH,
         name = "Gemstone ESP",
-        category = "Misc",
-        subcategory = "Mining"
+        category = "Mining",
+        subcategory = "Gemstone ESP"
     )
     var gemstoneESP = false
 
     @Property(
         type = PropertyType.NUMBER,
         name = "Gemstone ESP Radius",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Gemstone ESP",
         max = 50
     )
     var gemstoneESPRadius = 20
@@ -715,8 +715,8 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         type = PropertyType.NUMBER,
         name = "Gemstone ESP Time",
         description = "Time in ms between scan cycles.",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Gemstone ESP",
         increment = 10,
         max = 5000
     )
@@ -725,73 +725,73 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.CHECKBOX,
         name = "Amber",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Gemstone ESP",
     )
     var gemstoneAmber = true
 
     @Property(
         type = PropertyType.CHECKBOX,
         name = "Amethyst",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Gemstone ESP",
     )
     var gemstoneAmethyst = true
 
     @Property(
         type = PropertyType.CHECKBOX,
         name = "Jade",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Gemstone ESP",
     )
     var gemstoneJade = true
 
     @Property(
         type = PropertyType.CHECKBOX,
         name = "Jasper",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Gemstone ESP",
     )
     var gemstoneJasper = true
 
     @Property(
         type = PropertyType.CHECKBOX,
         name = "Ruby",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Gemstone ESP",
     )
     var gemstoneRuby = true
 
     @Property(
         type = PropertyType.CHECKBOX,
         name = "Sapphire",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Gemstone ESP",
     )
     var gemstoneSapphire = true
 
     @Property(
         type = PropertyType.CHECKBOX,
         name = "Topaz",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Gemstone ESP",
     )
     var gemstoneTopaz = true
 
     @Property(
         type = PropertyType.SWITCH,
-        name = "Worm fishing esp",
+        name = "Worm fishing ESP",
         description = "Detects lava in precursor remnants above Y=64.\n\nMade by TheStachelfisch",
-        category = "Misc",
-        subcategory = "Mining"
+        category = "Mining",
+        subcategory = "Lava ESP"
     )
     var wormFishingLavaESP = false
 
     @Property(
         type = PropertyType.NUMBER,
         name = "Worm fishing ESP Radius",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Lava ESP",
         max = 150
     )
     var wormFishingLavaESPRadius = 50
@@ -800,8 +800,8 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         type = PropertyType.NUMBER,
         name = "Worm fishing ESP Time",
         description = "Time in ms between scan cycles.",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Lava ESP",
         increment = 10,
         max = 5000
     )
@@ -811,8 +811,8 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         type = PropertyType.CHECKBOX,
         name = "Hide ESP near lava",
         description = "Hide ESP when near lava.",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Lava ESP",
     )
     var wormFishingLavaHideNear = true
 
@@ -820,8 +820,8 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         type = PropertyType.CHECKBOX,
         name = "Turn off ESP after fishing up worm",
         description = "Only turns it off for current session.",
-        category = "Misc",
-        subcategory = "Mining",
+        category = "Mining",
+        subcategory = "Lava ESP",
     )
     var wormFishingHideFished = true
 
@@ -948,6 +948,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     }
 
     private val configCategories = listOf(
-        "Info", "Dungeons", "Terminals", "Experiment", "ESP", "ESP Colors", "GUI", "Macros", "Misc", "Dev"
+        "Dungeons", "Terminals", "Experiment", "ESP", "ESP Colors", "GUI", "Macros", "Mining", "Misc", "Dev"
     )
 }
