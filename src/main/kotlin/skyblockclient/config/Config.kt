@@ -78,21 +78,14 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var fastLeapBloodDisable = false
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Block Incorrect Arrow Align Clicks",
+        type = PropertyType.SELECTOR,
+        name = "Arrow Align Solver",
         category = "Dungeons",
-        subcategory = "F7"
+        subcategory = "F7",
+        description = "Block Clicks: Blocks extra clicks\nOne Click: Right click an item frame to instantly complete it\nAuto: Look at an item frame to instantly complete it",
+        options = ["Off", "Block Clicks", "One Click", "Auto"]
     )
-    var arrowAlign = false
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "One Click Arrow Align",
-        description = "Complete each item frame in one click.",
-        category = "Dungeons",
-        subcategory = "F7"
-    )
-    var autoCompleteArrowAlign = false
+    var arrowAlignSolver = 0
 
     @Property(
         type = PropertyType.SWITCH,
