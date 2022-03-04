@@ -19,7 +19,6 @@ import skyblockclient.events.GuiContainerEvent.SlotClickEvent
 import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.renderText
-import kotlin.math.roundToInt
 
 class Terminals {
 
@@ -301,16 +300,17 @@ class Terminals {
     }
 
     private fun findClosestColor(panes: List<Slot>): Int {
+        if (panes.isEmpty()) return 15
         val mapping = mapOf(
-            14 to 0,
-            1 to 1,
-            4 to 2,
-            5 to 3,
-            11 to 4
+            14 to 5,
+            1 to 4,
+            4 to 3,
+            5 to 2,
+            11 to 1
         )
         var sum = 0.0
         panes.forEach { sum += mapping[it.stack?.itemDamage] ?: 0 }
-        val index = (sum / panes.size).roundToInt()
+        val index = (sum / panes.size).toInt() + 1
         mapping.entries.forEach { (key, value) ->
             if (value == index) return key
         }
