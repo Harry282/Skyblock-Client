@@ -305,7 +305,7 @@ class Terminals {
             14 to 5,
             1 to 4,
             4 to 3,
-            5 to 2,
+            13 to 2,
             11 to 1
         )
         var sum = 0.0
