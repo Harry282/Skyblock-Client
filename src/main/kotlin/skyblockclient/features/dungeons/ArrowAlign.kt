@@ -5,7 +5,6 @@ import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.util.BlockPos
-import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
@@ -25,23 +24,26 @@ class ArrowAlign {
             return@sortedWith 0
         }
     private val neededRotations = HashMap<Pair<Int, Int>, Int>()
+    var ticks = 0
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || config.arrowAlignSolver == 0 || !isFloor(7)) return
+        ticks++
         if (mc.thePlayer.getDistanceSq(BlockPos(-2, 122, 76)) <= 15 * 15) {
-            calculate()
-            if (mc.objectMouseOver?.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-                if (mc.objectMouseOver.entityHit is EntityItemFrame) {
-                    if (mc.thePlayer.isSneaking && config.arrowAlignSneakOverride) return
-                    val frame = mc.objectMouseOver.entityHit as EntityItemFrame
-                    val x = 79 - frame.hangingPosition.z
-                    val y = 124 - frame.hangingPosition.y
-                    if (x in 0..4 && y in 0..4) {
-                        val clicks = neededRotations[Pair(x, y)] ?: return
-                        if (config.arrowAlignSolver == 3 && clicks > 1) {
-                            rightClick()
-                        }
+            if (ticks % 20 == 0) {
+                calculate()
+                ticks = 0
+            }
+            if (mc.objectMouseOver?.entityHit is EntityItemFrame) {
+                if (mc.thePlayer.isSneaking && config.arrowAlignSneakOverride) return
+                val frame = mc.objectMouseOver.entityHit as EntityItemFrame
+                val x = 79 - frame.hangingPosition.z
+                val y = 124 - frame.hangingPosition.y
+                if (x in 0..4 && y in 0..4) {
+                    val clicks = neededRotations[Pair(x, y)] ?: return
+                    if (config.arrowAlignSolver == 3 && clicks > 0) {
+                        rightClick()
                     }
                 }
             }
@@ -51,22 +53,20 @@ class ArrowAlign {
     @SubscribeEvent
     fun onRightClick(event: ClickEvent.RightClickEvent) {
         if (config.arrowAlignSolver == 0 || !isFloor(7) || mc.objectMouseOver == null) return
-        if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-            if (mc.objectMouseOver.entityHit is EntityItemFrame) {
-                if (mc.thePlayer.isSneaking && config.arrowAlignSneakOverride) return
-                val frame = mc.objectMouseOver.entityHit as EntityItemFrame
-                val x = 79 - frame.hangingPosition.z
-                val y = 124 - frame.hangingPosition.y
-                if (x in 0..4 && y in 0..4) {
-                    val clicks = neededRotations[Pair(x, y)] ?: return
-                    if (clicks == 0) {
-                        event.isCanceled = true
-                        return
-                    }
-                    neededRotations[Pair(x, y)] = clicks - 1
-                    if (config.arrowAlignSolver > 1 && clicks > 1) {
-                        rightClick()
-                    }
+        if (mc.objectMouseOver?.entityHit is EntityItemFrame) {
+            if (mc.thePlayer.isSneaking && config.arrowAlignSneakOverride) return
+            val frame = mc.objectMouseOver.entityHit as EntityItemFrame
+            val x = 79 - frame.hangingPosition.z
+            val y = 124 - frame.hangingPosition.y
+            if (x in 0..4 && y in 0..4) {
+                val clicks = neededRotations[Pair(x, y)] ?: return
+                if (clicks == 0) {
+                    event.isCanceled = true
+                    return
+                }
+                neededRotations[Pair(x, y)] = clicks - 1
+                if (config.arrowAlignSolver > 1 && clicks > 1) {
+                    rightClick()
                 }
             }
         }
