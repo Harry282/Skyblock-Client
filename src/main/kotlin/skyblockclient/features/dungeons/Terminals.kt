@@ -19,6 +19,7 @@ import skyblockclient.events.GuiContainerEvent.SlotClickEvent
 import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.renderText
+import kotlin.math.roundToInt
 
 class Terminals {
 
@@ -29,7 +30,8 @@ class Terminals {
     private var shouldClick = false
     private var windowId = 0
     private var windowClicks = 0
-    private var closestColor = 15
+    private var closestColor = -1
+    private var colorOrder = listOf(14, 1, 4, 13, 11)
 
     @SubscribeEvent
     fun onGuiDraw(event: BackgroundDrawnEvent) {
@@ -76,6 +78,7 @@ class Terminals {
                 renderText("Terminal: " + currentTerminal.name, 20, 20)
                 renderText("Clicks left: " + clickQueue.size, 20, 40)
                 renderText("Window ID: $windowId, Pingless Clicks: $windowClicks", 20, 60)
+                renderText("Closest Color: $closestColor", 20, 80)
             }
         }
     }
@@ -155,13 +158,14 @@ class Terminals {
                                 mc.thePlayer.openContainer.windowId,
                                 (greenPaneIndex / 9) * 9 + 7,
                                 if (config.terminalMiddleClick) 2 else 0,
-                                1,
+                                0,
                                 mc.thePlayer
                             )
+                            lastClickTime = System.currentTimeMillis()
                         }
                     }
                     TerminalType.TOGGLECOLOR -> {
-                        if (closestColor == 15) {
+                        if (closestColor == -1) {
                             closestColor = findClosestColor(invSlots.filter {
                                 it.inventory != mc.thePlayer.inventory && it.stack?.item == Item.getItemFromBlock(
                                     Blocks.stained_glass_pane
@@ -171,9 +175,20 @@ class Terminals {
                             val pane = invSlots.firstOrNull {
                                 it.inventory != mc.thePlayer.inventory && it.stack?.item == Item.getItemFromBlock(
                                     Blocks.stained_glass_pane
-                                ) && it.stack?.itemDamage != closestColor && it.stack?.itemDamage != 15
+                                ) && it.stack?.itemDamage != colorOrder[closestColor] && it.stack?.itemDamage != 15
                             } ?: return
-                            clickSlot(pane)
+                            val paneIndex = colorOrder.indexOf(pane.stack.itemDamage)
+                            if (paneIndex == -1) return
+                            mc.playerController.windowClick(
+                                mc.thePlayer.openContainer.windowId,
+                                pane.slotNumber,
+                                if ((closestColor - paneIndex + 5) % 5 < 3) {
+                                    if (config.terminalMiddleClick) 2 else 0
+                                } else 1,
+                                0,
+                                mc.thePlayer
+                            )
+                            lastClickTime = System.currentTimeMillis()
                         }
                     }
                     else -> return
@@ -183,7 +198,7 @@ class Terminals {
             currentTerminal = TerminalType.NONE
             clickQueue.clear()
             shouldClick = false
-            closestColor = 15
+            closestColor = -1
         }
     }
 
@@ -301,20 +316,14 @@ class Terminals {
 
     private fun findClosestColor(panes: List<Slot>): Int {
         if (panes.isEmpty()) return 15
-        val mapping = mapOf(
-            14 to 5,
-            1 to 4,
-            4 to 3,
-            13 to 2,
-            11 to 1
-        )
         var sum = 0.0
-        panes.forEach { sum += mapping[it.stack?.itemDamage] ?: 0 }
-        val index = (sum / panes.size).toInt() + 1
-        mapping.entries.forEach { (key, value) ->
-            if (value == index) return key
+        panes.forEach {
+            if (colorOrder.contains(it.stack?.itemDamage)) {
+                sum += colorOrder.indexOf(it.stack.itemDamage)
+            }
         }
-        return 15
+        val index = (sum / panes.size).roundToInt()
+        return if (colorOrder.size > index) index else -1
     }
 
     private fun clickSlot(slot: Slot) {

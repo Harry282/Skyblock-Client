@@ -24,7 +24,7 @@ class ArrowAlign {
             return@sortedWith 0
         }
     private val neededRotations = HashMap<Pair<Int, Int>, Int>()
-    var ticks = 0
+    private var ticks = 0
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
