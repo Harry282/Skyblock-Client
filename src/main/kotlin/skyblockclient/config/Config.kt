@@ -99,11 +99,20 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.SWITCH,
         name = "F7 Ghost Block",
-        description = "Automatically creates ghost blocks to go to P3 from P2 on F7. Might not work with boss messages hidden.",
+        description = "Automatically creates ghost blocks to go to P3 from P2 on F7.",
         category = "Dungeons",
         subcategory = "F7"
     )
     var f7p3Ghost = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "M7 Ghost Block",
+        description = "Automatically creates ghost blocks to go to P5 from P4 on M7.",
+        category = "Dungeons",
+        subcategory = "F7"
+    )
+    var m7p5Ghost = false
 
     @Property(
         type = PropertyType.SWITCH,
@@ -860,6 +869,13 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         category = "Dev"
     )
     var forceSkyblock = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Skyblock Anti KB",
+        category = "Dev",
+    )
+    var antiKBSkyblock = false
 
     @Property(
         type = PropertyType.SWITCH,
