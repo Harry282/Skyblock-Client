@@ -14,9 +14,8 @@ class ImpactParticles {
     @SubscribeEvent
     fun onPacket(event: ReceivePacketEvent) {
         if (!config.noShieldParticles || !inSkyblock || event.packet !is S2APacketParticles) return
-        val packet = event.packet as S2APacketParticles
-        if (packet.particleType.equalsOneOf(EnumParticleTypes.SPELL_WITCH, EnumParticleTypes.HEART)) {
-            val particlePos = packet.run { Vec3(xCoordinate, yCoordinate, zCoordinate) }
+        if (event.packet.particleType.equalsOneOf(EnumParticleTypes.SPELL_WITCH, EnumParticleTypes.HEART)) {
+            val particlePos = event.packet.run { Vec3(xCoordinate, yCoordinate, zCoordinate) }
             if (particlePos.squareDistanceTo(mc.thePlayer.positionVector) <= 169) {
                 event.isCanceled = true
             }

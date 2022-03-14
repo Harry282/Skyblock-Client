@@ -2,6 +2,8 @@ package skyblockclient
 
 import com.google.gson.JsonElement
 import gg.essential.api.EssentialAPI
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.settings.KeyBinding
@@ -63,7 +65,7 @@ class SkyblockClient {
             BookAnvilMacro(),
             EnchantingExperiments(),
             EndstoneProtectorTimer(),
-            F7P3Ghost(),
+            F7PreGhostBlocks(),
             FastLeap(),
             GemstoneESP(),
             GhostBlock(),
@@ -87,24 +89,26 @@ class SkyblockClient {
     }
 
     @Mod.EventHandler
-    fun postInit(event: FMLLoadCompleteEvent) {
-        configFile?.let {
-            loadConfig(it)
-            parseData()
-            writeConfig(it)
-        }
-        if (UpdateChecker.hasUpdate() > 0) {
-            try {
-                EssentialAPI.getNotifications().push(
-                    MOD_NAME,
-                    "New release available on Github. Click to open download link.",
-                    10f,
-                    action = {
-                        Desktop.getDesktop().browse(URI("https://github.com/Harry282/Skyblock-Client/releases"))
-                    }
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
+    fun postInit(event: FMLLoadCompleteEvent) = runBlocking {
+        launch {
+            configFile?.let {
+                loadConfig(it)
+                parseData()
+                writeConfig(it)
+            }
+            if (UpdateChecker.hasUpdate() > 0) {
+                try {
+                    EssentialAPI.getNotifications().push(
+                        MOD_NAME,
+                        "New release available on Github. Click to open download link.",
+                        10f,
+                        action = {
+                            Desktop.getDesktop().browse(URI("https://github.com/Harry282/Skyblock-Client/releases"))
+                        }
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -135,7 +139,7 @@ class SkyblockClient {
     }
 
     @SubscribeEvent
-    fun onDisconnect(event: ClientDisconnectionFromServerEvent?) {
+    fun onDisconnect(event: ClientDisconnectionFromServerEvent) {
         inSkyblock = false
         inDungeons = false
     }

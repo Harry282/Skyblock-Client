@@ -28,7 +28,7 @@ open class GuiContainerEvent(val container: Container, val gui: GuiContainer) : 
 }
 
 @Cancelable
-class ReceivePacketEvent(var packet: Packet<*>) : Event()
+class ReceivePacketEvent(val packet: Packet<*>) : Event()
 
 @Cancelable
 class RenderLivingEntityEvent(
