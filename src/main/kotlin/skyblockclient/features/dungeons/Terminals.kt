@@ -315,7 +315,7 @@ class Terminals {
     }
 
     private fun findClosestColor(panes: List<Slot>): Int {
-        if (panes.isEmpty()) return 15
+        if (panes.isEmpty()) return -1
         var sum = 0.0
         panes.forEach {
             if (colorOrder.contains(it.stack?.itemDamage)) {
