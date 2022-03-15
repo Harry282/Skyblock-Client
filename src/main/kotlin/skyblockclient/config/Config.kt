@@ -879,6 +879,13 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Skyblock No Rotate",
+        category = "Dev",
+    )
+    var noRotate = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Terminal Info",
         category = "Dev"
     )
