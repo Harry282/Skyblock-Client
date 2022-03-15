@@ -16,8 +16,8 @@ public abstract class MixinPlayerHandler {
         AntiKBHook.INSTANCE.handleExplosion(packet);
     }
 
-    @Inject(method = "handleEntityVelocity", at = @At(value = "RETURN"))
+    @Inject(method = "handleEntityVelocity", at = @At(value = "HEAD"), cancellable = true)
     public void handleEntityVelocity(S12PacketEntityVelocity packet, CallbackInfo ci) {
-        AntiKBHook.INSTANCE.handleEntityVelocity(packet);
+        if (AntiKBHook.INSTANCE.handleEntityVelocity(packet)) ci.cancel();
     }
 }

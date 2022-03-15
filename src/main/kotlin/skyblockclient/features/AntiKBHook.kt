@@ -17,12 +17,13 @@ object AntiKBHook {
         }
     }
 
-    fun handleEntityVelocity(packet: S12PacketEntityVelocity) {
-        if (config.antiKBSkyblock && inSkyblock && !disableAntiKB()) {
-            if (mc.theWorld.getEntityByID(packet.entityID) == mc.thePlayer) {
-                mc.thePlayer.setVelocity(0.0, 0.0, 0.0)
+    fun handleEntityVelocity(packet: S12PacketEntityVelocity) : Boolean{
+        if (mc.theWorld.getEntityByID(packet.entityID) == mc.thePlayer) {
+            if (config.antiKBSkyblock && inSkyblock && !disableAntiKB()) {
+                return true
             }
         }
+        return false
     }
 
     private fun disableAntiKB(): Boolean = mc.thePlayer.isInLava || mc.thePlayer.heldItem?.itemID.equalsOneOf(
