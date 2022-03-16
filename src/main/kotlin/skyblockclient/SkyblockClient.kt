@@ -29,6 +29,7 @@ import skyblockclient.features.*
 import skyblockclient.features.dungeons.*
 import skyblockclient.utils.ScoreboardUtils
 import skyblockclient.utils.UpdateChecker
+kimport skyblockclient.utils.Utils
 import java.awt.Desktop
 import java.io.File
 import java.net.URI
@@ -147,6 +148,14 @@ class SkyblockClient {
     @SubscribeEvent
     fun onKey(event: KeyInputEvent?) {
         if (keyBinds[0].isPressed) display = config.gui()
+        if (keyBinds[3].isPressed) {
+            config.noRotate = !config.noRotate
+            Utils.modMessage("§aNo Rotate ${if (config.noRotate) "on" else "off"}")
+        }
+        if (keyBinds[4].isPressed) {
+            config.antiKBSkyblock = !config.antiKBSkyblock
+            Utils.modMessage("§aAnti KB ${if (config.antiKBSkyblock) "on" else "off"}")
+        }
     }
 
     companion object {
@@ -164,7 +173,10 @@ class SkyblockClient {
         val keyBinds = arrayOf(
             KeyBinding("Open Settings", Keyboard.KEY_RSHIFT, "Skyblock Client"),
             KeyBinding("Bone Macro", Keyboard.KEY_B, "Skyblock Client"),
-            KeyBinding("Ghost Block", Keyboard.KEY_G, "Skyblock Client")
+            KeyBinding("Ghost Block", Keyboard.KEY_G, "Skyblock Client"),
+            // Toggle keybinds until I make better way of doing this lol
+            KeyBinding("Toggle NoRotate", Keyboard.KEY_NONE, "Skyblock Client"),
+            KeyBinding("Toggle AntiKB", Keyboard.KEY_NONE, "Skyblock Client")
         )
         var tickCount = 0
     }
