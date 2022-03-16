@@ -886,6 +886,13 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Full Size Simon Says Buttons",
+        category = "Dev",
+    )
+    var simonSaysButtons = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Terminal Info",
         category = "Dev"
     )

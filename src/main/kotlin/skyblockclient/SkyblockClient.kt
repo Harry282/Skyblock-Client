@@ -79,6 +79,7 @@ class SkyblockClient {
             NoBlockAnimation(),
             NoWaterFOV(),
             SalvageOverlay(),
+            SimonSaysButtons(),
             Terminals(),
             ThornStun(),
             WormFishingLavaESP()
