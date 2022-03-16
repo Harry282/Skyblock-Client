@@ -3,15 +3,12 @@ package skyblockclient.features.dungeons
 import net.minecraft.network.play.server.S02PacketChat
 import net.minecraft.util.BlockPos
 import net.minecraft.util.StringUtils.stripControlCodes
-import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ReceivePacketEvent
-import skyblockclient.utils.RenderUtils
 import skyblockclient.utils.Utils.isFloor
-import java.awt.Color
 
 class F7PreGhostBlocks {
 

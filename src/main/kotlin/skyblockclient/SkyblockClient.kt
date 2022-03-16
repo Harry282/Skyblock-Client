@@ -29,7 +29,7 @@ import skyblockclient.features.*
 import skyblockclient.features.dungeons.*
 import skyblockclient.utils.ScoreboardUtils
 import skyblockclient.utils.UpdateChecker
-kimport skyblockclient.utils.Utils
+import skyblockclient.utils.Utils
 import java.awt.Desktop
 import java.io.File
 import java.net.URI

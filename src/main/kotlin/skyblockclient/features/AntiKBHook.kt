@@ -17,7 +17,7 @@ object AntiKBHook {
         }
     }
 
-    fun handleEntityVelocity(packet: S12PacketEntityVelocity) : Boolean{
+    fun handleEntityVelocity(packet: S12PacketEntityVelocity): Boolean {
         if (mc.theWorld.getEntityByID(packet.entityID) == mc.thePlayer) {
             if (config.antiKBSkyblock && inSkyblock && !disableAntiKB()) {
                 return true
