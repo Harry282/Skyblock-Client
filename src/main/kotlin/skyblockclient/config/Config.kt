@@ -98,6 +98,15 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Full Size Simon Says Buttons",
+        description = "Clicking on the obsidian behind the buttons will also register as a click.",
+        category = "Dungeons",
+        subcategory = "F7"
+    )
+    var simonSaysButtons = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "F7 Ghost Block",
         description = "Automatically creates ghost blocks to go to P3 from P2 on F7.",
         category = "Dungeons",
@@ -642,6 +651,20 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var bookCombineMessage = true
 
     @Property(
+        type = PropertyType.SWITCH,
+        name = "Skyblock Anti KB",
+        category = "Misc",
+    )
+    var antiKBSkyblock = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Skyblock No Rotate",
+        category = "Misc",
+    )
+    var noRotate = false
+
+    @Property(
         type = PropertyType.BUTTON,
         name = "Mod ID Hider",
         category = "Misc",
@@ -869,27 +892,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         category = "Dev"
     )
     var forceSkyblock = false
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Skyblock Anti KB",
-        category = "Dev",
-    )
-    var antiKBSkyblock = false
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Skyblock No Rotate",
-        category = "Dev",
-    )
-    var noRotate = false
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Full Size Simon Says Buttons",
-        category = "Dev",
-    )
-    var simonSaysButtons = false
 
     @Property(
         type = PropertyType.SWITCH,
