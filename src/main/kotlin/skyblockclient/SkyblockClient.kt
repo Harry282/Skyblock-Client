@@ -66,7 +66,7 @@ class SkyblockClient {
             BookAnvilMacro(),
             EnchantingExperiments(),
             EndstoneProtectorTimer(),
-            F7P3Ghost(),
+            F7PreGhostBlocks(),
             FastLeap(),
             GemstoneESP(),
             GhostBlock(),
