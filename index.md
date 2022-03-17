@@ -15,6 +15,8 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282#1031` on Di
 - Terminals click blocker, solver, and auto
 - Arrow Align device click blocker and [quick solver](https://youtu.be/i1CvmrMCEtg)
 - Auto ghost blocks to jump to terminals from crush
+- Auto ghost blocks to go to wither king from necron
+- Larger buttons for simon says
 
 ### Dungeons
 - Blood finished spawning message
@@ -27,6 +29,7 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282#1031` on Di
 
 ### Mining
 - Configurable Gemstone ESP
+- Lava ESP for worm fishing spots
 
 ### Misc
 - No block animation for swords with right click ability
@@ -35,9 +38,11 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282#1031` on Di
 - Hide potion effects in inventory
 - Highlight salvageable items
 - Hide Wither Shield particles
-- Keybind and right click Stonk ghost blocks
+- Keybind and right click pickaxe ghost blocks
 - Custom mod-ID hider
 - Endstone Protector Timer
+- No Rotate
+- Anti KB
 
 ### Macros
 - [Experiments](https://youtu.be/1_dP8UmHywA) click blocker, solver, and auto
@@ -45,14 +50,11 @@ Report crashes (WITH A CRASH REPORT) or broken features to `Harry282#1031` on Di
 - Custom Item Use Macros
 - Bone Macro
 
-## Upcoming Features
-- Auto Rogue Sword
-- Auto Salvage
-
 ## Potential Upcoming Features
 - Universal Bridge port
 - Wardrobe Macro
 - Custom Item Use Block
-- Dungeon Map Scanner
+- Auto Rogue Sword
+- Auto Salvage
 
 ## Known Bugs
