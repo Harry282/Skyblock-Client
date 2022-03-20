@@ -22,7 +22,7 @@ import skyblockclient.SkyblockClient
 import skyblockclient.SkyblockClient.Companion.configData
 import skyblockclient.config.ConfigManager.parseData
 import skyblockclient.config.ConfigManager.writeConfig
-import skyblockclient.features.ItemMacro.Companion.macros
+import skyblockclient.features.ItemMacro.macros
 import java.awt.Color
 
 class ItemMacros : WindowScreen(newGuiScale = GuiScale.scaleForScreenSize().ordinal) {

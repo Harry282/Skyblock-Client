@@ -13,7 +13,7 @@ import skyblockclient.utils.Utils.itemID
 import skyblockclient.utils.Utils.modMessage
 import skyblockclient.utils.Utils.rightClick
 
-class FastLeap {
+object FastLeap {
 
     private var lastOpener = ""
     private var bloodOpened = false

@@ -17,7 +17,7 @@ import skyblockclient.utils.ScoreboardUtils.cleanSB
 import skyblockclient.utils.ScoreboardUtils.sidebarLines
 import java.awt.Color
 
-class GemstoneESP {
+object GemstoneESP {
 
     private val gemstoneList = HashMap<BlockPos, Color>()
     private var lastUpdate: Long = 0

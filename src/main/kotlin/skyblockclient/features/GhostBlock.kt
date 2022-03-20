@@ -13,7 +13,7 @@ import skyblockclient.SkyblockClient.Companion.keyBinds
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ClickEvent
 
-class GhostBlock {
+object GhostBlock {
 
     private val blacklist = listOf(
         Blocks.acacia_door,

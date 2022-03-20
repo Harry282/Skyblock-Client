@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 
-class AnvilUses {
+object AnvilUses {
     @SubscribeEvent
     fun onTooltip(event: ItemTooltipEvent) {
         if (!config.showAnvilUses || !inSkyblock || !event.itemStack.hasTagCompound() ||

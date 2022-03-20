@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 
-class NoWaterFOV {
+object NoWaterFOV {
     @SubscribeEvent
     fun onFOV(event: EntityViewRenderEvent.FOVModifier) {
         if (!config.antiWaterFOV || !inSkyblock || event.block.material != Material.water) return

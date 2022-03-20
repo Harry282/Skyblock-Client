@@ -17,7 +17,10 @@ import skyblockclient.utils.OutlineUtils.outlineESP
 import skyblockclient.utils.RenderUtils.drawEntityBox
 import java.awt.Color
 
-class MobESP {
+object MobESP {
+
+    private val checked = HashSet<Entity>()
+    val starMobs = HashSet<Entity>()
 
     @SubscribeEvent
     fun onRenderEntity(event: RenderLivingEntityEvent) {
@@ -84,38 +87,33 @@ class MobESP {
         checked.clear()
     }
 
-    companion object {
-        private val checked = HashSet<Entity>()
-        val starMobs = HashSet<Entity>()
-
-        fun getColor(entity: Entity): Color? {
-            return when (entity) {
-                is EntityBat -> if (config.espBats && !entity.isInvisible) config.espColorBats else null
-                is EntityEnderman -> if (config.espFels && entity.name == "Dinnerbone") config.espColorFels else null
-                is EntityPlayer -> if ((config.espShadowAssassin || config.espMiniboss) && entity.name.contains("Shadow Assassin")) {
-                    config.espColorShadowAssassin
-                } else if (config.espMiniboss && entity.getCurrentArmor(0) != null) {
-                    when (entity.name) {
-                        "Lost Adventurer" -> if (config.espSeperateMinibossColor) {
-                            when (entity.getCurrentArmor(0).displayName) {
-                                "§6Unstable Dragon Boots" -> config.espColorUnstable
-                                "§6Young Dragon Boots" -> config.espColorYoung
-                                "§6Superior Dragon Boots" -> config.espColorSuperior
-                                "§6Holy Dragon Boots" -> config.espColorHoly
-                                "§6Frozen Blaze Boots" -> config.espColorFrozen
-                                else -> null
-                            }
-                        } else config.espColorMiniboss
-                        "Diamond Guy" -> if (config.espSeperateMinibossColor &&
-                            entity.getCurrentArmor(0).displayName.startsWith("§6Perfect Boots - Tier")
-                        ) {
-                            config.espColorAngryArchaeologist
-                        } else config.espColorMiniboss
-                        else -> null
-                    }
-                } else null
-                else -> null
-            }
+    fun getColor(entity: Entity): Color? {
+        return when (entity) {
+            is EntityBat -> if (config.espBats && !entity.isInvisible) config.espColorBats else null
+            is EntityEnderman -> if (config.espFels && entity.name == "Dinnerbone") config.espColorFels else null
+            is EntityPlayer -> if ((config.espShadowAssassin || config.espMiniboss) && entity.name.contains("Shadow Assassin")) {
+                config.espColorShadowAssassin
+            } else if (config.espMiniboss && entity.getCurrentArmor(0) != null) {
+                when (entity.name) {
+                    "Lost Adventurer" -> if (config.espSeperateMinibossColor) {
+                        when (entity.getCurrentArmor(0).displayName) {
+                            "§6Unstable Dragon Boots" -> config.espColorUnstable
+                            "§6Young Dragon Boots" -> config.espColorYoung
+                            "§6Superior Dragon Boots" -> config.espColorSuperior
+                            "§6Holy Dragon Boots" -> config.espColorHoly
+                            "§6Frozen Blaze Boots" -> config.espColorFrozen
+                            else -> null
+                        }
+                    } else config.espColorMiniboss
+                    "Diamond Guy" -> if (config.espSeperateMinibossColor &&
+                        entity.getCurrentArmor(0).displayName.startsWith("§6Perfect Boots - Tier")
+                    ) {
+                        config.espColorAngryArchaeologist
+                    } else config.espColorMiniboss
+                    else -> null
+                }
+            } else null
+            else -> null
         }
     }
 }

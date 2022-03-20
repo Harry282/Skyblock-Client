@@ -13,7 +13,9 @@ import skyblockclient.utils.Utils.itemID
 import skyblockclient.utils.Utils.leftClick
 import skyblockclient.utils.Utils.rightClick
 
-class ItemMacro {
+object ItemMacro {
+
+    val macros = HashSet<ItemMacros.Macro>()
 
     @SubscribeEvent
     fun onInput(event: InputEvent) {
@@ -54,11 +56,5 @@ class ItemMacro {
                 return
             }
         }
-    }
-
-
-    companion object {
-        // Updated in gui ItemMacros.kt
-        val macros = HashSet<ItemMacros.Macro>()
     }
 }

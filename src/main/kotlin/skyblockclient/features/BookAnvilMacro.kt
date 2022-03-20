@@ -14,7 +14,7 @@ import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.utils.Utils.modMessage
 
-class BookAnvilMacro {
+object BookAnvilMacro {
 
     private val bookPairs = HashMap<String, List<Int>>()
     private var thread: Thread? = null

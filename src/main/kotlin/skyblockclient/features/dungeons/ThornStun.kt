@@ -8,7 +8,7 @@ import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.itemID
 
-class ThornStun {
+object ThornStun {
 
     private var isClicking = false
 

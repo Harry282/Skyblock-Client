@@ -7,7 +7,7 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.events.GuiContainerEvent.DrawSlotEvent
 
-class SalvageOverlay {
+object SalvageOverlay {
     @SubscribeEvent
     fun onDrawSlot(event: DrawSlotEvent) {
         if (!config.overlaySalvageable || !inSkyblock || event.gui !is GuiChest) return

@@ -11,7 +11,10 @@ import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.utils.Utils.itemID
 import skyblockclient.utils.Utils.lore
 
-class NoBlockAnimation {
+object NoBlockAnimation {
+
+    private var isRightClickKeyDown = false
+    val blacklist = HashSet<String>()
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
@@ -32,10 +35,5 @@ class NoBlockAnimation {
                 }
             }
         }
-    }
-
-    companion object {
-        private var isRightClickKeyDown = false
-        val blacklist = HashSet<String>()
     }
 }

@@ -10,7 +10,7 @@ import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ReceivePacketEvent
 import skyblockclient.utils.Utils.isFloor
 
-class F7PreGhostBlocks {
+object F7PreGhostBlocks {
 
     private val P3_BLOCK_POS_LIST = listOf(
         BlockPos(87, 167, 40),

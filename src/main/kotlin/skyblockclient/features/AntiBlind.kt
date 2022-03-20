@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 
-class AntiBlind {
+object AntiBlind {
 
     @SubscribeEvent
     fun onRenderFog(event: FogDensity) {

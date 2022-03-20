@@ -10,7 +10,7 @@ import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ReceivePacketEvent
 import skyblockclient.utils.Utils.equalsOneOf
 
-class ImpactParticles {
+object ImpactParticles {
     @SubscribeEvent
     fun onPacket(event: ReceivePacketEvent) {
         if (!config.noShieldParticles || !inSkyblock || event.packet !is S2APacketParticles) return

@@ -10,7 +10,7 @@ import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.utils.Utils.renderText
 
-class EndstoneProtectorTimer {
+object EndstoneProtectorTimer {
 
     private var timer: Long = 0
 

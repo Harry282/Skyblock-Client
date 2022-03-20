@@ -12,7 +12,7 @@ import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.renderText
 
-class BloodReady {
+object BloodReady {
 
     private var bloodReady = false
     private var timer: Long = 0

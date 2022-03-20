@@ -58,31 +58,32 @@ class SkyblockClient {
 
         listOf(
             this,
-            AntiBlind(),
-            AnvilUses(),
-            ArrowAlign(),
-            BloodReady(),
-            BoneMacro(),
-            BookAnvilMacro(),
-            EnchantingExperiments(),
-            EndstoneProtectorTimer(),
-            F7PreGhostBlocks(),
-            FastLeap(),
-            GemstoneESP(),
-            GhostBlock(),
-            HiddenMobs(),
-            ImpactParticles(),
-            ItemMacro(),
-            LividESP(),
-            MimicMessage(),
-            MobESP(),
-            NoBlockAnimation(),
-            NoWaterFOV(),
-            SalvageOverlay(),
-            SimonSaysButtons(),
-            Terminals(),
-            ThornStun(),
-            WormFishingLavaESP()
+            AntiBlind,
+            AnvilUses,
+            ArrowAlign,
+            BloodReady,
+            BoneMacro,
+            BookAnvilMacro,
+            EnchantingExperiments,
+            EndstoneProtectorTimer,
+            F7PreGhostBlocks,
+            FastLeap,
+            GemstoneESP,
+            GhostBlock,
+            HiddenMobs,
+            ImpactParticles,
+            ItemMacro,
+            LividESP,
+            MimicMessage,
+            MobESP,
+            NoBlockAnimation,
+            NoWaterFOV,
+            RuneCombineMacro,
+            SalvageOverlay,
+            SimonSaysButtons,
+            Terminals,
+            ThornStun,
+            WormFishingLavaESP
         ).forEach(MinecraftForge.EVENT_BUS::register)
 
         for (keyBind in keyBinds) {
@@ -147,7 +148,7 @@ class SkyblockClient {
     }
 
     @SubscribeEvent
-    fun onKey(event: KeyInputEvent?) {
+    fun onKey(event: KeyInputEvent) {
         if (keyBinds[0].isPressed) display = config.gui()
         if (keyBinds[3].isPressed) {
             config.noRotate = !config.noRotate

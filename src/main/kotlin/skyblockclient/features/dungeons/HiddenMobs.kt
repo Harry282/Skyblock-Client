@@ -7,7 +7,7 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.events.RenderLivingEntityEvent
 
-class HiddenMobs {
+object HiddenMobs {
 
     private val watcherMobs = listOf(
         "Revoker",

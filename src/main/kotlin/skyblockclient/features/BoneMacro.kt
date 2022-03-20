@@ -8,7 +8,7 @@ import skyblockclient.SkyblockClient.Companion.keyBinds
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.utils.Utils.rightClick
 
-class BoneMacro {
+object BoneMacro {
     @SubscribeEvent
     fun onKey(event: KeyInputEvent?) {
         if (!inSkyblock || !keyBinds[1].isPressed) return

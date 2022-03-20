@@ -18,7 +18,7 @@ import skyblockclient.SkyblockClient
 import skyblockclient.SkyblockClient.Companion.configData
 import skyblockclient.config.ConfigManager.parseData
 import skyblockclient.config.ConfigManager.writeConfig
-import skyblockclient.features.NoBlockAnimation.Companion.blacklist
+import skyblockclient.features.NoBlockAnimation.blacklist
 import java.awt.Color
 
 class BlockAnimationBlacklist : WindowScreen(newGuiScale = GuiScale.scaleForScreenSize().ordinal) {

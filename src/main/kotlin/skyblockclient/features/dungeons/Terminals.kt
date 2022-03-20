@@ -21,7 +21,7 @@ import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.renderText
 import kotlin.math.roundToInt
 
-class Terminals {
+object Terminals {
 
     private val clickQueue = ArrayList<Slot>(28)
     private var currentTerminal = TerminalType.NONE

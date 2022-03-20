@@ -15,7 +15,7 @@ import skyblockclient.utils.RenderUtils
 import skyblockclient.utils.ScoreboardUtils
 import java.awt.Color
 
-class WormFishingLavaESP {
+object WormFishingLavaESP {
 
     private val lavaBlocksList: MutableList<BlockPos> = mutableListOf()
     private var lastUpdate: Long = 0

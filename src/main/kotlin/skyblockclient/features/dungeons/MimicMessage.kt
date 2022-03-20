@@ -8,7 +8,7 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.mc
 
-class MimicMessage {
+object MimicMessage {
 
     private var mimicKilled = false
 

@@ -9,7 +9,7 @@ import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 
 
-class SimonSaysButtons {
+object SimonSaysButtons {
     @SubscribeEvent
     fun onInteract(event: PlayerInteractEvent) {
         if (!config.simonSaysButtons || !inSkyblock || event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) return

@@ -20,7 +20,7 @@ import skyblockclient.utils.RenderUtils.drawEntityBox
 import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.modMessage
 
-class LividESP {
+object LividESP {
 
     private val lividNames = mapOf(
         '2' to "Frog Livid",

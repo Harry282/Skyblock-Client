@@ -18,7 +18,7 @@ import skyblockclient.events.GuiContainerEvent
 import skyblockclient.events.GuiContainerEvent.SlotClickEvent
 import skyblockclient.utils.Utils.renderText
 
-class EnchantingExperiments {
+object EnchantingExperiments {
 
     private var currentExperiment = ExperimentType.NONE
     private var hasAdded = false
