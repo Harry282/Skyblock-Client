@@ -78,7 +78,6 @@ class SkyblockClient {
             MobESP,
             NoBlockAnimation,
             NoWaterFOV,
-            RuneCombineMacro,
             SalvageOverlay,
             SimonSaysButtons,
             Terminals,
