@@ -13,8 +13,6 @@ import skyblockclient.utils.Utils.isFloor
 object F7PreGhostBlocks {
 
     private val P3_BLOCK_POS_LIST = listOf(
-        BlockPos(87, 167, 40),
-        BlockPos(87, 167, 41),
         BlockPos(88, 167, 41),
         BlockPos(89, 167, 41),
         BlockPos(90, 167, 41),
@@ -38,6 +36,8 @@ object F7PreGhostBlocks {
         BlockPos(95, 166, 41),
         BlockPos(95, 167, 41),
         BlockPos(95, 167, 40),
+        BlockPos(96, 167, 41),
+        BlockPos(96, 167, 40),
     )
 
     private val P5_BLOCK_POS_LIST = listOf(
