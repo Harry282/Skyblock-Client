@@ -6,6 +6,7 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.utils.Utils.equalsOneOf
+import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.itemID
 
 object AntiKBHook {
@@ -26,7 +27,7 @@ object AntiKBHook {
         return false
     }
 
-    private fun disableAntiKB(): Boolean = mc.thePlayer.isInLava || mc.thePlayer.heldItem?.itemID.equalsOneOf(
+    private fun disableAntiKB(): Boolean = mc.thePlayer.isInLava && isFloor(7) || mc.thePlayer.heldItem?.itemID.equalsOneOf(
         "JERRY_STAFF",
         "BONZO_STAFF",
         "STARRED_BONZO_STAFF"
