@@ -1,7 +1,10 @@
 package skyblockclient.features
 
+import net.minecraft.init.Blocks
 import net.minecraft.network.play.server.S08PacketPlayerPosLook
+import net.minecraft.util.BlockPos
 import skyblockclient.SkyblockClient.Companion.config
+import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 
@@ -17,7 +20,11 @@ object NoRotateHook {
     }
 
     fun handlePlayerPosLook(packet: S08PacketPlayerPosLook) {
-        if (!config.noRotate || !inSkyblock || packet.pitch % 1 == 0f && packet.yaw % 1 == 0f) return
+        if (!config.noRotate || !inSkyblock || packet.pitch % 1 == 0f) return
+        if (inDungeons && mc.thePlayer.run {
+                BlockPos.getAllInBox(position.add(2, -1, 2), position.add(-2, -1, -2))
+                    .any { mc.theWorld.getBlockState(it).block == Blocks.end_portal_frame }
+            }) return
         mc.thePlayer.run {
             rotationPitch = prevPitch.also { prevRotationPitch = it }
             rotationYaw = prevYaw.also { prevRotationYaw = it }
