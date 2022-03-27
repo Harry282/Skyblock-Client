@@ -644,6 +644,15 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Rune Combine",
+        description = "Button to combine runes at Rune Pedestal.",
+        category = "Macros",
+        subcategory = "Book Anvil Combine"
+    )
+    var runeCombine = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Skyblock Anti KB",
         category = "Misc",
     )
