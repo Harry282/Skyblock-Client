@@ -60,6 +60,7 @@ class SkyblockClient {
             this,
             AntiBlind,
             AnvilUses,
+            AutoTerminals,
             ArrowAlign,
             BloodReady,
             BoneMacro,
@@ -80,7 +81,7 @@ class SkyblockClient {
             NoWaterFOV,
             SalvageOverlay,
             SimonSaysButtons,
-            Terminals,
+            TerminalFeatures,
             ThornStun,
             WormFishingLavaESP
         ).forEach(MinecraftForge.EVENT_BUS::register)

@@ -165,21 +165,13 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var terminalAuto = false
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Auto New Terminals",
-        description = "Auto terminals only for the new ones added with M7. Seperate toggle for now.",
-        category = "Terminals",
-        subcategory = "Auto"
-    )
-    var terminalAutoNew = false
-
-    @Property(
         type = PropertyType.NUMBER,
         name = "Terminal Click Delay",
         description = "Time in ms between automatic terminal clicks.",
         category = "Terminals",
         subcategory = "Auto",
         increment = 10,
+        min = 10,
         max = 1000
     )
     var terminalClickDelay = 200
