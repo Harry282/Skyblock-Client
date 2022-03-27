@@ -11,7 +11,6 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import java.awt.Color
 
-
 object RenderUtils {
 
     private fun drawFilledAABB(aabb: AxisAlignedBB, color: Color) {

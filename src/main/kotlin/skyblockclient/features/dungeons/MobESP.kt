@@ -59,7 +59,7 @@ object MobESP {
 
     @SubscribeEvent
     fun onRenderWorld(event: RenderWorldLastEvent) {
-        if (!inDungeons || config.espType == 0) return
+        if (!inDungeons || config.espType != 1) return
         mc.theWorld.loadedEntityList.forEach {
             if (starMobs.contains(it)) {
                 drawEntityBox(
