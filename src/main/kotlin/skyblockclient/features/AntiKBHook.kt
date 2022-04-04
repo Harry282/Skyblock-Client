@@ -32,6 +32,7 @@ object AntiKBHook {
         "BONZO_STAFF",
         "STARRED_BONZO_STAFF",
         "LEAPING_SWORD",
-        "SILK_EDGE_SWORD"
+        "SILK_EDGE_SWORD",
+        "SPRING_BOOTS"
     )
 }
