@@ -179,7 +179,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     @Property(
         type = PropertyType.SWITCH,
         name = "Pingless Clicks",
-        description = "Experimental! Sends clicks before terminal GUI is updated.",
+        description = "Sends clicks before terminal GUI is updated. Not recommended on lower ping.",
         category = "Terminals",
         subcategory = "Clicks"
     )
@@ -900,6 +900,13 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         category = "Dev"
     )
     var showTerminalInfo = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Show Custom Cape",
+        category = "Dev"
+    )
+    var showCustomCapes = true
 
     init {
         setCategoryDescription(
