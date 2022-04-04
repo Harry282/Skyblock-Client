@@ -57,7 +57,7 @@ object RuneCombineMacro {
                     val runeSlot = invSlots.firstOrNull {
                         it.inventory == mc.thePlayer.inventory && it.hasStack && it.stack.run {
                             stackSize > 1 && StringUtils.stripControlCodes(displayName).run {
-                                contains("Rune") && !contains("3")
+                                contains("Rune") && !contains("III")
                             }
                         }
                     } ?: break
@@ -67,7 +67,7 @@ object RuneCombineMacro {
                     while (invSlots[19].hasStack) {
                         Thread.sleep(200)
                     }
-                    click(31, false, 500)
+                    click(31, true, 500)
                 }
                 modMessage("§aFinished Rune Combining!")
             }, "Book Combine")
