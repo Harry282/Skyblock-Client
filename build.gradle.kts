@@ -5,7 +5,7 @@ import net.minecraftforge.gradle.user.TaskSingleReobf
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.6.20"
     id("net.minecraftforge.gradle.forge") version "6f53277"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.spongepowered.mixin") version "0.6-SNAPSHOT"
