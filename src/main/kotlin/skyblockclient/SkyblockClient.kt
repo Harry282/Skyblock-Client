@@ -27,6 +27,8 @@ import skyblockclient.config.ConfigManager.parseData
 import skyblockclient.config.ConfigManager.writeConfig
 import skyblockclient.features.*
 import skyblockclient.features.dungeons.*
+import skyblockclient.features.nether.AutoAttune
+import skyblockclient.features.nether.FirePillar
 import skyblockclient.utils.ScoreboardUtils
 import skyblockclient.utils.UpdateChecker
 import skyblockclient.utils.Utils
@@ -60,6 +62,7 @@ class SkyblockClient {
             this,
             AntiBlind,
             AnvilUses,
+            AutoAttune,
             AutoTerminals,
             ArrowAlign,
             BloodReady,
@@ -69,6 +72,7 @@ class SkyblockClient {
             EndstoneProtectorTimer,
             F7PreGhostBlocks,
             FastLeap,
+            FirePillar,
             GemstoneESP,
             GhostBlock,
             HiddenMobs,
