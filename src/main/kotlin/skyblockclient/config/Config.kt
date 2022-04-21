@@ -908,6 +908,20 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     )
     var showCustomCapes = true
 
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Auto Blaze Attune",
+        category = "Dev"
+    )
+    var autoAttune = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Show Fire Pillar",
+        category = "Dev"
+    )
+    var showFirePillar = false
+
     init {
         setCategoryDescription(
             "ESP",
