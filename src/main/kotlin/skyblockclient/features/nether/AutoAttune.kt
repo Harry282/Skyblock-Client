@@ -3,7 +3,8 @@ package skyblockclient.features.nether
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.init.Items
 import net.minecraft.item.Item
-import net.minecraft.util.MovingObjectPosition
+import net.minecraft.util.StringUtils
+import net.minecraft.util.Vec3
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
@@ -12,6 +13,8 @@ import skyblockclient.events.ClickEvent
 import skyblockclient.utils.Utils.rightClick
 
 object AutoAttune {
+
+    var lastAttuneTime = 0L
 
     private val attunements = listOf(
         Attunement("ASHEN", Items.stone_sword, 0),
@@ -30,18 +33,28 @@ object AutoAttune {
 
     @SubscribeEvent
     fun onLeftClick(event: ClickEvent.LeftClickEvent) {
-        if (!inSkyblock || !autoAttune || mc.objectMouseOver?.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) return
-        val attunementArmorStand = mc.theWorld.loadedEntityList.filterIsInstance<EntityArmorStand>().firstOrNull {
+        if (!inSkyblock || !autoAttune) return
+        val attunementArmorStand = mc.theWorld.loadedEntityList.filterIsInstance<EntityArmorStand>().filter {
             it.getDistanceSqToEntity(mc.thePlayer) < 36 && attunements.any { attunement ->
-                it.name.contains(attunement.name)
+                StringUtils.stripControlCodes(it.name).startsWith(attunement.name)
             }
+        }.firstOrNull {
+            mc.thePlayer.run {
+                val look: Vec3 = getLook(1.0f)
+                val lookVec = getPositionEyes(1.0f).addVector(
+                    look.xCoord * 6, look.yCoord * 6, look.zCoord * 6
+                )
+                it.entityBoundingBox.offset(0.0, -1.0, 0.0).expand(0.5, 1.0, 0.5)
+                    .calculateIntercept(mc.thePlayer.getPositionEyes(1.0f), lookVec)
+            } != null
         } ?: return
         attunements.find {
-            attunementArmorStand.name.contains(it.name)
+            StringUtils.stripControlCodes(attunementArmorStand.name).startsWith(it.name)
         }?.let { swapTo(it) }
     }
 
-    fun swapTo(attunement: Attunement) {
+    private fun swapTo(attunement: Attunement) {
+        if (System.currentTimeMillis() - lastAttuneTime < 400) return
         val swordNames = if (attunement.type == 0) sword0 else sword1
         for (i in 0..8) {
             val item = mc.thePlayer.inventory.getStackInSlot(i) ?: continue
@@ -50,6 +63,7 @@ object AutoAttune {
                 if (item.item != attunement.sword) {
                     rightClick()
                 }
+                lastAttuneTime = System.currentTimeMillis()
             }
         }
     }
