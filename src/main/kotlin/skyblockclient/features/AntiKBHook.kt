@@ -27,11 +27,12 @@ object AntiKBHook {
         return false
     }
 
-    private fun disableAntiKB(): Boolean = mc.thePlayer.isInLava && isFloor(7) || mc.thePlayer.heldItem?.itemID.equalsOneOf(
-        "JERRY_STAFF",
-        "BONZO_STAFF",
-        "STARRED_BONZO_STAFF",
-        "LEAPING_SWORD",
-        "SILK_EDGE_SWORD"
-    ) || mc.thePlayer.getCurrentArmor(0)?.itemID == "SPRING_BOOTS"
+    private fun disableAntiKB(): Boolean =
+        mc.thePlayer.isInLava && isFloor(7) || mc.thePlayer.heldItem?.itemID.equalsOneOf(
+            "JERRY_STAFF",
+            "BONZO_STAFF",
+            "STARRED_BONZO_STAFF",
+            "LEAPING_SWORD",
+            "SILK_EDGE_SWORD"
+        ) || mc.thePlayer.getCurrentArmor(0)?.itemID == "SPRING_BOOTS"
 }
