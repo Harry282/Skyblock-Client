@@ -206,7 +206,7 @@ object AutoTerminals {
                     if (column == -1 || greenPane == -1) return
                     if (column % 9 == greenPane % 9) {
                         val row = greenPane / 9
-                        if (lastRowClicked == row && System.currentTimeMillis() - lastClickTime < 1000) return
+                        if (lastRowClicked == row && System.currentTimeMillis() - lastClickTime < 500) return
                         mc.playerController.windowClick(
                             mc.thePlayer.openContainer.windowId,
                             row * 9 + 7,
