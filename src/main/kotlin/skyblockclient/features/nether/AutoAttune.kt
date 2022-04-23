@@ -34,11 +34,12 @@ object AutoAttune {
     @SubscribeEvent
     fun onLeftClick(event: ClickEvent.LeftClickEvent) {
         if (!inSkyblock || !autoAttune) return
-        val attunementArmorStand = mc.theWorld.loadedEntityList.filterIsInstance<EntityArmorStand>().filter {
+        val list = mc.theWorld.loadedEntityList.filterIsInstance<EntityArmorStand>().filter {
             it.getDistanceSqToEntity(mc.thePlayer) < 36 && attunements.any { attunement ->
                 StringUtils.stripControlCodes(it.name).startsWith(attunement.name)
             }
-        }.firstOrNull {
+        }
+        val attunementArmorStand = if (list.size == 1) list.first() else list.firstOrNull {
             mc.thePlayer.run {
                 val look: Vec3 = getLook(1.0f)
                 val lookVec = getPositionEyes(1.0f).addVector(
