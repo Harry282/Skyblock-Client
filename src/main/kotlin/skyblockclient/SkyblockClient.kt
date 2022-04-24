@@ -29,6 +29,8 @@ import skyblockclient.features.*
 import skyblockclient.features.dungeons.*
 import skyblockclient.features.nether.AutoAttune
 import skyblockclient.features.nether.FirePillar
+import skyblockclient.features.nether.dojo.Discipline
+import skyblockclient.features.nether.dojo.Force
 import skyblockclient.utils.ScoreboardUtils
 import skyblockclient.utils.UpdateChecker
 import skyblockclient.utils.Utils
@@ -68,11 +70,13 @@ class SkyblockClient {
             BloodReady,
             BoneMacro,
             BookAnvilMacro,
+            Discipline,
             EnchantingExperiments,
             EndstoneProtectorTimer,
             F7PreGhostBlocks,
             FastLeap,
             FirePillar,
+            Force,
             GemstoneESP,
             GhostBlock,
             HiddenMobs,

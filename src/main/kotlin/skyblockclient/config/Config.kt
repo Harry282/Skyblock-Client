@@ -862,6 +862,22 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "[Force] Block Negative Hits",
+        category = "Nether",
+        subcategory = "Dojo"
+    )
+    var dojoForceBlockHits = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "[Discipline] Auto Swap Sword",
+        category = "Nether",
+        subcategory = "Dojo"
+    )
+    var dojoDisciplineAutoSwap = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Auto Blaze Attune",
         category = "Nether",
         subcategory = "Slayer"
