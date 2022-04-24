@@ -65,6 +65,7 @@ object AutoAttune {
                     rightClick()
                 }
                 lastAttuneTime = System.currentTimeMillis()
+                return
             }
         }
     }
