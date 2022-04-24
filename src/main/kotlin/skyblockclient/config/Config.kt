@@ -862,6 +862,22 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Auto Blaze Attune",
+        category = "Nether",
+        subcategory = "Slayer"
+    )
+    var autoAttune = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Show Fire Pillar",
+        category = "Nether",
+        subcategory = "Slayer"
+    )
+    var showFirePillar = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Right Click Ghost Block",
         description = "Right click with any pickaxe to create ghost block.",
         category = "Misc",
@@ -907,20 +923,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         category = "Dev"
     )
     var showCustomCapes = true
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Auto Blaze Attune",
-        category = "Dev"
-    )
-    var autoAttune = false
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Show Fire Pillar",
-        category = "Dev"
-    )
-    var showFirePillar = false
 
     init {
         setCategoryDescription(
@@ -1004,6 +1006,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     }
 
     private val configCategories = listOf(
-        "Dungeons", "Terminals", "Experiment", "ESP", "ESP Colors", "GUI", "Macros", "Mining", "Misc", "Dev"
+        "Dungeons", "Terminals", "Experiment", "ESP", "ESP Colors", "GUI", "Macros", "Mining", "Nether", "Misc", "Dev"
     )
 }
