@@ -62,9 +62,9 @@ object BookAnvilMacro {
                     bookPairs.forEach { (enchant, books) ->
                         if (books.size > 1 && !enchant.endsWith("5") && !enchant.endsWith("10")) {
                             click(books[0], true, 0)
-                            while (mc.thePlayer.openContainer.inventory[33] == null) Thread.sleep(50)
-                            click(books[1], true, 0)
                             while (mc.thePlayer.openContainer.inventory[29] == null) Thread.sleep(50)
+                            click(books[1], true, 0)
+                            while (mc.thePlayer.openContainer.inventory[33] == null) Thread.sleep(50)
                             click(22, false, 250)
                             while (mc.thePlayer.openContainer.inventory[33] != null) Thread.sleep(50)
                             click(22, false, 200)
