@@ -9,6 +9,7 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ClickEvent
+import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.itemID
 import skyblockclient.utils.Utils.modMessage
 import skyblockclient.utils.Utils.rightClick
@@ -37,7 +38,7 @@ object FastLeap {
     fun onClick(event: ClickEvent.LeftClickEvent) {
         if (!config.fastLeap || !inDungeons) return
         if (config.fastLeapBloodDisable && bloodOpened) return
-        if (mc.thePlayer.heldItem?.itemID == "SPIRIT_LEAP" && lastOpener != "") {
+        if (mc.thePlayer.heldItem?.itemID.equalsOneOf("SPIRIT_LEAP", "INFINITE_SPIRIT_LEAP") && lastOpener != "") {
             event.isCanceled = true
             rightClick()
             if (thread == null || !thread!!.isAlive) {

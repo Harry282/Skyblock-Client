@@ -7,6 +7,7 @@ import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.itemID
 
 object NoRotateHook {
@@ -24,11 +25,12 @@ object NoRotateHook {
         if (!config.noRotate || !inSkyblock || packet.pitch % 1 == 0f) return
         if (inDungeons && mc.thePlayer.run {
                 BlockPos.getAllInBox(position.add(2, -1, 2), position.add(-2, -1, -2))
-                    .any { mc.theWorld.getBlockState(it).block == Blocks.end_portal_frame } || heldItem?.itemID == "SPIRIT_LEAP"
+                    .any { mc.theWorld.getBlockState(it).block == Blocks.end_portal_frame } ||
+                        heldItem?.itemID.equalsOneOf("SPIRIT_LEAP", "INFINITE_SPIRIT_LEAP")
             }) return
         mc.thePlayer.run {
-            rotationPitch = prevPitch.also { prevRotationPitch = it }
-            rotationYaw = prevYaw.also { prevRotationYaw = it }
+            rotationPitch = prevPitch
+            rotationYaw = prevYaw
         }
     }
 }
