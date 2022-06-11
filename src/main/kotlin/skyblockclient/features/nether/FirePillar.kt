@@ -16,13 +16,13 @@ object FirePillar {
         if (event.type != RenderGameOverlayEvent.ElementType.HOTBAR || !config.showFirePillar || !inSkyblock || mc.ingameGUI == null) return
         mc.theWorld.loadedEntityList.filterIsInstance<EntityArmorStand>()
             .filter { StringUtils.stripControlCodes(it.name).endsWith("s 8 hits") }.withIndex().forEach {
-            val sr = ScaledResolution(mc)
-            Utils.renderText(
-                text = it.value.name,
-                x = sr.scaledWidth / 2 - mc.fontRendererObj.getStringWidth(it.value.name),
-                y = sr.scaledHeight / 2 - 30 * it.index,
-                scale = 2.0
-            )
-        }
+                val sr = ScaledResolution(mc)
+                Utils.renderText(
+                    text = it.value.name,
+                    x = sr.scaledWidth / 2 - mc.fontRendererObj.getStringWidth(it.value.name),
+                    y = sr.scaledHeight / 2 - 30 * it.index,
+                    scale = 2.0
+                )
+            }
     }
 }

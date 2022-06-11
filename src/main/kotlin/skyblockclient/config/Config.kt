@@ -730,6 +730,29 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     }
 
     @Property(
+        type = PropertyType.NUMBER,
+        name = "AutoClicker CPS",
+        category = "Misc",
+        max = 50,
+        increment = 5
+    )
+    var autoClickerCPS = 30
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Auto Close Secrets Chest",
+        category = "Misc"
+    )
+    var autoCloseSecretChests = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Hit Through Summons",
+        category = "Misc"
+    )
+    var ghostSummons = false
+
+    @Property(
         type = PropertyType.SWITCH,
         name = "Gemstone ESP",
         category = "Mining",

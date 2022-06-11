@@ -65,6 +65,8 @@ class SkyblockClient {
             AntiBlind,
             AnvilUses,
             AutoAttune,
+            AutoClicker,
+            AutoCloseChest,
             AutoTerminals,
             ArrowAlign,
             BloodReady,
@@ -90,6 +92,7 @@ class SkyblockClient {
             RuneCombineMacro,
             SalvageOverlay,
             SimonSaysButtons,
+            SummonsFeatures,
             TerminalFeatures,
             ThornStun,
             WormFishingLavaESP
@@ -178,20 +181,24 @@ class SkyblockClient {
         const val MOD_NAME = "Skyblock Client"
         const val MOD_VERSION = "0.2.0-pre1"
         const val CHAT_PREFIX = "§b§l<§fSkyblockClient§b§l>§r"
+
         val mc: Minecraft = Minecraft.getMinecraft()
         var config = Config
         val configData = HashMap<String, JsonElement>()
         var configFile: File? = null
         var display: GuiScreen? = null
+
         var inSkyblock = false
         var inDungeons = false
+
         val keyBinds = arrayOf(
             KeyBinding("Open Settings", Keyboard.KEY_RSHIFT, "Skyblock Client"),
             KeyBinding("Bone Macro", Keyboard.KEY_B, "Skyblock Client"),
             KeyBinding("Ghost Block", Keyboard.KEY_G, "Skyblock Client"),
             // Toggle keybinds until I make better way of doing this lol
             KeyBinding("Toggle NoRotate", Keyboard.KEY_NONE, "Skyblock Client"),
-            KeyBinding("Toggle AntiKB", Keyboard.KEY_NONE, "Skyblock Client")
+            KeyBinding("Toggle AntiKB", Keyboard.KEY_NONE, "Skyblock Client"),
+            KeyBinding("Toggle Autoclicker", Keyboard.KEY_X, "Skyblock Client")
         )
         var tickCount = 0
         var capesLoaded = false
