@@ -4,6 +4,7 @@
   "package": "skyblockclient.mixins",
   "refmap": "mixins.skyblockclient.refmap.json",
   "client": [
+    "MixinAbstractClientPlayer",
     "MixinEntityRenderer",
     "MixinGuiContainer",
     "MixinInventoryEffectRenderer",

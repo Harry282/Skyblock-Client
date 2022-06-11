@@ -135,6 +135,10 @@ class SkyblockClient {
         }
         if (tickCount % 20 == 0) {
             if (mc.thePlayer != null) {
+                if (!capesLoaded) {
+                    CapeManager.loadCape()
+                }
+
                 val onHypixel = EssentialAPI.getMinecraftUtil().isHypixel()
 
                 inSkyblock = config.forceSkyblock || onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
@@ -190,5 +194,6 @@ class SkyblockClient {
             KeyBinding("Toggle AntiKB", Keyboard.KEY_NONE, "Skyblock Client")
         )
         var tickCount = 0
+        var capesLoaded = false
     }
 }
