@@ -4,10 +4,9 @@ import com.google.gson.*
 import skyblockclient.SkyblockClient.Companion.configData
 import skyblockclient.features.ItemMacro
 import skyblockclient.features.NoBlockAnimation
-import skyblockclient.guis.ItemMacros
+import skyblockclient.ui.ItemMacros
 import java.io.File
 import java.nio.charset.StandardCharsets
-
 object ConfigManager {
 
     private val categories = mapOf<String, JsonElement>(

@@ -6,9 +6,9 @@ import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import gg.essential.vigilance.data.SortingBehavior
 import skyblockclient.SkyblockClient.Companion.display
-import skyblockclient.guis.BlockAnimationBlacklist
-import skyblockclient.guis.HideModID
-import skyblockclient.guis.ItemMacros
+import skyblockclient.ui.BlockAnimationBlacklist
+import skyblockclient.ui.HideModID
+import skyblockclient.ui.ItemMacros
 import java.awt.Color
 import java.io.File
 import java.util.function.Consumer

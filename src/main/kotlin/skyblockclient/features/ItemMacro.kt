@@ -8,7 +8,7 @@ import org.lwjgl.input.Keyboard
 import org.lwjgl.input.Mouse
 import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
-import skyblockclient.guis.ItemMacros
+import skyblockclient.ui.ItemMacros
 import skyblockclient.utils.Utils.itemID
 import skyblockclient.utils.Utils.leftClick
 import skyblockclient.utils.Utils.rightClick

@@ -1,4 +1,4 @@
-package skyblockclient.guis
+package skyblockclient.ui
 
 import gg.essential.elementa.components.UIRoundedRectangle
 import gg.essential.elementa.components.UIText

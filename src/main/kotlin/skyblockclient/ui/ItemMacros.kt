@@ -1,4 +1,4 @@
-package skyblockclient.guis
+package skyblockclient.ui
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
