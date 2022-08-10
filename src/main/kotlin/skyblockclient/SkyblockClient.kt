@@ -82,6 +82,7 @@ class SkyblockClient {
             GemstoneESP,
             GhostBlock,
             HiddenMobs,
+            HideServerID,
             ImpactParticles,
             ItemMacro,
             LividESP,

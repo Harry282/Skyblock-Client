@@ -754,6 +754,14 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Hide Server ID",
+        category = "Misc"
+    )
+    var hideServerID = false
+
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Gemstone ESP",
         category = "Mining",
         subcategory = "Gemstone ESP"
