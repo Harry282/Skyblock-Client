@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ClickEvent
-import skyblockclient.utils.Utils.isFloor
+import skyblockclient.utils.LocationUtils.dungeonFloor
 import skyblockclient.utils.Utils.rightClick
 import java.util.*
 
@@ -28,7 +28,7 @@ object ArrowAlign {
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START || config.arrowAlignSolver == 0 || !isFloor(7)) return
+        if (event.phase != TickEvent.Phase.START || config.arrowAlignSolver == 0 || dungeonFloor != 7) return
         ticks++
         if (mc.thePlayer.getDistanceSq(BlockPos(-2, 122, 76)) <= 15 * 15) {
             if (ticks % 20 == 0) {
@@ -52,7 +52,7 @@ object ArrowAlign {
 
     @SubscribeEvent
     fun onRightClick(event: ClickEvent.RightClickEvent) {
-        if (config.arrowAlignSolver == 0 || !isFloor(7) || mc.objectMouseOver == null) return
+        if (config.arrowAlignSolver == 0 || dungeonFloor != 7 || mc.objectMouseOver == null) return
         if (mc.objectMouseOver?.entityHit is EntityItemFrame) {
             if (mc.thePlayer.isSneaking && config.arrowAlignSneakOverride) return
             val frame = mc.objectMouseOver.entityHit as EntityItemFrame

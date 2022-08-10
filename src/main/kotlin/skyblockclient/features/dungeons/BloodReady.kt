@@ -7,8 +7,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.LocationUtils.inDungeons
 import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.renderText
 

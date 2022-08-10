@@ -4,8 +4,8 @@ import net.minecraft.entity.monster.EntityEnderman
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.events.RenderLivingEntityEvent
+import skyblockclient.utils.LocationUtils.inDungeons
 
 object HiddenMobs {
 

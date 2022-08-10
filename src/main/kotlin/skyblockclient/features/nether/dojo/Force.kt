@@ -5,9 +5,9 @@ import net.minecraft.init.Items
 import net.minecraft.util.StringUtils
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ClickEvent
+import skyblockclient.utils.LocationUtils.inSkyblock
 import skyblockclient.utils.ScoreboardUtils
 
 object Force {

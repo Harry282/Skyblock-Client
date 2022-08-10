@@ -10,8 +10,8 @@ import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.LocationUtils.inSkyblock
 import skyblockclient.utils.RenderUtils.drawBlockBox
 import skyblockclient.utils.ScoreboardUtils.cleanSB
 import skyblockclient.utils.ScoreboardUtils.sidebarLines

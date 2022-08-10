@@ -5,9 +5,9 @@ import net.minecraft.util.EnumParticleTypes
 import net.minecraft.util.Vec3
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ReceivePacketEvent
+import skyblockclient.utils.LocationUtils.inSkyblock
 import skyblockclient.utils.Utils.equalsOneOf
 
 object ImpactParticles {

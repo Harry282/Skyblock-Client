@@ -4,9 +4,9 @@ import net.minecraft.init.Blocks
 import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.minecraft.util.BlockPos
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inDungeons
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.LocationUtils.inDungeons
+import skyblockclient.utils.LocationUtils.inSkyblock
 import skyblockclient.utils.Utils.equalsOneOf
 import skyblockclient.utils.Utils.itemID
 

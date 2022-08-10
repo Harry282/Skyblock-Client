@@ -6,8 +6,8 @@ import net.minecraft.entity.monster.EntityZombie
 import net.minecraftforge.client.event.RenderLivingEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inDungeons
-import skyblockclient.SkyblockClient.Companion.inSkyblock
+import skyblockclient.utils.LocationUtils.inDungeons
+import skyblockclient.utils.LocationUtils.inSkyblock
 import skyblockclient.utils.Utils.itemID
 
 

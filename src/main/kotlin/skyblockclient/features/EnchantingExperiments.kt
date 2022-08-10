@@ -12,10 +12,10 @@ import net.minecraftforge.client.event.GuiScreenEvent
 import net.minecraftforge.event.entity.player.ItemTooltipEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.GuiContainerEvent
 import skyblockclient.events.GuiContainerEvent.SlotClickEvent
+import skyblockclient.utils.LocationUtils.inSkyblock
 import skyblockclient.utils.Utils.renderText
 
 object EnchantingExperiments {

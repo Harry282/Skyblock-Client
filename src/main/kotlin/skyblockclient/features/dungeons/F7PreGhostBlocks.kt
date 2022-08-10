@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ReceivePacketEvent
-import skyblockclient.utils.Utils.isFloor
+import skyblockclient.utils.LocationUtils.dungeonFloor
 
 object F7PreGhostBlocks {
 
@@ -48,7 +48,7 @@ object F7PreGhostBlocks {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     fun onChatPacket(event: ReceivePacketEvent) {
-        if (event.packet !is S02PacketChat || event.packet.type.toInt() == 2 || !isFloor(7)) return
+        if (event.packet !is S02PacketChat || event.packet.type.toInt() == 2 || dungeonFloor != 7) return
         val message = stripControlCodes(event.packet.chatComponent.unformattedText)
         if (Regex("\\[BOSS] (Maxor|Storm|Goldor|Necron): .+").matches(message)) {
             if (config.f7p3Ghost) {

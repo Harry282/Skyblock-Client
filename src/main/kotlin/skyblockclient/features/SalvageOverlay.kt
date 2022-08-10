@@ -4,8 +4,8 @@ import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.inventory.GuiChest
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.events.GuiContainerEvent.DrawSlotEvent
+import skyblockclient.utils.LocationUtils.inSkyblock
 
 object SalvageOverlay {
     @SubscribeEvent

@@ -5,7 +5,7 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
+import skyblockclient.utils.LocationUtils.inSkyblock
 
 object AntiBlind {
 

@@ -15,9 +15,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RenderLivingEntityEvent
+import skyblockclient.utils.LocationUtils.dungeonFloor
 import skyblockclient.utils.OutlineUtils.outlineESP
 import skyblockclient.utils.RenderUtils.drawEntityBox
-import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.modMessage
 
 object LividESP {
@@ -41,13 +41,13 @@ object LividESP {
 
     @SubscribeEvent
     fun onRenderEntity(event: RenderLivingEntityEvent) {
-        if (!config.lividFinder || !isFloor(5) || !foundLivid || config.espType != 0) return
+        if (!config.lividFinder || dungeonFloor != 5 || !foundLivid || config.espType != 0) return
         if (event.entity == livid) outlineESP(event, config.espColorLivid)
     }
 
     @SubscribeEvent
     fun onRender(event: RenderWorldLastEvent) {
-        if (!config.lividFinder || !isFloor(5) || !foundLivid || config.espType == 0) return
+        if (!config.lividFinder || dungeonFloor != 5 || !foundLivid || config.espType == 0) return
         livid?.let {
             drawEntityBox(
                 it,
@@ -61,7 +61,7 @@ object LividESP {
 
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
-        if (!config.lividFinder || !isFloor(5) || inBoss) return
+        if (!config.lividFinder || dungeonFloor != 5 || inBoss) return
         val message = stripControlCodes(event.message.unformattedText)
         if (message == "[BOSS] Livid: I respect you for making it to here, but I'll be your undoing.") {
             inBoss = true
@@ -70,7 +70,7 @@ object LividESP {
 
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START || !config.lividFinder || !isFloor(5)) return
+        if (event.phase != TickEvent.Phase.START || !config.lividFinder || dungeonFloor != 5) return
         if (!foundLivid && inBoss) {
             val loadedLivids = mc.theWorld.loadedEntityList.filter {
                 it.name.contains("Livid") && it.name.length > 5 && it.name[1] == it.name[5]

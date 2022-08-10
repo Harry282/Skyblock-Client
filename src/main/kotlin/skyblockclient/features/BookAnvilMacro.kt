@@ -10,8 +10,8 @@ import net.minecraftforge.client.event.GuiScreenEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.lwjgl.input.Mouse
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.LocationUtils.inSkyblock
 import skyblockclient.utils.Utils.modMessage
 
 object BookAnvilMacro {

@@ -18,18 +18,6 @@ object Utils {
         }
     }
 
-    fun isFloor(floor: Int): Boolean {
-        sidebarLines.forEach {
-            val line = ScoreboardUtils.cleanSB(it)
-            if (line.contains("The Catacombs (")) {
-                if (line.substringAfter("(").substringBefore(")").equalsOneOf("F$floor", "M$floor")) {
-                    return true
-                }
-            }
-        }
-        return config.forceSkyblock && mc.thePlayer != null && mc.theWorld != null
-    }
-
     val ItemStack.itemID: String
         get() {
             if (this.hasTagCompound() && this.tagCompound.hasKey("ExtraAttributes")) {

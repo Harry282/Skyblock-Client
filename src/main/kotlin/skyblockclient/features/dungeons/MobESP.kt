@@ -10,9 +10,9 @@ import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inDungeons
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.RenderLivingEntityEvent
+import skyblockclient.utils.LocationUtils.inDungeons
 import skyblockclient.utils.OutlineUtils.outlineESP
 import skyblockclient.utils.RenderUtils.drawEntityBox
 import java.awt.Color

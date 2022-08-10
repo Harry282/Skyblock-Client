@@ -3,10 +3,10 @@ package skyblockclient.features
 import net.minecraft.network.play.server.S12PacketEntityVelocity
 import net.minecraft.network.play.server.S27PacketExplosion
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.LocationUtils.dungeonFloor
+import skyblockclient.utils.LocationUtils.inSkyblock
 import skyblockclient.utils.Utils.equalsOneOf
-import skyblockclient.utils.Utils.isFloor
 import skyblockclient.utils.Utils.itemID
 
 object AntiKBHook {
@@ -28,7 +28,7 @@ object AntiKBHook {
     }
 
     private fun disableAntiKB(): Boolean =
-        mc.thePlayer.isInLava && isFloor(7) || mc.thePlayer.heldItem?.itemID.equalsOneOf(
+        mc.thePlayer.isInLava && dungeonFloor != 7 || mc.thePlayer.heldItem?.itemID.equalsOneOf(
             "JERRY_STAFF",
             "BONZO_STAFF",
             "STARRED_BONZO_STAFF",

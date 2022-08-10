@@ -18,7 +18,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent
 import org.lwjgl.input.Keyboard
 import skyblockclient.command.SkyblockClientCommands
 import skyblockclient.config.Config
@@ -31,7 +30,7 @@ import skyblockclient.features.nether.AutoAttune
 import skyblockclient.features.nether.FirePillar
 import skyblockclient.features.nether.dojo.Discipline
 import skyblockclient.features.nether.dojo.Force
-import skyblockclient.utils.ScoreboardUtils
+import skyblockclient.utils.LocationUtils
 import skyblockclient.utils.UpdateChecker
 import skyblockclient.utils.Utils
 import java.awt.Desktop
@@ -86,6 +85,7 @@ class SkyblockClient {
             ImpactParticles,
             ItemMacro,
             LividESP,
+            LocationUtils,
             MimicMessage,
             MobESP,
             NoBlockAnimation,
@@ -131,37 +131,9 @@ class SkyblockClient {
 
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START) return
-        tickCount++
-        if (display != null) {
-            mc.displayGuiScreen(display)
-            display = null
-        }
-        if (tickCount % 20 == 0) {
-            if (mc.thePlayer != null) {
-                if (!capesLoaded) {
-                    CapeManager.loadCape()
-                }
-
-                val onHypixel = EssentialAPI.getMinecraftUtil().isHypixel()
-
-                inSkyblock = config.forceSkyblock || onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
-                    ?.let { ScoreboardUtils.cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
-
-                inDungeons = config.forceSkyblock || inSkyblock && ScoreboardUtils.sidebarLines.any {
-                    ScoreboardUtils.cleanSB(it).run {
-                        (contains("The Catacombs") && !contains("Queue")) || contains("Dungeon Cleared:")
-                    }
-                }
-            }
-            tickCount = 0
-        }
-    }
-
-    @SubscribeEvent
-    fun onDisconnect(event: ClientDisconnectionFromServerEvent) {
-        inSkyblock = false
-        inDungeons = false
+        if (event.phase != TickEvent.Phase.START || display == null) return
+        mc.displayGuiScreen(display)
+        display = null
     }
 
     @SubscribeEvent
@@ -189,9 +161,6 @@ class SkyblockClient {
         var configFile: File? = null
         var display: GuiScreen? = null
 
-        var inSkyblock = false
-        var inDungeons = false
-
         val keyBinds = arrayOf(
             KeyBinding("Open Settings", Keyboard.KEY_RSHIFT, "Skyblock Client"),
             KeyBinding("Bone Macro", Keyboard.KEY_B, "Skyblock Client"),
@@ -201,7 +170,6 @@ class SkyblockClient {
             KeyBinding("Toggle AntiKB", Keyboard.KEY_NONE, "Skyblock Client"),
             KeyBinding("Toggle Autoclicker", Keyboard.KEY_X, "Skyblock Client")
         )
-        var tickCount = 0
         var capesLoaded = false
     }
 }

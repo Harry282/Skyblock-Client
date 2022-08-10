@@ -3,7 +3,7 @@ package skyblockclient.features
 import net.minecraftforge.event.entity.player.ItemTooltipEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
+import skyblockclient.utils.LocationUtils.inSkyblock
 
 object AnvilUses {
     @SubscribeEvent

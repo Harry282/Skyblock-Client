@@ -13,7 +13,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
-import skyblockclient.utils.Utils.isFloor
+import skyblockclient.utils.LocationUtils
+import skyblockclient.utils.LocationUtils.dungeonFloor
 import skyblockclient.utils.Utils.renderText
 import kotlin.math.abs
 
@@ -55,7 +56,7 @@ object AutoTerminals {
 
     @SubscribeEvent
     fun onGuiOpen(event: GuiOpenEvent) {
-        if (event.gui !is GuiChest || currentTerminal != TerminalType.NONE || !isFloor(7)) return
+        if (event.gui !is GuiChest || currentTerminal != TerminalType.NONE || dungeonFloor != 7) return
         val container = (event.gui as GuiChest).inventorySlots
         if (container is ContainerChest) {
             val chestName = container.lowerChestInventory.displayName.unformattedText

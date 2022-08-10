@@ -8,10 +8,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import skyblockclient.SkyblockClient.Companion.config
-import skyblockclient.SkyblockClient.Companion.inSkyblock
 import skyblockclient.SkyblockClient.Companion.keyBinds
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ClickEvent
+import skyblockclient.utils.LocationUtils.inSkyblock
 
 object GhostBlock {
 
