@@ -33,7 +33,7 @@ dependencies {
     compileOnly("org.spongepowered:mixin:0.8.5")
 
     packageLib("gg.essential:loader-launchwrapper:1.1.3")
-    implementation("gg.essential:essential-1.8.9-forge:3662")
+    implementation("gg.essential:essential-1.8.9-forge:3760")
 }
 
 sourceSets {
