@@ -13,7 +13,7 @@ object HideServerID {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (!config.hideServerID || !inSkyblock || event.phase != TickEvent.Phase.START) return
-        mc.theWorld.scoreboard.teams.find { team ->
+        mc.theWorld?.scoreboard?.teams?.find { team ->
             team.teamName == "team_${ScoreboardUtils.sidebarLines.indexOfFirst { dateRegex.matches(it) } + 1}"
         }?.run {
             setNamePrefix(colorPrefix.substringBefore(" §8"))
