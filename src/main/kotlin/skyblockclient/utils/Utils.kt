@@ -5,9 +5,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.item.ItemStack
 import skyblockclient.SkyblockClient.Companion.CHAT_PREFIX
-import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
-import skyblockclient.utils.ScoreboardUtils.sidebarLines
 import kotlin.math.round
 
 
@@ -52,7 +50,7 @@ object Utils {
         x: Int,
         y: Int,
         scale: Double = 1.0,
-        color: Int = 0xFFFFFF
+        color: Int = 0xFFFFFF,
     ) {
         GlStateManager.pushMatrix()
         GlStateManager.disableLighting()

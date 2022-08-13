@@ -2,8 +2,9 @@ package skyblockclient
 
 import com.google.gson.JsonElement
 import gg.essential.api.EssentialAPI
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.settings.KeyBinding
@@ -36,6 +37,7 @@ import skyblockclient.utils.Utils
 import java.awt.Desktop
 import java.io.File
 import java.net.URI
+import kotlin.coroutines.EmptyCoroutineContext
 
 @Mod(
     modid = SkyblockClient.MOD_ID,
@@ -47,9 +49,7 @@ class SkyblockClient {
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
         val directory = File(event.modConfigurationDirectory, "sbclient")
-        if (!directory.exists()) {
-            directory.mkdirs()
-        }
+        directory.mkdirs()
         configFile = File(directory, "config.json")
     }
 
@@ -99,33 +99,25 @@ class SkyblockClient {
             WormFishingLavaESP
         ).forEach(MinecraftForge.EVENT_BUS::register)
 
-        for (keyBind in keyBinds) {
-            ClientRegistry.registerKeyBinding(keyBind)
-        }
+        keyBinds.forEach(ClientRegistry::registerKeyBinding)
     }
 
     @Mod.EventHandler
-    fun postInit(event: FMLLoadCompleteEvent) = runBlocking {
-        launch {
-            configFile?.let {
-                loadConfig(it)
-                parseData()
-                writeConfig(it)
-            }
-            if (UpdateChecker.hasUpdate() > 0) {
-                try {
-                    EssentialAPI.getNotifications().push(
-                        MOD_NAME,
-                        "New release available on Github. Click to open download link.",
-                        10f,
-                        action = {
-                            Desktop.getDesktop().browse(URI("https://github.com/Harry282/Skyblock-Client/releases"))
-                        }
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+    fun postInit(event: FMLLoadCompleteEvent) = scope.launch(Dispatchers.IO) {
+        configFile?.let {
+            loadConfig(it)
+            parseData()
+            writeConfig(it)
+        }
+        if (UpdateChecker.hasUpdate() > 0) {
+            EssentialAPI.getNotifications()
+                .push(MOD_NAME, "New release available on Github. Click to open download link.", 10f, action = {
+                    try {
+                        Desktop.getDesktop().browse(URI("https://github.com/Harry282/Skyblock-Client/releases"))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                })
         }
     }
 
@@ -160,6 +152,7 @@ class SkyblockClient {
         val configData = HashMap<String, JsonElement>()
         var configFile: File? = null
         var display: GuiScreen? = null
+        val scope = CoroutineScope(EmptyCoroutineContext)
 
         val keyBinds = arrayOf(
             KeyBinding("Open Settings", Keyboard.KEY_RSHIFT, "Skyblock Client"),
