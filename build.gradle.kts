@@ -27,7 +27,7 @@ val packageLib by configurations.creating {
 dependencies {
     minecraft("com.mojang:minecraft:1.8.9")
     mappings("de.oceanlabs.mcp:mcp_stable:22-1.8.9")
-    forge("net.minecraftforge:forge:1.8.9-11.15.1.2318-1.8.9")
+    forge("net.minecraftforge:forge:1.19.2-43.0.11")
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly("org.spongepowered:mixin:0.8.5")
