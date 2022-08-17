@@ -44,6 +44,14 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Auto Show Extra Stats",
+        category = "Dungeons",
+        subcategory = "General"
+    )
+    var showExtraStats = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "AFK Thorn Stun",
         description = "Makes right click toggled while holding Tribal Spear or Bonemerang in F4/M4",
         category = "Dungeons",
