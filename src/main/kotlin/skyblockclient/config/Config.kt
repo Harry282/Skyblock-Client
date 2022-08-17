@@ -133,6 +133,15 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Crystal Placer",
+        description = "Automatically places F7 crystals.",
+        category = "Dungeons",
+        subcategory = "F7"
+    )
+    var crystalPlacer = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Livid Finder",
         category = "Dungeons",
         subcategory = "Render"
