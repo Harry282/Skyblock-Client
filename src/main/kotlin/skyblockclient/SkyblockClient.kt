@@ -27,10 +27,15 @@ import skyblockclient.config.ConfigManager.parseData
 import skyblockclient.config.ConfigManager.writeConfig
 import skyblockclient.features.*
 import skyblockclient.features.dungeons.*
+import skyblockclient.features.macros.AutoBookCombine
+import skyblockclient.features.macros.AutoRuneCombine
+import skyblockclient.features.macros.AutoSalvage
+import skyblockclient.features.macros.BoneMacro
 import skyblockclient.features.nether.AutoAttune
 import skyblockclient.features.nether.FirePillar
 import skyblockclient.features.nether.dojo.Discipline
 import skyblockclient.features.nether.dojo.Force
+import skyblockclient.utils.GuiMacroUtils
 import skyblockclient.utils.LocationUtils
 import skyblockclient.utils.UpdateChecker
 import skyblockclient.utils.Utils
@@ -63,11 +68,14 @@ class SkyblockClient {
             this,
             AntiBlind,
             AnvilUses,
+            ArrowAlign,
             AutoAttune,
+            AutoBookCombine,
             AutoClicker,
             AutoCloseChest,
+            AutoRuneCombine,
+            AutoSalvage,
             AutoTerminals,
-            ArrowAlign,
             BloodReady,
             BoneMacro,
             BookAnvilMacro,
@@ -80,6 +88,7 @@ class SkyblockClient {
             Force,
             GemstoneESP,
             GhostBlock,
+            GuiMacroUtils,
             HiddenMobs,
             HideServerID,
             ImpactParticles,
@@ -90,7 +99,6 @@ class SkyblockClient {
             MobESP,
             NoBlockAnimation,
             NoWaterFOV,
-            RuneCombineMacro,
             SalvageOverlay,
             SimonSaysButtons,
             SummonsFeatures,

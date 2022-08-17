@@ -614,42 +614,67 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var boneThrowDelay = 50
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Book Combine",
-        description = "Button to combine tier 1 books in anvil.",
-        category = "Macros",
-        subcategory = "Book Anvil Combine"
-    )
-    var bookCombine = false
-
-    @Property(
         type = PropertyType.NUMBER,
-        name = "Book Combine Speed",
-        description = "Minimum time between clicks. Increase if you get please slow down messages.",
+        name = "Gui Macro Speed",
+        description = "Delay to add to gui macros. Increase if you get please slow down messages.",
         category = "Macros",
-        subcategory = "Book Anvil Combine",
+        subcategory = "Gui Macro",
         max = 200,
         increment = 5
     )
-    var bookCombineSpeed = 50
+    var guiMacroDelay = 0
 
     @Property(
         type = PropertyType.SWITCH,
-        name = "Book Combine Messages",
-        description = "Shows chat messages when starting and stopping book combining.",
+        name = "Gui Macro Messages",
+        description = "Shows chat messages when starting and stopping gui macros.",
         category = "Macros",
-        subcategory = "Book Anvil Combine"
+        subcategory = "Gui Macro"
     )
-    var bookCombineMessage = true
+    var guiMacroMessage = true
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Book Combine",
+        description = "Button to combine same tier books in anvil.",
+        category = "Macros",
+        subcategory = "Gui Macro"
+    )
+    var bookCombine = true
 
     @Property(
         type = PropertyType.SWITCH,
         name = "Rune Combine",
         description = "Button to combine runes at Rune Pedestal.",
         category = "Macros",
-        subcategory = "Book Anvil Combine"
+        subcategory = "Gui Macro"
     )
-    var runeCombine = false
+    var runeCombine = true
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Auto Salvage",
+        description = "Button to auto salvage items in salvage menu.",
+        category = "Macros",
+        subcategory = "Gui Macro"
+    )
+    var autoSalvage = true
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Salvage Dungeon Mob Items",
+        category = "Macros",
+        subcategory = "Gui Macro"
+    )
+    var dungeonSalvage = true
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Salvage Nether Fishing Items",
+        category = "Macros",
+        subcategory = "Gui Macro"
+    )
+    var netherSalvage = true
 
     @Property(
         type = PropertyType.SWITCH,
