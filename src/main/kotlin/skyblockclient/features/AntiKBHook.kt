@@ -28,7 +28,7 @@ object AntiKBHook {
     }
 
     private fun disableAntiKB(): Boolean =
-        mc.thePlayer.isInLava && dungeonFloor != 7 || mc.thePlayer.heldItem?.itemID.equalsOneOf(
+        mc.thePlayer.isInLava && dungeonFloor == 7 || mc.thePlayer.heldItem?.itemID.equalsOneOf(
             "JERRY_STAFF",
             "BONZO_STAFF",
             "STARRED_BONZO_STAFF",
