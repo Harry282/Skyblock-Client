@@ -27,6 +27,14 @@ open class GuiContainerEvent(val container: Container, val gui: GuiContainer) : 
         GuiContainerEvent(container, gui)
 }
 
+open class MovementUpdateEvent : Event() {
+    @Cancelable
+    class Pre : MovementUpdateEvent()
+
+    @Cancelable
+    class Post : MovementUpdateEvent()
+}
+
 @Cancelable
 class ReceivePacketEvent(val packet: Packet<*>) : Event()
 
