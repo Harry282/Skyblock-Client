@@ -52,6 +52,13 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Auto Close Secrets Chest",
+        category = "Misc"
+    )
+    var autoCloseSecretChests = false
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "AFK Thorn Stun",
         description = "Makes right click toggled while holding Tribal Spear or Bonemerang in F4/M4",
         category = "Dungeons",
@@ -779,13 +786,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         increment = 5
     )
     var autoClickerCPS = 30
-
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Auto Close Secrets Chest",
-        category = "Misc"
-    )
-    var autoCloseSecretChests = false
 
     @Property(
         type = PropertyType.SWITCH,
