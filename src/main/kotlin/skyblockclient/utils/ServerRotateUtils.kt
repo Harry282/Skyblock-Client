@@ -9,6 +9,10 @@ object ServerRotateUtils {
     private var queuedRotation: Rotation? = null
     private var savedRotation: Rotation? = null
 
+    fun queueAction(action: () -> Unit) {
+        queuedAction = action
+    }
+
     fun queueRotation(rotation: Rotation, action: () -> Unit = {}) {
         if (queuedRotation == null) {
             queuedRotation = rotation
@@ -39,6 +43,4 @@ object ServerRotateUtils {
             savedRotation = null
         }
     }
-
-    data class Rotation(val pitch: Float, val yaw: Float)
 }

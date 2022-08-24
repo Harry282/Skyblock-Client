@@ -93,6 +93,48 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var fastLeapBloodDisable = false
 
     @Property(
+        type = PropertyType.SWITCH,
+        name = "Secret Aura",
+        category = "Dungeons",
+        subcategory = "Secret Aura"
+    )
+    var secretAura = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Server Rotate",
+        category = "Dungeons",
+        subcategory = "Secret Aura"
+    )
+    var secretAuraRotate = false
+
+    @Property(
+        type = PropertyType.DECIMAL_SLIDER,
+        name = "Chest Range",
+        category = "Dungeons",
+        subcategory = "Secret Aura",
+        maxF = 6f
+    )
+    var chestRange = 5.8f
+
+    @Property(
+        type = PropertyType.DECIMAL_SLIDER,
+        name = "Wither Essence Range",
+        category = "Dungeons",
+        subcategory = "Secret Aura",
+        maxF = 6f
+    )
+    var witherEssenceRange = 4.8f
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Aura Item Name",
+        category = "Dungeons",
+        subcategory = "Secret Aura"
+    )
+    var secretAuraItem = "Pickaxe"
+
+    @Property(
         type = PropertyType.SELECTOR,
         name = "Arrow Align Solver",
         category = "Dungeons",

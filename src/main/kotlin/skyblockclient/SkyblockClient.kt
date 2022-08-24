@@ -100,6 +100,7 @@ class SkyblockClient {
             NoBlockAnimation,
             NoWaterFOV,
             SalvageOverlay,
+            SecretAura,
             ShowExtraStats,
             SimonSaysButtons,
             SummonsFeatures,
