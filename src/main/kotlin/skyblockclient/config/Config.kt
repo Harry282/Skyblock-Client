@@ -135,6 +135,14 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var secretAuraItem = "Pickaxe"
 
     @Property(
+        type = PropertyType.SWITCH,
+        name = "Disable in Boss",
+        category = "Dungeons",
+        subcategory = "Secret Aura"
+    )
+    var secretAuraDisableInBoss = false
+
+    @Property(
         type = PropertyType.SELECTOR,
         name = "Arrow Align Solver",
         category = "Dungeons",

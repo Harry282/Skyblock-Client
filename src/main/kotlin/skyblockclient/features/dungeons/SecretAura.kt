@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.LocationUtils.inBoss
 import skyblockclient.utils.LocationUtils.inDungeons
 import skyblockclient.utils.Rotation
 import skyblockclient.utils.ServerRotateUtils
@@ -19,6 +20,7 @@ object SecretAura {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (!config.secretAura || !inDungeons || event.phase != TickEvent.Phase.START ) return
+        if (config.secretAuraDisableInBoss && inBoss) return
         getFirstValidBlock()?.let {
             val axisAlignedBB = mc.theWorld.getBlockState(it).block.getSelectedBoundingBox(mc.theWorld, it)
             val rotation = VecUtils.getRotation(
