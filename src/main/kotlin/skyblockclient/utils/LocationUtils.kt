@@ -1,10 +1,13 @@
 package skyblockclient.utils
 
+import net.minecraft.network.play.server.S02PacketChat
+import net.minecraft.util.StringUtils
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.network.FMLNetworkEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.events.ReceivePacketEvent
 import skyblockclient.utils.ScoreboardUtils.sidebarLines
 import kotlin.concurrent.fixedRateTimer
 
@@ -13,6 +16,17 @@ object LocationUtils {
     var inSkyblock = false
     var inDungeons = false
     var dungeonFloor = -1
+    var inBoss = false
+
+    private val entryMessages = listOf(
+        "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",
+        "[BOSS] Scarf: This is where the journey ends for you, Adventurers.",
+        "[BOSS] The Professor: I was burdened with terrible news recently...",
+        "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
+        "[BOSS] Livid: Welcome, you arrive right on time. I am Livid, the Master of Shadows.",
+        "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!",
+        "[BOSS] Maxor: WELL WELL WELL LOOK WHO’S HERE!"
+    )
 
     init {
         fixedRateTimer(period = 1000) {
@@ -38,6 +52,13 @@ object LocationUtils {
     }
 
     @SubscribeEvent
+    fun onChatPacket(event: ReceivePacketEvent) {
+        if (event.packet !is S02PacketChat || event.packet.type.toInt() == 2 || !inDungeons) return
+        val text = StringUtils.stripControlCodes(event.packet.chatComponent.unformattedText)
+        if (entryMessages.any { it == text }) inBoss = true
+    }
+
+    @SubscribeEvent
     fun onConnect(event: FMLNetworkEvent.ClientConnectedToServerEvent) {
         onHypixel = mc.runCatching {
             !event.isLocal && ((thePlayer?.clientBrand?.lowercase()?.contains("hypixel")
@@ -49,6 +70,7 @@ object LocationUtils {
     fun onWorldUnload(event: WorldEvent.Unload) {
         inDungeons = false
         dungeonFloor = -1
+        inBoss = false
     }
 
     @SubscribeEvent
@@ -57,5 +79,6 @@ object LocationUtils {
         inSkyblock = false
         inDungeons = false
         dungeonFloor = -1
+        inBoss = false
     }
 }
