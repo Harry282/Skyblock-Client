@@ -78,7 +78,6 @@ class SkyblockClient {
             AutoTerminals,
             BloodReady,
             BoneMacro,
-            CrystalPlacer,
             Discipline,
             EnchantingExperiments,
             EndstoneProtectorTimer,
