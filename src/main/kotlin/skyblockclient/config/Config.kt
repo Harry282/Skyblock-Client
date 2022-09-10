@@ -122,7 +122,7 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
         name = "Wither Essence Range",
         category = "Dungeons",
         subcategory = "Secret Aura",
-        maxF = 6f
+        maxF = 5f
     )
     var witherEssenceRange = 4.8f
 
