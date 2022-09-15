@@ -45,9 +45,10 @@ sourceSets {
 loom {
     launchConfigs {
         getByName("client") {
+            property("elementa.dev", "true")
             property("mixin.debug", "true")
             property("asmhelper.verbose", "true")
-            arg("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
+            arg("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
             arg("--mixin", "mixins.skyblockclient.json")
         }
     }

@@ -1,12 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Minecraft Client" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="GradleStart" />
+    <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="MAIN_CLASS_NAME" value="net.fabricmc.devlaunchinjector.Main" />
     <module name="Skyblock-Client.main" />
-    <option name="PROGRAM_PARAMETERS" value="--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker" />
-    <option name="VM_PARAMETERS" value="-Dfml.coreMods.load=skyblockclient.forge.FMLLoadingPlugin" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
-    <RunnerSettings RunnerId="Run" />
-    <ConfigurationWrapper RunnerId="Run" />
+    <option name="VM_PARAMETERS" value="&quot;-Dfabric.dli.config=C:\Users\Harrison\IdeaProjects\Skyblock-Client\.gradle\loom-cache\launch.cfg&quot; &quot;-Dfabric.dli.env=client&quot; &quot;-Dfabric.dli.main=net.minecraft.launchwrapper.Launch&quot;" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run/" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
