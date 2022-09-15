@@ -33,6 +33,7 @@ import skyblockclient.features.macros.AutoSalvage
 import skyblockclient.features.macros.BoneMacro
 import skyblockclient.features.nether.AutoAttune
 import skyblockclient.features.nether.FirePillar
+import skyblockclient.features.nether.dojo.Control
 import skyblockclient.features.nether.dojo.Discipline
 import skyblockclient.features.nether.dojo.Force
 import skyblockclient.utils.GuiMacroUtils
@@ -78,6 +79,7 @@ class SkyblockClient {
             AutoTerminals,
             BloodReady,
             BoneMacro,
+            Control,
             Discipline,
             EnchantingExperiments,
             EndstoneProtectorTimer,

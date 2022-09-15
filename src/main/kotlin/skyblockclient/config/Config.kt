@@ -1001,6 +1001,25 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Auto Control Dojo",
+        description = "AntiKB recommended.",
+        category = "Nether",
+        subcategory = "Dojo"
+    )
+    var dojoControl = false
+
+    @Property(
+        type = PropertyType.DECIMAL_SLIDER,
+        name = "[Control] Tick Offset",
+        description = "Adjust based on ping.",
+        category = "Nether",
+        subcategory = "Dojo",
+        maxF = 8f
+    )
+    var tickOffset = 1f
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Auto Blaze Attune",
         category = "Nether",
         subcategory = "Slayer"
