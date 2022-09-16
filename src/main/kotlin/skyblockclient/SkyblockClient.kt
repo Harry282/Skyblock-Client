@@ -134,6 +134,7 @@ class SkyblockClient {
 
     @SubscribeEvent
     fun onTick(event: ClientTickEvent) {
+        if (!capesLoaded) CapeManager.loadCape()
         if (event.phase != TickEvent.Phase.START || display == null) return
         mc.displayGuiScreen(display)
         display = null

@@ -27,7 +27,7 @@ object CapeManager {
             Cape(File(dir, "cape.png").inputStream())
         } else null
         if (cape != null) {
-            capes[SkyblockClient.mc.thePlayer.gameProfile.id.toString()] = cape
+            capes[SkyblockClient.mc.session.profile.id.toString()] = cape
         }
         SkyblockClient.capesLoaded = true
     }
