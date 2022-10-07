@@ -13,7 +13,7 @@ object AutoCloseChest {
     fun onPacket(event: ReceivePacketEvent) {
         if (event.packet !is S2DPacketOpenWindow || !inDungeons) return
         if (config.autoCloseSecretChests || config.secretAura) {
-            if (event.packet.windowTitle.formattedText == "Chest") {
+            if (event.packet.windowTitle.unformattedText == "Chest") {
                 event.isCanceled = true
                 mc.netHandler.networkManager.sendPacket(C0DPacketCloseWindow((event.packet.windowId)))
             }
