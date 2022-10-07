@@ -54,7 +54,7 @@ object FastLeap {
                                     mc.thePlayer.openContainer.windowId,
                                     it.slotNumber,
                                     2,
-                                    0,
+                                    3,
                                     mc.thePlayer
                                 )
                                 return@Thread

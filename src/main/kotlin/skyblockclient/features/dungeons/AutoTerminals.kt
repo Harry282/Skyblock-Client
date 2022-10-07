@@ -13,7 +13,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
-import skyblockclient.utils.LocationUtils
 import skyblockclient.utils.LocationUtils.dungeonFloor
 import skyblockclient.utils.Utils.renderText
 import kotlin.math.abs
@@ -212,7 +211,7 @@ object AutoTerminals {
                             mc.thePlayer.openContainer.windowId,
                             row * 9 + 7,
                             if (config.terminalMiddleClick) 2 else 0,
-                            0,
+                            if (config.terminalMiddleClick) 3 else 0,
                             mc.thePlayer
                         )
                         lastClickTime = System.currentTimeMillis()
@@ -240,7 +239,7 @@ object AutoTerminals {
         if (windowID > 100) windowID -= 100
         lastClickTime = System.currentTimeMillis()
         mc.playerController.windowClick(
-            windowID, slotNumber, clickType, 0, mc.thePlayer
+            windowID, slotNumber, clickType, if (clickType == 2) 3 else 0, mc.thePlayer
         )
         if (config.terminalPingless) {
             windowClicks++

@@ -82,7 +82,7 @@ object EnchantingExperiments {
                             mc.thePlayer.openContainer.windowId,
                             chronomatronOrder[clicks].first,
                             2,
-                            0,
+                            3,
                             mc.thePlayer
                         )
                         lastClickTime = System.currentTimeMillis()
@@ -123,7 +123,7 @@ object EnchantingExperiments {
                         ultrasequencerOrder[clicks]?.let {
                             mc.playerController.windowClick(
                                 mc.thePlayer.openContainer.windowId,
-                                it, 2, 0, mc.thePlayer
+                                it, 2, 3, mc.thePlayer
                             )
                         }
                         lastClickTime = System.currentTimeMillis()
@@ -151,7 +151,7 @@ object EnchantingExperiments {
                     mc.thePlayer.openContainer.windowId,
                     event.slot!!.slotNumber,
                     2,
-                    0,
+                    3,
                     mc.thePlayer
                 )
             }
