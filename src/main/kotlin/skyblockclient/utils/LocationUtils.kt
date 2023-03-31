@@ -4,12 +4,12 @@ import net.minecraft.network.play.server.S02PacketChat
 import net.minecraft.util.StringUtils
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.network.FMLNetworkEvent
 import skyblockclient.SkyblockClient.Companion.config
 import skyblockclient.SkyblockClient.Companion.mc
 import skyblockclient.events.ReceivePacketEvent
 import skyblockclient.utils.ScoreboardUtils.sidebarLines
-import kotlin.concurrent.fixedRateTimer
 
 object LocationUtils {
     private var onHypixel = false
@@ -17,6 +17,8 @@ object LocationUtils {
     var inDungeons = false
     var dungeonFloor = -1
     var inBoss = false
+
+    private var tickCount = 0
 
     private val entryMessages = listOf(
         "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",
@@ -28,27 +30,27 @@ object LocationUtils {
         "[BOSS] Maxor: WELL WELL WELL LOOK WHO’S HERE!"
     )
 
-    init {
-        fixedRateTimer(period = 1000) {
-            if (mc.theWorld != null) {
-                if (config.forceSkyblock) {
-                    inSkyblock = true
-                    inDungeons = true
-                    dungeonFloor = 7
-                } else {
-                    inSkyblock = onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
-                        ?.let { ScoreboardUtils.cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
+    @SubscribeEvent
+    fun onTick(event: TickEvent.ClientTickEvent) {
+        if (event.phase != TickEvent.Phase.START || mc.theWorld == null) return
+        tickCount++
+        if (tickCount % 20 != 0) return
+        if (config.forceSkyblock) {
+            inSkyblock = true
+            inDungeons = true
+            dungeonFloor = 7
+        } else {
+            inSkyblock = onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)?.name == "SBScoreboard"
 
-                    if (!inDungeons) {
-                        val line = sidebarLines.find {
-                            ScoreboardUtils.cleanSB(it).run { contains("The Catacombs (") && !contains("Queue") }
-                        } ?: return@fixedRateTimer
-                        inDungeons = true
-                        dungeonFloor = line.substringBefore(")").lastOrNull()?.digitToIntOrNull() ?: 0
-                    }
-                }
+            if (!inDungeons) {
+                val line = sidebarLines.find {
+                    ScoreboardUtils.cleanSB(it).run { contains("The Catacombs (") && !contains("Queue") }
+                } ?: return
+                inDungeons = true
+                dungeonFloor = line.substringBefore(")").lastOrNull()?.digitToIntOrNull() ?: 0
             }
         }
+        tickCount = 0
     }
 
     @SubscribeEvent
