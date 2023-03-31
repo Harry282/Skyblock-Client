@@ -20,7 +20,7 @@ object AutoRuneCombine : GuiMacro("Rune Combining") {
     override lateinit var job: Job
     override val button = GuiButton(69, 0, 0, 100, 20, "Auto Combine")
     override val inGui
-        get() = inSkyblock && config.bookCombine && GuiMacroUtils.currentChestName == "Runic Pedestal"
+        get() = inSkyblock && config.runeCombine && GuiMacroUtils.currentChestName == "Runic Pedestal"
 
     override fun resetJob() {
         job = scope.launch(start = CoroutineStart.LAZY) {
