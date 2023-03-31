@@ -76,7 +76,7 @@ object AutoTerminals {
         if (currentTerminal == TerminalType.NONE || event.gui !is GuiChest) return
         val container = (event.gui as GuiChest).inventorySlots
         if (container is ContainerChest) {
-            if (clickQueue.isEmpty() || totalClicks - clickQueue.size > container.windowId - startWindowID + 2) {
+            if (clickQueue.isEmpty() || totalClicks - clickQueue.size > container.windowId - startWindowID + config.terminalFix) {
                 resetClicks()
                 clickQueue.addAll(getClicks(container).also { totalClicks = it.size })
                 startWindowID = container.windowId
@@ -200,7 +200,7 @@ object AutoTerminals {
                 TerminalType.TIMING -> {
                     val panes = container.inventorySlots.filter { it.inventory != mc.thePlayer.inventory }
                     val column =
-                        panes.indexOfFirst { it.stack?.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && it.stack.itemDamage == 10 }
+                        panes.indexOfFirst { it.stack?.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && it.stack.itemDamage == 2 }
                     val greenPane =
                         panes.indexOfFirst { it.stack?.item == Item.getItemFromBlock(Blocks.stained_glass_pane) && it.stack.itemDamage == 5 }
                     if (column == -1 || greenPane == -1) return

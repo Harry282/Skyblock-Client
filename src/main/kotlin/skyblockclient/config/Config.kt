@@ -251,6 +251,17 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var terminalClickDelay = 200
 
     @Property(
+        type = PropertyType.NUMBER,
+        name = "Terminal Fix Time",
+        description = "How often to attempt to fix terminals while using pingless.",
+        category = "Terminals",
+        subcategory = "Auto",
+        min = 0,
+        max = 10
+    )
+    var terminalFix = 2
+
+    @Property(
         type = PropertyType.SWITCH,
         name = "Pingless Clicks",
         description = "Sends clicks before terminal GUI is updated. Not recommended on lower ping.",
