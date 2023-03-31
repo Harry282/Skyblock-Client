@@ -30,9 +30,7 @@ object SecretAura {
                     axisAlignedBB.minZ + (axisAlignedBB.maxZ - axisAlignedBB.minZ) / 2.0
                 )
             )
-            if (config.secretAuraRotate) {
-                ServerRotateUtils.queueRotation(rotation)
-            }
+            ServerRotateUtils.queueRotation(rotation)
             getInteractData(
                 it, rotation, if (isWitherEssence(it)) config.witherEssenceRange else config.chestRange
             )?.run {

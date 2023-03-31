@@ -101,14 +101,6 @@ object Config : Vigilant(File("./config/sbclient/config.toml"), "SkyblockClient"
     var secretAura = false
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Server Rotate",
-        category = "Dungeons",
-        subcategory = "Secret Aura"
-    )
-    var secretAuraRotate = false
-
-    @Property(
         type = PropertyType.DECIMAL_SLIDER,
         name = "Chest Range",
         category = "Dungeons",
