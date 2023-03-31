@@ -2,7 +2,7 @@
   "minVersion": "0.6",
   "compatibilityLevel": "JAVA_8",
   "package": "skyblockclient.mixins",
-  "refmap": "mixins.skyblockclient.refmap.json",
+  "refmap": "mixins.${modid}.refmap.json",
   "client": [
     "MixinAbstractClientPlayer",
     "MixinEntityPlayerSP",
