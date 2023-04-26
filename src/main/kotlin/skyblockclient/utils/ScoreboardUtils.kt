@@ -1,26 +1,18 @@
 package skyblockclient.utils
 
 import net.minecraft.scoreboard.ScorePlayerTeam
-import net.minecraft.util.StringUtils.stripControlCodes
 import skyblockclient.SkyblockClient.Companion.mc
+import skyblockclient.utils.Utils.removeFormatting
 
 object ScoreboardUtils {
-    fun cleanSB(scoreboard: String?): String {
-        return stripControlCodes(scoreboard).toCharArray().filter { it.code in 21..126 }.joinToString("")
-    }
+    fun cleanSB(scoreboard: String): String = scoreboard.removeFormatting().filter { it.code in 32..126 }
 
     val sidebarLines: List<String>
-        get() {
-            val scoreboard = mc.theWorld?.scoreboard ?: return emptyList()
-            val objective = scoreboard.getObjectiveInDisplaySlot(1) ?: return emptyList()
-            var scores = scoreboard.getSortedScores(objective)
-            scores = scores.filter {
-                it?.playerName?.startsWith("#") == false
-            }.let {
-                if (it.size > 15) it.drop(15) else it
-            }
-            return scores.map {
-                ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(it.playerName), it.playerName)
-            }
-        }
+        get() = mc.theWorld?.scoreboard?.run {
+            val objective = getObjectiveInDisplaySlot(1) ?: return emptyList()
+            getSortedScores(objective)
+                .filter { it?.playerName?.startsWith("#") == false }
+                .let { if (it.size > 15) it.drop(15) else it }
+                .map { ScorePlayerTeam.formatPlayerName(getPlayersTeam(it.playerName), it.playerName) }
+        } ?: emptyList()
 }

@@ -4,44 +4,32 @@ import gg.essential.universal.UChat
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.StringUtils
 import skyblockclient.SkyblockClient.Companion.CHAT_PREFIX
 import skyblockclient.SkyblockClient.Companion.mc
 import kotlin.math.round
 
 
 object Utils {
-    fun Any?.equalsOneOf(vararg other: Any): Boolean {
-        return other.any {
-            this == it
-        }
-    }
+    fun Any?.equalsOneOf(vararg other: Any): Boolean = other.any { this == it }
+
+    fun String.removeFormatting(): String = StringUtils.stripControlCodes(this)
+
+    val ItemStack.extraAttributes: NBTTagCompound?
+        get() = this.getSubCompound("ExtraAttributes", false)
 
     val ItemStack.itemID: String
-        get() {
-            if (this.hasTagCompound() && this.tagCompound.hasKey("ExtraAttributes")) {
-                val attributes = this.getSubCompound("ExtraAttributes", false)
-                if (attributes.hasKey("id", 8)) {
-                    return attributes.getString("id")
-                }
-            }
-            return ""
-        }
+        get() = this.extraAttributes?.getString("id") ?: ""
 
     val ItemStack.lore: List<String>
-        get() {
-            if (this.hasTagCompound() && this.tagCompound.hasKey("display", 10)) {
-                val display = this.tagCompound.getCompoundTag("display")
-                if (display.hasKey("Lore", 9)) {
-                    val nbt = display.getTagList("Lore", 8)
-                    val lore = ArrayList<String>()
-                    (0..nbt.tagCount()).forEach {
-                        lore.add(nbt.getStringTagAt(it))
-                    }
-                    return lore
-                }
+        get() = this.tagCompound?.getCompoundTag("display")?.getTagList("Lore", 8)?.let {
+            val list = mutableListOf<String>()
+            for (i in 0 until it.tagCount()) {
+                list.add(it.getStringTagAt(i))
             }
-            return emptyList()
-        }
+            list
+        } ?: emptyList()
 
     fun modMessage(message: String) = UChat.chat("$CHAT_PREFIX $message")
 

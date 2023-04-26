@@ -43,11 +43,14 @@ object LocationUtils {
             inSkyblock = onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)?.name == "SBScoreboard"
 
             if (!inDungeons) {
-                val line = sidebarLines.find {
-                    ScoreboardUtils.cleanSB(it).run { contains("The Catacombs (") && !contains("Queue") }
-                } ?: return
-                inDungeons = true
-                dungeonFloor = line.substringBefore(")").lastOrNull()?.digitToIntOrNull() ?: 0
+                sidebarLines.find {
+                    ScoreboardUtils.cleanSB(it).run {
+                        contains("The Catacombs (") && !contains("Queue")
+                    }
+                }?.let {
+                    inDungeons = true
+                    dungeonFloor = it.substringBefore(")").lastOrNull()?.digitToIntOrNull() ?: 0
+                }
             }
         }
         tickCount = 0
