@@ -3,7 +3,7 @@ import dev.architectury.pack200.java.Pack200Adapter
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.8.21"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("gg.essential.loom") version "0.10.0.+"
@@ -37,7 +37,7 @@ dependencies {
     compileOnly("org.spongepowered:mixin:0.8.5")
 
     packageLib("gg.essential:loader-launchwrapper:1.1.3")
-    implementation("gg.essential:essential-1.8.9-forge:11640+g7f637cfee")
+    implementation("gg.essential:essential-1.8.9-forge:12132+g6e2bf4dc5")
 }
 
 sourceSets.main {
@@ -73,12 +73,14 @@ tasks {
         inputs.property("mcversion", "1.8.9")
 
         filesMatching(listOf("mcmod.info", "mixins.${modID}.json")) {
-            expand(mapOf(
-                "modname" to modName,
-                "modid" to modID,
-                "version" to project.version,
-                "mcversion" to "1.8.9"
-            ))
+            expand(
+                mapOf(
+                    "modname" to modName,
+                    "modid" to modID,
+                    "version" to project.version,
+                    "mcversion" to "1.8.9"
+                )
+            )
         }
         dependsOn(compileJava)
     }
