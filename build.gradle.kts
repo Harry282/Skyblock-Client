@@ -36,7 +36,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly("org.spongepowered:mixin:0.8.5")
 
-    packageLib("gg.essential:loader-launchwrapper:1.1.3")
+    packageLib("gg.essential:loader-launchwrapper:1.2.1")
     implementation("gg.essential:essential-1.8.9-forge:12132+g6e2bf4dc5")
 }
 
